@@ -31,6 +31,12 @@ export function enhancePromptOffline({
     'code-review': 'Senior Principal Security & Code Review Auditor specializing in OWASP Top 10 prevention and architectural cleanliness',
     'db-optimization': 'Database Performance Tuning Expert & PostgreSQL DBA specializing in index design and query execution plans',
     'devops-docker': 'Senior Site Reliability & Cloud Infrastructure Engineer specializing in hardened containers and zero-trust CI/CD',
+    'devops-infra': 'Principal Cloud Infrastructure Engineer specializing in Cloudflare DNS, Render Web Services, and Better Stack Uptime',
+    'security-privacy': 'Chief Security Architect specializing in OWASP Web Vulnerabilities, Zero-Trace Ephemeral Systems, and E2EE Cryptography',
+    'secrets-observability': 'DevOps & Reliability Architect specializing in Infisical Secret Synchronization and Sentry Production Observability',
+    'healthcare-doctor': 'Principal HealthTech Architect specializing in HIPAA-Compliant Symptom Triage, Doctor Scheduling, and Multi-Tenant Systems',
+    'image-generation': 'Staff AI Creative Director & Prompt Engineer specializing in Photorealistic Infographics and Bilingual Composition',
+    'concurrency-scaling': 'Distributed Systems Architect specializing in High-Concurrency WebSockets, Socket.io Redis Adapters, and Cluster Profiling',
     'general-developer': 'Senior Software Architect and Systems Design Specialist'
   };
 
@@ -162,6 +168,130 @@ export function enhancePromptOffline({
       improvements.push('Added RFC 7807 standardized error formatting');
       improvements.push('Included idempotency and replay-attack defenses');
       improvements.push('Defined strict schema validation contracts');
+      break;
+
+    case 'devops-infra':
+      instructions = [
+        `Diagnose and configure Cloudflare DNS, Render deployment, and Better Stack uptime monitoring for ${framework}.`,
+        'Verify Cloudflare Proxied (Orange Cloud) vs DNS-Only (Grey Cloud) configuration for uptime probe compatibility.',
+        'Implement automated heartbeat ping / cron worker to prevent free-tier inactivity sleep (e.g. Upstash Redis, Render).',
+        'Provide exact CLI verification commands (dig +trace, curl -Iv, nslookup) to validate DNS propagation and SSL certificate status.'
+      ];
+      edgeCases = [
+        'DNS lookup failure (NXDOMAIN / SERVFAIL) due to CNAME flattening or stale TTL cache.',
+        'Better Stack uptime alerts triggering false alarms due to Cloudflare DDoS bot challenge.',
+        'Render cold-start latency (50-60s) triggering premature gateway timeout (504).'
+      ];
+      constraints = [
+        'Zero-cost tier priority: solution must run within free-tier quotas without requiring paid enterprise infrastructure.',
+        'Never expose origin server IP directly; ensure Cloudflare DDoS protection remains intact.'
+      ];
+      improvements.push('Diagnosed Cloudflare proxy vs DNS-only probe conflict');
+      improvements.push('Injected zero-cost automated keep-alive cron architecture');
+      improvements.push('Added exact terminal DNS diagnostic commands');
+      break;
+
+    case 'security-privacy':
+      instructions = [
+        'Perform an exhaustive security and privacy audit based on OWASP Top 10 and real-time WebSocket attack vectors.',
+        'Enforce true Zero-Trace RAM-only storage: verify zero persistence to disk, databases, or unencrypted log aggregators.',
+        'Implement cryptographic timing-safe comparisons (`crypto.timingSafeEqual`) for room passcodes and access tokens.',
+        'Architect auto-burn photo & text countdown synchronization between client canvas and server-authoritative purge signal.'
+      ];
+      edgeCases = [
+        'Host doorbell knock bypass: unauthorized socket connection attempting direct room room join without host approval.',
+        'XSS payload injection inside markdown/raw message content.',
+        'Memory leaks in room Map holding onto client ArrayBuffers after room destruction.'
+      ];
+      constraints = [
+        'No persistence: NEVER write messages, photos, or IP addresses to permanent storage or un-redacted logs.',
+        'Cache-Control headers must strictly specify "no-store, no-cache, must-revalidate, private".'
+      ];
+      improvements.push('Enforced true Zero-Trace in-memory ephemeral lifecycle');
+      improvements.push('Injected timing-safe cryptographic comparisons and XSS sanitation');
+      improvements.push('Specified server-authoritative auto-burn countdown protocol');
+      break;
+
+    case 'secrets-observability':
+      instructions = [
+        `Formulate automated secret injection and production observability using ${framework}.`,
+        'Provide programmatic Infisical CLI commands (`infisical run`, `infisical export`) for seamless environment syncing (dev, prod, local).',
+        'Configure Sentry Next.js / Node SDK with source-map uploads and automated PII scrubbing (passwords, tokens, cookies, chat payloads).',
+        'Ensure zero secrets are committed to git repositories or baked into client-side bundles.'
+      ];
+      edgeCases = [
+        'Infisical secret token expiration or missing environment tag causing silent runtime failure.',
+        'Sentry error flood during cascading network failure; configure client-side deduplication and sampleRate.',
+        'Next.js public runtime config accidentally exposing NEXT_PUBLIC_ variables containing private credentials.'
+      ];
+      constraints = [
+        'NEVER advise manual copy-pasting of .env files; enforce automated Infisical secret management.',
+        'PII scrubbers must redact user emails, room passcodes, and authorization headers before transmitting to Sentry.'
+      ];
+      improvements.push('Configured programmatic Infisical secret sync workflow');
+      improvements.push('Added Sentry Next.js SDK with automated PII redaction rules');
+      improvements.push('Prevented client-side credential exposure leaks');
+      break;
+
+    case 'healthcare-doctor':
+      instructions = [
+        `Architect and test a HIPAA-compliant virtual doctor triage and appointment booking system using ${framework}.`,
+        'Implement a finite state machine for clinical symptom intake with clear medical disclaimers and emergency 911/112 escalations.',
+        'Ensure calendar slot reservation is atomic and idempotent to eliminate double-booking race conditions.',
+        'Enforce strict multi-tenant white-label isolation: brand themes, clinic domain routing, and isolated patient data.'
+      ];
+      edgeCases = [
+        'Patient reports high-acuity red flag symptoms (chest pain, shortness of breath); trigger immediate emergency prompt redirect.',
+        'Concurrent users attempting to book the exact same doctor consultation slot at the same second.',
+        'White-label tenant branding leakage (e.g. wrong hospital name or logo appearing on patient receipt).'
+      ];
+      constraints = [
+        'Medical liability safety: Must always output explicit medical advice disclaimers and recommend consulting a licensed physician.',
+        'Patient Protected Health Information (PHI) must be encrypted both in transit (TLS 1.3) and at rest.'
+      ];
+      improvements.push('Injected clinical symptom triage state machine with safety disclaimers');
+      improvements.push('Added atomic calendar slot locking to eliminate double bookings');
+      improvements.push('Enforced strict multi-tenant white-label brand isolation');
+      break;
+
+    case 'image-generation':
+      instructions = [
+        `Construct an authentic, hyper-detailed visual infographic prompt specification for ${framework}.`,
+        'Structure prompt into bilingual specifications: authentic local language step-by-step guidance + high-definition English imagery description.',
+        'Provide precise agricultural / technical specifications: exact potting soil ratios (vermicompost, cocopeat, sand), grow bag dimensions, and harvest timelines.',
+        'Enforce visual quality constraints: authentic rooftop terrace setting, morning natural lighting, crisp typography, and 4:5 social media aspect ratio.'
+      ];
+      edgeCases = [
+        'AI rendering garbled illegible text: specify negative prompt weights against pseudo-characters and distorted lettering.',
+        'Unrealistic or generic stock photo look: inject authentic cultural and local contextual anchors.'
+      ];
+      constraints = [
+        'Negative prompts: avoid cartoonish, oversaturated, low-res, deformed hands, or blurry foliage.',
+        'Deliverable must include ready-to-run prompt block + copy-paste parameters for target image model.'
+      ];
+      improvements.push('Structured bilingual infographic specifications with technical soil ratios');
+      improvements.push('Added authentic contextual cultural anchors (Indian rooftop terrace garden)');
+      improvements.push('Injected negative prompt weights to prevent garbled text and distorted foliage');
+      break;
+
+    case 'concurrency-scaling':
+      instructions = [
+        `Architect and benchmark high-concurrency real-time WebSocket scaling for ${framework}.`,
+        'Implement Socket.io Redis Streams / Redis Adapter architecture for horizontal multi-instance scaling.',
+        'Configure sticky session routing cookies at the reverse proxy layer (Cloudflare / Nginx / Render).',
+        'Profile memory footprint per connected socket (~15KB) and implement aggressive cleanup for disconnected zombie clients.'
+      ];
+      edgeCases = [
+        'Network flap causing rapid reconnect storm; implement exponential backoff with jitter on client.',
+        'Redis pub/sub bottleneck under high broadcast fan-out; batch room notifications.'
+      ];
+      constraints = [
+        'Never rely on single-node memory when scaling past 1,000 concurrent sockets.',
+        'Ensure heartbeats (pingInterval/pingTimeout) prune inactive sockets to avoid memory bloat.'
+      ];
+      improvements.push('Designed Socket.io Redis adapter horizontal cluster architecture');
+      improvements.push('Configured sticky-session reverse proxy requirements');
+      improvements.push('Implemented zombie connection eviction and memory bounds');
       break;
 
     default:

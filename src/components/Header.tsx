@@ -1,9 +1,10 @@
 import React from 'react';
-import { Sparkles, Settings, History, Cpu, Zap } from 'lucide-react';
+import { Sparkles, Settings, History, Cpu, Zap, FolderGit2 } from 'lucide-react';
 
 interface HeaderProps {
   onOpenSettings: () => void;
   onOpenHistory: () => void;
+  onOpenLearned: () => void;
   historyCount: number;
   engineUsed: 'offline' | 'gemini' | 'openai';
 }
@@ -11,6 +12,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenHistory,
+  onOpenLearned,
   historyCount,
   engineUsed,
 }) => {
@@ -38,7 +40,20 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Status & Actions */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Learned from Sessions Pill Button */}
+          <button
+            onClick={onOpenLearned}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-colors text-xs font-semibold cursor-pointer shadow-sm shadow-amber-500/10"
+            title="Browse real prompts learned from your project workspaces & sessions"
+          >
+            <FolderGit2 className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">Learned Workflows</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/30 font-mono">
+              11 Repos
+            </span>
+          </button>
+
           {/* Active Engine Badge */}
           <div
             onClick={onOpenSettings}
@@ -93,3 +108,4 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
+

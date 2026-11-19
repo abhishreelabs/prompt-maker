@@ -17,7 +17,14 @@ import {
   ArrowRight,
   Layers,
   Lightbulb,
-  Plus
+  Plus,
+  Cloud,
+  Lock,
+  Key,
+  Stethoscope,
+  Palette,
+  Zap,
+  FolderGit2
 } from 'lucide-react';
 
 interface BadPromptInputProps {
@@ -33,6 +40,7 @@ interface BadPromptInputProps {
   setTone: (val: PromptTone) => void;
   onTransform: () => void;
   isTransforming: boolean;
+  onOpenLearned?: () => void;
 }
 
 const USE_CASE_ICONS: Record<UseCaseId, React.ReactNode> = {
@@ -45,6 +53,12 @@ const USE_CASE_ICONS: Record<UseCaseId, React.ReactNode> = {
   'code-review': <ShieldCheck className="w-4 h-4 text-red-400" />,
   'db-optimization': <Database className="w-4 h-4 text-orange-400" />,
   'devops-docker': <Terminal className="w-4 h-4 text-teal-400" />,
+  'devops-infra': <Cloud className="w-4 h-4 text-sky-400" />,
+  'security-privacy': <Lock className="w-4 h-4 text-emerald-400" />,
+  'secrets-observability': <Key className="w-4 h-4 text-amber-400" />,
+  'healthcare-doctor': <Stethoscope className="w-4 h-4 text-rose-400" />,
+  'image-generation': <Palette className="w-4 h-4 text-fuchsia-400" />,
+  'concurrency-scaling': <Zap className="w-4 h-4 text-yellow-400" />,
   'general-developer': <Code2 className="w-4 h-4 text-slate-400" />
 };
 
@@ -60,7 +74,8 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
   tone,
   setTone,
   onTransform,
-  isTransforming
+  isTransforming,
+  onOpenLearned
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const currentUseCase = USE_CASES.find(u => u.id === useCase) || USE_CASES[0];
@@ -151,9 +166,21 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
 
       {/* Quick Inspo Samples */}
       <div className="bg-slate-950/40 rounded-xl p-2.5 border border-slate-800/60">
-        <div className="flex items-center space-x-1.5 text-xs text-slate-400 mb-1.5 font-medium">
-          <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-          <span>Quick Bad Prompt Inspo:</span>
+        <div className="flex items-center justify-between text-xs text-slate-400 mb-1.5 font-medium">
+          <div className="flex items-center space-x-1.5">
+            <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+            <span>Quick Inspo for this Category:</span>
+          </div>
+          {onOpenLearned && (
+            <button
+              type="button"
+              onClick={onOpenLearned}
+              className="text-[11px] text-amber-400 hover:text-amber-300 flex items-center space-x-1 font-semibold transition-colors"
+            >
+              <FolderGit2 className="w-3 h-3" />
+              <span>Learned From Repos &rarr;</span>
+            </button>
+          )}
         </div>
         <div className="flex flex-wrap gap-1.5">
           {currentUseCase.sampleBadPrompts.map((sample, idx) => (

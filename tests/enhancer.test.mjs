@@ -53,3 +53,32 @@ test('Target models apply correct format wrapping', () => {
   });
   assert.ok(cursorResult.enhancedPrompt.includes('## Anti-Patterns:'), 'Cursor should have concise rules format');
 });
+
+test('enhancePromptOffline handles real workspace devops-infra (Better Stack DNS & Keep-Alive)', () => {
+  const result = enhancePromptOffline({
+    rawPrompt: 'chekc better stack we are getting dns lookup failure',
+    useCase: 'devops-infra',
+    targetModel: 'gemini',
+    tone: 'production',
+    framework: 'Cloudflare DNS + Render API'
+  });
+
+  assert.ok(result.enhancedPrompt.includes('Cloudflare'), 'Should reference Cloudflare DNS diagnostics');
+  assert.ok(result.enhancedPrompt.includes('Better Stack'), 'Should reference Better Stack heartbeat diagnostics');
+  assert.ok(result.enhancedPrompt.includes('dig +trace'), 'Should inject terminal verification commands');
+});
+
+test('enhancePromptOffline handles real workspace security-privacy (WhisperRoom Zero-Trace)', () => {
+  const result = enhancePromptOffline({
+    rawPrompt: 'Lets find all security and vunerability and privacy issues. Les e an expert and ffind them',
+    useCase: 'security-privacy',
+    targetModel: 'claude',
+    tone: 'qa-adversarial',
+    framework: 'OWASP / Socket.io / WebRTC'
+  });
+
+  assert.ok(result.enhancedPrompt.includes('Zero-Trace'), 'Should enforce Zero-Trace RAM storage');
+  assert.ok(result.enhancedPrompt.includes('crypto.timingSafeEqual'), 'Should inject timing-safe crypto comparisons');
+  assert.ok(result.enhancedPrompt.includes('auto-burn'), 'Should enforce auto-burn synchronization');
+});
+

@@ -71,10 +71,40 @@ export function analyzeBadPrompt(prompt: string, useCase: UseCaseId): PromptAnal
     if (!/\b(status code|idempotent|schema|zod|validation|header|rfc)\b/i.test(clean)) {
       missingElements.push('Missing HTTP status codes, schema validation, and error contract');
     }
+  } else if (useCase === 'devops-infra') {
+    if (!/\b(dns|ttl|cname|proxy|better stack|uptime|cloudflare|probe|heartbeat)\b/i.test(clean)) {
+      missingElements.push('No DNS probe diagnostics, TTL caching, or Cloudflare proxy status analyzed');
+    }
+    if (!/\b(keep-alive|cron|free tier|inactivity|sleep)\b/i.test(clean)) {
+      missingElements.push('No keep-alive cron strategy specified for free-tier inactivity sleep');
+    }
+  } else if (useCase === 'security-privacy') {
+    if (!/\b(ram|memory|zero-trace|ephemeral|burn|wipe|timing|safe)\b/i.test(clean)) {
+      missingElements.push('No Zero-Trace memory lifecycle or client auto-burn synchronization specified');
+    }
+    if (!/\b(owasp|xss|sanitize|token|auth|doorbell|knock)\b/i.test(clean)) {
+      missingElements.push('Missing WebSocket room authorization & XSS payload injection defenses');
+    }
+  } else if (useCase === 'secrets-observability') {
+    if (!/\b(infisical|infiscal|cli|export|run|sentry|dsn|pii|token)\b/i.test(clean)) {
+      missingElements.push('Missing programmatic Infisical secret management and Sentry PII scrubbing');
+    }
+  } else if (useCase === 'healthcare-doctor') {
+    if (!/\b(disclaimer|triage|state machine|hipaa|double booking|slot|white-label)\b/i.test(clean)) {
+      missingElements.push('Missing clinical safety disclaimer, appointment race condition lock, and tenant isolation');
+    }
+  } else if (useCase === 'concurrency-scaling') {
+    if (!/\b(redis|adapter|sticky|cluster|memory|footprint|heartbeat|prune)\b/i.test(clean)) {
+      missingElements.push('Missing Socket.io Redis adapter horizontal scaling and sticky-session proxy configuration');
+    }
+  } else if (useCase === 'image-generation') {
+    if (!/\b(bilingual|hindi|english|ratio|soil|negative|aspect|4:5)\b/i.test(clean)) {
+      missingElements.push('Missing bilingual layout specs, precise technical ratios, and negative quality weights');
+    }
   }
 
-  // Detect technical keywords
-  const techRegex = /\b(playwright|cypress|selenium|jest|vitest|react|next\.?js|vue|angular|node|express|fastapi|python|typescript|javascript|postgres|sql|prisma|docker|kubernetes|graphql|rest|tailwind|css|html)\b/gi;
+  // Detect technical keywords including workspace tools
+  const techRegex = /\b(playwright|cypress|selenium|jest|vitest|react|next\.?js|vue|angular|node|express|fastapi|python|typescript|javascript|postgres|sql|prisma|docker|kubernetes|graphql|rest|tailwind|css|html|cloudflare|render|better stack|betterstack|infisical|infiscal|sentry|socket\.io|webrtc|upstash|upstack|redis|neon|supabase|django)\b/gi;
   const matches = clean.match(techRegex) || [];
   const detectedKeywords = Array.from(new Set(matches.map(m => m.toLowerCase())));
 

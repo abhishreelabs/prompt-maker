@@ -224,7 +224,7 @@ export const USE_CASES: UseCaseDefinition[] = [
   },
   {
     id: 'devops-docker',
-    name: 'DevOps, Docker & CI/CD',
+    name: 'DevOps & Dockerfiles',
     icon: 'Terminal',
     description: 'Generate multi-stage, rootless, cached Dockerfiles and hardened GitHub Actions workflows.',
     defaultFramework: 'GitHub Actions + Docker',
@@ -247,6 +247,174 @@ export const USE_CASES: UseCaseDefinition[] = [
       'Layer caching optimization for fast builds',
       'Secret management (no hardcoded secrets)',
       'Health check endpoint and graceful shutdown'
+    ]
+  },
+  {
+    id: 'devops-infra',
+    name: 'Cloudflare, Render & DNS Ops',
+    icon: 'Cloud',
+    description: 'Learned from Abhishree Sentinel & Labs: Diagnose DNS lookup failures, CNAME routing, Better Stack uptime, and Render deployments.',
+    defaultFramework: 'Cloudflare DNS + Render API',
+    suggestedFrameworks: ['Cloudflare DNS + Render API', 'Better Stack Uptime', 'Upstash Redis Keep-Alive', 'CNAME / SSL Mapping'],
+    associatedProject: 'Abhishree Sentinel / Labs / WhisperRoom',
+    sampleBadPrompts: [
+      {
+        title: 'Better Stack DNS error',
+        prompt: 'chekc better stack we are getting dns lookup failure',
+        suggestedStack: 'Cloudflare DNS + Better Stack Heartbeat Script',
+        sourceProject: 'Abhishree Sentinel'
+      },
+      {
+        title: 'Upstash Redis Inactivity Sleep',
+        prompt: 'upstack redis goes down due to inactivityu can we setup in betterstack or uptiem which we had',
+        suggestedStack: 'Cloudflare Worker Cron + Better Stack',
+        sourceProject: 'WhisperRoom'
+      },
+      {
+        title: 'Zero-Cost Deployment',
+        prompt: 'whichver cost me nothing we cannot keep in ram correct? what to deploy and test it',
+        suggestedStack: 'Render Free Tier + Cloudflare DNS',
+        sourceProject: 'WhisperRoom'
+      }
+    ],
+    keyChecklist: [
+      'Cloudflare Orange vs Grey Cloud (Proxy vs DNS only) audit',
+      'Better Stack HTTP heartbeat vs TCP ping setup',
+      'Zero-cost keep-alive cron job to prevent free-tier sleep',
+      'Custom domain SSL certificate propagation and CNAME flattening'
+    ]
+  },
+  {
+    id: 'security-privacy',
+    name: 'Security, Privacy & Zero-Trace',
+    icon: 'Lock',
+    description: 'Learned from WhisperRoom & Interview Portal: Code-level vulnerability audits, RAM-only ephemeral storage, and auto-burn countdowns.',
+    defaultFramework: 'OWASP / Socket.io / WebRTC',
+    suggestedFrameworks: ['OWASP Top 10', 'Socket.io Auth', 'Memory Zeroing', 'End-to-End Encryption (E2EE)'],
+    associatedProject: 'WhisperRoom / Interview Portal',
+    sampleBadPrompts: [
+      {
+        title: 'Full Security & Privacy Audit',
+        prompt: 'Lets find all security and vunerability and privacy issues. Les e an expert and ffind them',
+        suggestedStack: 'OWASP WebSockets & Node Audit',
+        sourceProject: 'WhisperRoom'
+      },
+      {
+        title: 'View Once & Auto-Burn Media',
+        prompt: 'how many users we can add in single chat... what about privacy if somebdy share image what happened to them they should burn',
+        suggestedStack: 'Client Decryption + In-Memory Wipe',
+        sourceProject: 'WhisperRoom'
+      }
+    ],
+    keyChecklist: [
+      'Zero-trace in-memory storage (no database, no disk cache)',
+      'Timing-safe cryptographic comparisons for room passcodes',
+      'Socket room authorization and injection sanitization',
+      'Client countdown auto-burn with server-authoritative signal'
+    ]
+  },
+  {
+    id: 'secrets-observability',
+    name: 'Infisical Secrets & Sentry Tracing',
+    icon: 'Key',
+    description: 'Learned from Abhishree Studio & Sentinel: Automated secret synchronization via Infisical and production error tracking with Sentry.',
+    defaultFramework: 'Infisical CLI + Sentry Next.js',
+    suggestedFrameworks: ['Infisical CLI', 'Sentry Next.js SDK', 'Render API Tokens', 'GitHub Action Secrets'],
+    associatedProject: 'Abhishree Studio / Sentinel / WhisperRoom',
+    sampleBadPrompts: [
+      {
+        title: 'Sync Infisical Keys to Render',
+        prompt: 'do u know the infiscal ? if ye sthen we have abhishree-sentil or abhishreelabs in that we have render key you can use it to setup render',
+        suggestedStack: 'Infisical CLI + Render API',
+        sourceProject: 'Abhishree Studio'
+      },
+      {
+        title: 'Integrate Sentry Error Tracking',
+        prompt: 'is there anything we cna add for this Sentry or any service which can be good for Sentry i hav eadded sentry_token in infiscal',
+        suggestedStack: 'Sentry Next.js SDK + Infisical',
+        sourceProject: 'WhisperRoom'
+      }
+    ],
+    keyChecklist: [
+      'Infisical programmatic secret pulling across dev/local/prod',
+      'Sentry next.config.ts wrapper with source map upload',
+      'Automatic PII scrubbing in error breadcrumbs and stack traces',
+      'Zero plaintext secrets in source code or CI build artifacts'
+    ]
+  },
+  {
+    id: 'healthcare-doctor',
+    name: 'Virtual Doctor & Health Triage',
+    icon: 'Stethoscope',
+    description: 'Learned from Hospital Management & Virtual Doctor: Patient symptom triage, appointment booking chatbots, and hospital white-labeling.',
+    defaultFramework: 'Django REST + Next.js + Triage API',
+    suggestedFrameworks: ['Django REST Framework', 'Next.js 16', 'Symptom Triage Chatbot', 'HIPAA Privacy Guard'],
+    associatedProject: 'Hospital Management System / Virtual Doctor Core',
+    sampleBadPrompts: [
+      {
+        title: 'Chatbot Appointment Booking Flow',
+        prompt: 'can you test now the virtual doctior on landing page. can we book appointment from landing page chatbot for doing the booking',
+        suggestedStack: 'Playwright E2E + Triage API',
+        sourceProject: 'Virtual Doctor'
+      },
+      {
+        title: 'Fix White-Labeling Branding Leak',
+        prompt: 'change it as vedant hospital is not our name that was client name why wedant websit eis coming ?',
+        suggestedStack: 'Multi-Tenant Config / Supabase',
+        sourceProject: 'Hospital Vedant'
+      }
+    ],
+    keyChecklist: [
+      'Conversational symptom triage state machine with clinical safety disclaimers',
+      'Doctor calendar slot locking to prevent double booking',
+      'Tenant brand isolation (dynamic themes, logos, and domains)',
+      'Patient health data encryption in transit and at rest'
+    ]
+  },
+  {
+    id: 'image-generation',
+    name: 'AI Infographics & Image Prompts',
+    icon: 'Palette',
+    description: 'Learned from Terrace Farming & AI Social Automation: Generate rich bilingual infographic visual prompts with precise composition.',
+    defaultFramework: 'Bilingual Prompt Generator (Imagen / Midjourney)',
+    suggestedFrameworks: ['Midjourney v6', 'Google Imagen 3', 'Bilingual English/Hindi Matrix', 'Creative Director Brief'],
+    associatedProject: 'Terrace Farming / AI Social Automation',
+    sampleBadPrompts: [
+      {
+        title: '30-Day Terrace Farming Infographic',
+        prompt: 'create all 30 ready-to-run prompts matching the authentic 14-section Muli/Palak/Methi reference for terrace farming',
+        suggestedStack: 'Terrace Farming Infographic Spec',
+        sourceProject: 'Terrace Farming'
+      }
+    ],
+    keyChecklist: [
+      'Bilingual content layout (authentic Hindi steps + English imagery)',
+      'Exact potting soil ratio formulas (vermicompost, cocopeat, sand)',
+      'Negative constraints (no distorted text, no cartoonish look, authentic lighting)',
+      'Aspect ratio specifications (4:5 social media or 16:9 banner)'
+    ]
+  },
+  {
+    id: 'concurrency-scaling',
+    name: 'Concurrency & Session Scaling',
+    icon: 'Zap',
+    description: 'Learned from WhisperRoom & Interview Portal: Real-time WebSockets, handling N concurrent rooms/users, and Redis clustering.',
+    defaultFramework: 'Socket.io Cluster + Redis Adapter',
+    suggestedFrameworks: ['Socket.io Redis Adapter', 'Node.js Cluster', 'Sticky Session Load Balancing', 'Memory Profiling'],
+    associatedProject: 'WhisperRoom / Interview Portal',
+    sampleBadPrompts: [
+      {
+        title: 'Handle N Users & Sessions',
+        prompt: 'how we are going to deal with n number of session and how we can deal with n user in a session?',
+        suggestedStack: 'Socket.io Redis Adapter + Node Cluster',
+        sourceProject: 'WhisperRoom'
+      }
+    ],
+    keyChecklist: [
+      'Socket.io Redis adapter for cross-node message broadcasting',
+      'Reverse proxy sticky session cookies (Cloudflare / Nginx)',
+      'Per-client memory overhead bounds (~15KB per connection)',
+      'Heartbeat timeout & zombie connection pruning'
     ]
   },
   {

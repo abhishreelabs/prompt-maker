@@ -8,6 +8,12 @@ export type UseCaseId =
   | 'code-review'
   | 'db-optimization'
   | 'devops-docker'
+  | 'devops-infra'
+  | 'security-privacy'
+  | 'secrets-observability'
+  | 'healthcare-doctor'
+  | 'image-generation'
+  | 'concurrency-scaling'
   | 'general-developer';
 
 export type TargetModel = 'claude' | 'gpt4o' | 'gemini' | 'cursor';
@@ -21,12 +27,25 @@ export interface UseCaseDefinition {
   description: string;
   defaultFramework: string;
   suggestedFrameworks: string[];
+  associatedProject?: string;
   sampleBadPrompts: {
     title: string;
     prompt: string;
     suggestedStack: string;
+    sourceProject?: string;
   }[];
   keyChecklist: string[];
+}
+
+export interface LearnedPromptItem {
+  id: string;
+  project: string;
+  category: UseCaseId;
+  rawUserPrompt: string;
+  context: string;
+  targetStack: string;
+  whyItFailedBefore: string;
+  keyUpgrades: string[];
 }
 
 export interface PromptTransformationResult {
@@ -50,3 +69,4 @@ export interface SettingsState {
   defaultModel: TargetModel;
   preferredEngine: 'hybrid' | 'offline-only';
 }
+

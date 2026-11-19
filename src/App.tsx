@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
-import type { UseCaseId, TargetModel, PromptTone, PromptTransformationResult, SettingsState } from './types/index.ts';
+import type { UseCaseId, TargetModel, PromptTone, PromptTransformationResult, SettingsState, LearnedPromptItem } from './types/index.ts';
 import { Header } from './components/Header';
 import { BadPromptInput } from './components/BadPromptInput';
 import { GoodPromptOutput } from './components/GoodPromptOutput';
 import { AnalysisCard } from './components/AnalysisCard';
 import { SettingsModal } from './components/SettingsModal';
 import { HistoryDrawer } from './components/HistoryDrawer';
+import { LearnedPromptsModal } from './components/LearnedPromptsModal';
 import { enhancePromptOffline } from './engine/offlineEnhancer.ts';
 import { enhancePromptWithAi } from './engine/aiEnhancer.ts';
 import { USE_CASES } from './data/useCases.ts';
-import { Sparkles, Terminal, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { LEARNED_USER_PROMPTS } from './data/learnedPrompts.ts';
+import { Sparkles, Terminal, ArrowRight, ShieldCheck, Zap, FolderGit2 } from 'lucide-react';
 
 const STORAGE_KEY_HISTORY = 'prompt_maker_history_v1';
 const STORAGE_KEY_SETTINGS = 'prompt_maker_settings_v1';
@@ -26,6 +28,7 @@ export function App() {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isLearnedOpen, setIsLearnedOpen] = useState(false);
 
   // Settings state from localStorage
   const [settings, setSettings] = useState<SettingsState>(() => {
@@ -152,6 +155,23 @@ export function App() {
     setResult(item);
   };
 
+  const handleSelectLearnedPrompt = (item: LearnedPromptItem) => {
+    setRawPrompt(item.rawUserPrompt);
+    setUseCase(item.category);
+    setFramework(item.targetStack);
+    // Instant preview
+    const enhanced = enhancePromptOffline({
+      rawPrompt: item.rawUserPrompt,
+      useCase: item.category,
+      targetModel,
+      tone,
+      framework: item.targetStack
+    });
+    setResult(enhanced);
+    saveToHistory(enhanced);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
+
   const currentEngine: 'offline' | 'gemini' | 'openai' =
     settings.preferredEngine === 'hybrid' && settings.geminiApiKey.trim()
       ? 'gemini'
@@ -165,6 +185,7 @@ export function App() {
       <Header
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenHistory={() => setIsHistoryOpen(true)}
+        onOpenLearned={() => setIsLearnedOpen(true)}
         historyCount={history.length}
         engineUsed={currentEngine}
       />
@@ -189,9 +210,17 @@ export function App() {
 
             {/* Quick stats pills */}
             <div className="flex flex-wrap md:flex-col gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsLearnedOpen(true)}
+                className="flex items-center space-x-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg border border-amber-500/30 text-amber-300 transition-colors cursor-pointer"
+              >
+                <FolderGit2 className="w-4 h-4 text-amber-400" />
+                <span>Learned from 11 Repos</span>
+              </button>
               <div className="flex items-center space-x-2 text-xs bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800 text-slate-300">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>10+ Developer Presets</span>
+                <span>16 Domain Presets</span>
               </div>
               <div className="flex items-center space-x-2 text-xs bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800 text-slate-300">
                 <Zap className="w-4 h-4 text-amber-400" />
@@ -217,6 +246,7 @@ export function App() {
             setTone={setTone}
             onTransform={handleTransform}
             isTransforming={isTransforming}
+            onOpenLearned={() => setIsLearnedOpen(true)}
           />
 
           {/* Right Column: Good Prompt Output */}
@@ -229,12 +259,64 @@ export function App() {
         {/* Detailed Analysis / Audit Section */}
         {result && <AnalysisCard result={result} />}
 
+        {/* Showcase: Learned from Your Real Workspace Sessions */}
+        <div className="bg-gradient-to-br from-slate-900/50 via-slate-950/60 to-slate-900/50 rounded-2xl border border-amber-500/20 p-6 space-y-4 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+            <div className="flex items-center space-x-2.5">
+              <FolderGit2 className="w-5 h-5 text-amber-400" />
+              <div>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                  Discovered From Your Real Projects & Developer Sessions
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Extracted from actual sessions in WhisperRoom, Hospital Management, Sentinel, Terrace Farming, and Interview Portal.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsLearnedOpen(true)}
+              className="text-xs text-amber-400 hover:text-amber-300 flex items-center space-x-1 font-semibold self-start sm:self-auto cursor-pointer"
+            >
+              <span>View All {LEARNED_USER_PROMPTS.length} Workflows &rarr;</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {LEARNED_USER_PROMPTS.slice(0, 6).map(item => (
+              <div
+                key={item.id}
+                onClick={() => handleSelectLearnedPrompt(item)}
+                className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900/60 transition-all cursor-pointer space-y-2 group"
+              >
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="font-semibold text-amber-300 font-mono">
+                    {item.project}
+                  </span>
+                  <span className="text-slate-500 text-[10px] uppercase font-bold">
+                    {item.category}
+                  </span>
+                </div>
+                <div className="text-xs text-slate-200 font-mono line-clamp-2">
+                  &ldquo;{item.rawUserPrompt}&rdquo;
+                </div>
+                <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-900 text-slate-400">
+                  <span className="truncate max-w-[180px]">{item.targetStack}</span>
+                  <span className="text-amber-400 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center space-x-0.5">
+                    <span>Enhance</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Developer Use Case Directory / Cheat-sheet */}
         <div className="bg-slate-900/30 rounded-2xl border border-slate-800/80 p-6 space-y-4">
           <div className="flex items-center space-x-2">
             <Terminal className="w-4 h-4 text-indigo-400" />
             <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
-              Supported Engineering Domains
+              All Supported Engineering Domains ({USE_CASES.length})
             </h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -247,7 +329,7 @@ export function App() {
                   if (uc.sampleBadPrompts[0]) {
                     setRawPrompt(uc.sampleBadPrompts[0].prompt);
                   }
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  window.scrollTo({ top: 120, behavior: 'smooth' });
                 }}
                 className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                   uc.id === useCase
@@ -304,6 +386,12 @@ export function App() {
         history={history}
         onSelectPrompt={handleSelectFromHistory}
         onClearHistory={handleClearHistory}
+      />
+
+      <LearnedPromptsModal
+        isOpen={isLearnedOpen}
+        onClose={() => setIsLearnedOpen(false)}
+        onSelectPrompt={handleSelectLearnedPrompt}
       />
     </div>
   );
