@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { PromptTransformationResult } from '../types';
-import { MODEL_PRESETS } from '../data/models';
+import type { PromptTransformationResult } from '../types/index.ts';
+import { MODEL_PRESETS } from '../data/models.ts';
 import confetti from 'canvas-confetti';
 import {
   Copy,
@@ -13,7 +13,9 @@ import {
   Code,
   Sliders,
   CheckCircle,
-  Cpu
+  Cpu,
+  Layers,
+  FileCheck
 } from 'lucide-react';
 
 interface GoodPromptOutputProps {
@@ -26,7 +28,7 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
   isTransforming
 }) => {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formatted' | 'raw' | 'breakdown'>('formatted');
+  const [activeTab, setActiveTab] = useState<'formatted' | 'raw' | 'breakdown' | 'diff'>('formatted');
   const [variableValues, setVariableValues] = useState<Record<string, string>>({});
 
   const handleCopy = () => {
@@ -35,13 +37,12 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
     navigator.clipboard.writeText(finalPrompt);
     setCopied(true);
 
-    // Confetti celebration
     try {
       confetti({
-        particleCount: 40,
+        particleCount: 50,
         spread: 60,
         origin: { y: 0.8 },
-        colors: ['#6366f1', '#a855f7', '#ec4899', '#10b981']
+        colors: ['#f59e0b', '#10b981', '#06b6d4', '#ffffff']
       });
     } catch {
       // Fallback
@@ -91,19 +92,19 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
 
   if (isTransforming) {
     return (
-      <div className="h-full min-h-[450px] bg-slate-900/40 rounded-2xl border border-slate-800 p-8 flex flex-col items-center justify-center text-center space-y-4">
+      <div className="craft-chassis rounded-2xl flex flex-col items-center justify-center min-h-[460px] p-8 text-center space-y-4">
         <div className="relative">
-          <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center animate-pulse">
-            <Sparkles className="w-8 h-8 text-indigo-400 animate-spin" style={{ animationDuration: '4s' }} />
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center animate-pulse">
+            <Sparkles className="w-8 h-8 text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
           </div>
-          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-pink-500 animate-ping" />
+          <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-cyan-400 animate-ping" />
         </div>
         <div>
-          <h3 className="text-base font-semibold text-slate-200">
-            Synthesizing Comprehensive Prompt...
+          <h3 className="font-display text-base font-bold text-white">
+            Compiling Meta-Prompt Architecture...
           </h3>
-          <p className="text-xs text-slate-400 max-w-sm mt-1">
-            Analyzing developer context, generating edge-case matrices, enforcing deterministic locators, and structuring output constraints.
+          <p className="text-xs text-slate-400 max-w-sm mt-1 leading-relaxed">
+            Generating edge cases, calculating accessible locators, enforcing auto-wait assertions, and structuring deliverables.
           </p>
         </div>
       </div>
@@ -112,16 +113,16 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
 
   if (!result) {
     return (
-      <div className="h-full min-h-[450px] bg-slate-900/40 rounded-2xl border border-dashed border-slate-800 p-8 flex flex-col items-center justify-center text-center space-y-4">
-        <div className="w-14 h-14 rounded-2xl bg-slate-800/50 flex items-center justify-center border border-slate-700/50">
-          <FileCode className="w-7 h-7 text-slate-500" />
+      <div className="craft-chassis rounded-2xl flex flex-col items-center justify-center min-h-[460px] p-8 text-center space-y-4 border border-dashed border-white/10">
+        <div className="w-14 h-14 rounded-2xl bg-black/40 flex items-center justify-center border border-white/[0.08]">
+          <FileCode className="w-7 h-7 text-slate-600" />
         </div>
         <div className="max-w-md">
-          <h3 className="text-base font-semibold text-slate-300">
-            Your Elite AI Prompt Will Appear Here
+          <h3 className="font-display text-base font-bold text-slate-200">
+            Awaiting Developer Draft
           </h3>
-          <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-            Enter a rough draft on the left (e.g. &ldquo;test login form&rdquo; or &ldquo;refactor this loop&rdquo;) and click <span className="text-indigo-400 font-medium">Transform</span> to generate an expert prompt with boundary tests, proper roles, and strict schemas.
+          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            Enter a task on the left (e.g. &ldquo;test login form&rdquo; or &ldquo;check dns failure&rdquo;) and click <span className="text-amber-400 font-semibold">Harden & Compile</span>.
           </p>
         </div>
       </div>
@@ -135,26 +136,27 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
   const targetPreset = MODEL_PRESETS[result.targetModel];
 
   return (
-    <div className="flex flex-col h-full bg-slate-900/40 rounded-2xl border border-slate-800 p-5 shadow-xl space-y-4">
-      {/* Header Bar */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+    <div className="craft-chassis rounded-2xl flex flex-col h-full shadow-2xl overflow-hidden border border-white/[0.08]">
+      {/* Editor Tab Chrome */}
+      <div className="bg-[#0c0e15] px-4 py-2.5 border-b border-white/[0.06] flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
-            <span>Enhanced AI Prompt</span>
-            <span className="text-[10px] font-mono font-normal px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-              Score: {result.clarityScoreAfter}/100
-            </span>
-          </h2>
+          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-300">
+            <FileCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>compiled.prompt.md</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 ml-1" />
+          </div>
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+            Score: {result.clarityScoreAfter}/100
+          </span>
         </div>
 
         {/* View Tabs */}
-        <div className="flex items-center space-x-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800 text-xs">
+        <div className="flex items-center space-x-1 bg-black/50 p-0.5 rounded-lg border border-white/[0.08] text-xs">
           <button
             onClick={() => setActiveTab('formatted')}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 ${
+            className={`px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 cursor-pointer ${
               activeTab === 'formatted'
-                ? 'bg-indigo-600 text-white font-medium'
+                ? 'bg-white/10 text-white font-semibold'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -163,9 +165,9 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('raw')}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 ${
+            className={`px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 cursor-pointer ${
               activeTab === 'raw'
-                ? 'bg-indigo-600 text-white font-medium'
+                ? 'bg-white/10 text-white font-semibold'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -174,143 +176,164 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('breakdown')}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 ${
+            className={`px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 cursor-pointer ${
               activeTab === 'breakdown'
-                ? 'bg-indigo-600 text-white font-medium'
+                ? 'bg-white/10 text-white font-semibold'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             <Sliders className="w-3 h-3" />
-            <span>Breakdown</span>
+            <span>Injections</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('diff')}
+            className={`px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 cursor-pointer ${
+              activeTab === 'diff'
+                ? 'bg-white/10 text-white font-semibold'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Layers className="w-3 h-3" />
+            <span>Diff</span>
           </button>
         </div>
       </div>
 
-      {/* Meta Bar: Target Model badge & Engine */}
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-        <div className="flex items-center space-x-2">
-          <span className="font-semibold text-slate-200">{targetPreset?.name || result.targetModel}</span>
-          <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-            {targetPreset?.badge}
-          </span>
-        </div>
-        <div className="flex items-center space-x-3 text-[11px] font-mono text-slate-400">
-          <span>{wordCount} words</span>
-          <span>•</span>
-          <span>~{tokenCountEst} tokens</span>
-          <span>•</span>
-          <span className="flex items-center space-x-1 text-emerald-400">
-            <Cpu className="w-3 h-3" />
-            <span>{result.engineUsed === 'offline-smart-template' ? 'Offline Engine' : 'AI Powered'}</span>
-          </span>
-        </div>
-      </div>
-
-      {/* Variable Replacer if variables found */}
-      {result.detectedVariables.length > 0 && (
-        <div className="bg-indigo-950/20 rounded-xl p-3 border border-indigo-500/20">
-          <div className="text-xs font-semibold text-indigo-300 mb-2 flex items-center space-x-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Custom Placeholders Detected:</span>
+      <div className="p-5 flex-1 flex flex-col space-y-4">
+        {/* Status Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs bg-black/40 p-2.5 rounded-xl border border-white/[0.06]">
+          <div className="flex items-center space-x-2">
+            <span className="font-semibold text-white">{targetPreset?.name || result.targetModel}</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.06] text-slate-300 border border-white/[0.08]">
+              {targetPreset?.badge}
+            </span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {result.detectedVariables.map(v => (
-              <div key={v.key} className="flex items-center space-x-2 text-xs">
-                <span className="font-mono text-slate-400 font-semibold">{`{{${v.key}}}`}:</span>
-                <input
-                  type="text"
-                  placeholder={`Value for ${v.key}`}
-                  value={variableValues[v.key] || ''}
-                  onChange={e => handleVariableChange(v.key, e.target.value)}
-                  className="flex-1 px-2 py-1 rounded bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:border-indigo-500 focus:outline-none"
-                />
-              </div>
-            ))}
+          <div className="flex items-center space-x-3 text-[11px] font-mono text-slate-400">
+            <span>{wordCount} words</span>
+            <span>•</span>
+            <span>~{tokenCountEst} tokens</span>
+            <span>•</span>
+            <span className="flex items-center space-x-1 text-emerald-400">
+              <Cpu className="w-3 h-3" />
+              <span>{result.engineUsed === 'offline-smart-template' ? 'Offline Engine' : 'AI Powered'}</span>
+            </span>
           </div>
         </div>
-      )}
 
-      {/* Main Content Area */}
-      <div className="flex-1 relative min-h-[300px] overflow-hidden rounded-xl bg-slate-950 border border-slate-800 flex flex-col">
-        {activeTab === 'formatted' && (
-          <div className="p-4 overflow-y-auto flex-1 font-mono text-xs sm:text-sm text-slate-200 whitespace-pre-wrap leading-relaxed select-text">
-            {processedText}
-          </div>
-        )}
-
-        {activeTab === 'raw' && (
-          <textarea
-            readOnly
-            value={processedText}
-            className="w-full h-full p-4 bg-transparent text-slate-300 font-mono text-xs sm:text-sm resize-none focus:outline-none"
-          />
-        )}
-
-        {activeTab === 'breakdown' && (
-          <div className="p-4 overflow-y-auto flex-1 space-y-3 text-xs">
-            <div className="text-slate-300 font-medium pb-2 border-b border-slate-800">
-              Injected Architectural Upgrades:
+        {/* Variable Replacer if variables found */}
+        {result.detectedVariables.length > 0 && (
+          <div className="bg-amber-950/20 rounded-xl p-3 border border-amber-500/20">
+            <div className="text-xs font-semibold text-amber-300 mb-2 flex items-center space-x-1">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Custom Variables Detected:</span>
             </div>
-            <div className="space-y-2">
-              {result.improvements.map((imp, idx) => (
-                <div key={idx} className="flex items-start space-x-2 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <span className="text-slate-200 leading-normal">{imp}</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {result.detectedVariables.map(v => (
+                <div key={v.key} className="flex items-center space-x-2 text-xs">
+                  <span className="font-mono text-slate-400 font-semibold">{`{{${v.key}}}`}:</span>
+                  <input
+                    type="text"
+                    placeholder={`Value for ${v.key}`}
+                    value={variableValues[v.key] || ''}
+                    onChange={e => handleVariableChange(v.key, e.target.value)}
+                    className="flex-1 px-2 py-1 rounded bg-black/50 border border-white/[0.08] text-slate-200 text-xs focus:border-amber-500 focus:outline-none font-mono"
+                  />
                 </div>
               ))}
             </div>
           </div>
         )}
-      </div>
 
-      {/* Action Buttons Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-        <div className="flex items-center space-x-2">
-          {/* Download as Markdown */}
-          <button
-            type="button"
-            onClick={handleDownload}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-medium transition-colors"
-            title="Download .md file"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download .md</span>
-          </button>
+        {/* Content Viewer */}
+        <div className="flex-1 relative craft-inner-input rounded-xl overflow-hidden min-h-[300px] border border-white/[0.06] flex flex-col">
+          {activeTab === 'formatted' && (
+            <div className="p-4 overflow-y-auto flex-1 font-mono text-xs sm:text-sm text-slate-200 whitespace-pre-wrap leading-relaxed select-text">
+              {processedText}
+            </div>
+          )}
 
-          {/* Copy as .cursorrules / system instruction */}
-          <button
-            type="button"
-            onClick={handleCopyAsSystem}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-medium transition-colors"
-            title="Copy as System Prompt / .cursorrules"
-          >
-            <Share2 className="w-3.5 h-3.5" />
-            <span>Copy as .cursorrules</span>
-          </button>
+          {activeTab === 'raw' && (
+            <textarea
+              readOnly
+              value={processedText}
+              className="w-full h-full p-4 bg-transparent text-slate-300 font-mono text-xs sm:text-sm resize-none focus:outline-none"
+            />
+          )}
+
+          {activeTab === 'breakdown' && (
+            <div className="p-4 overflow-y-auto flex-1 space-y-2.5 text-xs">
+              <div className="text-slate-300 font-semibold pb-2 border-b border-white/[0.08]">
+                Injected Architectural Upgrades:
+              </div>
+              <div className="space-y-2">
+                {result.improvements.map((imp, idx) => (
+                  <div key={idx} className="flex items-start space-x-2.5 bg-black/40 p-3 rounded-xl border border-white/[0.06]">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                    <span className="text-slate-200 leading-relaxed">{imp}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'diff' && (
+            <div className="p-4 overflow-y-auto flex-1 space-y-4 text-xs font-mono">
+              <div className="bg-rose-950/20 border border-rose-500/20 p-3 rounded-xl">
+                <span className="text-rose-400 font-bold block mb-1">Original Draft:</span>
+                <span className="text-slate-300 line-through opacity-80">{result.originalPrompt}</span>
+              </div>
+              <div className="bg-emerald-950/20 border border-emerald-500/20 p-3 rounded-xl whitespace-pre-wrap leading-relaxed">
+                <span className="text-emerald-400 font-bold block mb-1">Hardened Output (+{(processedText.length - result.originalPrompt.length)} chars):</span>
+                <span className="text-emerald-200/90">{processedText}</span>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Primary Copy Button */}
-        <button
-          type="button"
-          onClick={handleCopy}
-          className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer ${
-            copied
-              ? 'bg-emerald-600 text-white shadow-emerald-600/30'
-              : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold shadow-emerald-500/20'
-          }`}
-        >
-          {copied ? (
-            <>
-              <Check className="w-4 h-4" />
-              <span>Copied to Clipboard! 🎉</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-4 h-4" />
-              <span>Copy Enhanced Prompt</span>
-            </>
-          )}
-        </button>
+        {/* Actions Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <div className="flex items-center space-x-2">
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-black/40 hover:bg-white/[0.06] border border-white/[0.08] text-slate-300 hover:text-white text-xs font-medium transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Download .md</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCopyAsSystem}
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-black/40 hover:bg-white/[0.06] border border-white/[0.08] text-slate-300 hover:text-white text-xs font-medium transition-colors"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Copy .cursorrules</span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleCopy}
+            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all shadow-lg tactile-btn cursor-pointer ${
+              copied
+                ? 'bg-emerald-500 text-black shadow-emerald-500/20'
+                : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/20'
+            }`}
+          >
+            {copied ? (
+              <>
+                <Check className="w-4 h-4" />
+                <span>Copied! 🎉</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4" />
+                <span>Copy Hardened Prompt</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

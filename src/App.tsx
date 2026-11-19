@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { BadPromptInput } from './components/BadPromptInput';
 import { GoodPromptOutput } from './components/GoodPromptOutput';
 import { AnalysisCard } from './components/AnalysisCard';
+import { PromptPipelineView } from './components/PromptPipelineView';
 import { SettingsModal } from './components/SettingsModal';
 import { HistoryDrawer } from './components/HistoryDrawer';
 import { LearnedPromptsModal } from './components/LearnedPromptsModal';
@@ -18,6 +19,9 @@ const STORAGE_KEY_HISTORY = 'prompt_maker_history_v1';
 const STORAGE_KEY_SETTINGS = 'prompt_maker_settings_v1';
 
 export function App() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialView = (urlParams.get('view') as 'studio' | 'pipeline' | 'audit') || 'studio';
+  const [activeView, setActiveView] = useState<'studio' | 'pipeline' | 'audit'>(initialView);
   const [rawPrompt, setRawPrompt] = useState('test the login form with email and password and check if error shows up when invalid');
   const [useCase, setUseCase] = useState<UseCaseId>('ui-testing');
   const [framework, setFramework] = useState('Playwright (TypeScript)');
@@ -182,9 +186,11 @@ export function App() {
       : 'offline';
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#090a0f] text-slate-100 flex flex-col font-sans bg-blueprint-grid">
       {/* Navigation Header */}
       <Header
+        activeView={activeView}
+        setActiveView={setActiveView}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenHistory={() => setIsHistoryOpen(true)}
         onOpenLearned={() => setIsLearnedOpen(true)}
@@ -196,18 +202,18 @@ export function App() {
       {/* Main Body */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-950/60 via-purple-950/40 to-slate-950 border border-indigo-500/20 p-5 sm:p-6 shadow-2xl">
+        <div className="relative overflow-hidden rounded-2xl craft-chassis p-5 sm:p-6 border border-white/[0.08] shadow-2xl">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5 max-w-2xl">
-              <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Developer Prompt Transformer</span>
+              <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold font-mono">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Compiler Deck &bull; Architecture Hardener</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+              <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white">
                 Don&apos;t Let Vague Prompts Generate Broken Code.
               </h1>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Convert one-liner developer drafts into bulletproof AI prompts with accessible locators, auto-wait assertions, boundary tests, and explicit output schemas.
+                Transform rough developer drafts into bulletproof AI prompts with accessible locators, auto-wait assertions, boundary tests, and explicit output schemas.
               </p>
             </div>
 
@@ -216,16 +222,16 @@ export function App() {
               <button
                 type="button"
                 onClick={() => setIsLearnedOpen(true)}
-                className="flex items-center space-x-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg border border-amber-500/30 text-amber-300 transition-colors cursor-pointer"
+                className="flex items-center space-x-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg border border-amber-500/30 text-amber-300 transition-colors cursor-pointer font-mono"
               >
                 <FolderGit2 className="w-4 h-4 text-amber-400" />
                 <span>Learned from 11 Repos</span>
               </button>
-              <div className="flex items-center space-x-2 text-xs bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800 text-slate-300">
+              <div className="flex items-center space-x-2 text-xs bg-black/40 px-3 py-1.5 rounded-lg border border-white/[0.08] text-slate-300 font-mono">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 <span>16 Domain Presets</span>
               </div>
-              <div className="flex items-center space-x-2 text-xs bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800 text-slate-300">
+              <div className="flex items-center space-x-2 text-xs bg-black/40 px-3 py-1.5 rounded-lg border border-white/[0.08] text-slate-300 font-mono">
                 <Zap className="w-4 h-4 text-amber-400" />
                 <span>Zero-Cost Offline First</span>
               </div>
@@ -233,42 +239,66 @@ export function App() {
           </div>
         </div>
 
-        {/* Split Screen Workspace */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-          {/* Left Column: Bad Prompt Input */}
-          <BadPromptInput
-            rawPrompt={rawPrompt}
-            setRawPrompt={setRawPrompt}
-            useCase={useCase}
-            setUseCase={setUseCase}
-            framework={framework}
-            setFramework={setFramework}
-            targetModel={targetModel}
-            setTargetModel={setTargetModel}
-            tone={tone}
-            setTone={setTone}
-            onTransform={handleTransform}
-            isTransforming={isTransforming}
-            onOpenLearned={() => setIsLearnedOpen(true)}
-          />
+        {/* View switching logic */}
+        {activeView === 'studio' && (
+          <div className="space-y-6">
+            {/* Split Screen Workspace */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+              {/* Left Column: Bad Prompt Input */}
+              <BadPromptInput
+                rawPrompt={rawPrompt}
+                setRawPrompt={setRawPrompt}
+                useCase={useCase}
+                setUseCase={setUseCase}
+                framework={framework}
+                setFramework={setFramework}
+                targetModel={targetModel}
+                setTargetModel={setTargetModel}
+                tone={tone}
+                setTone={setTone}
+                onTransform={handleTransform}
+                isTransforming={isTransforming}
+                onOpenLearned={() => setIsLearnedOpen(true)}
+              />
 
-          {/* Right Column: Good Prompt Output */}
-          <GoodPromptOutput
-            result={result}
-            isTransforming={isTransforming}
-          />
-        </div>
+              {/* Right Column: Good Prompt Output */}
+              <GoodPromptOutput
+                result={result}
+                isTransforming={isTransforming}
+              />
+            </div>
 
-        {/* Detailed Analysis / Audit Section */}
-        {result && <AnalysisCard result={result} />}
+            {/* Pipeline and Audit inside Studio */}
+            {result && (
+              <>
+                <PromptPipelineView result={result} />
+                <AnalysisCard result={result} />
+              </>
+            )}
+          </div>
+        )}
+
+        {activeView === 'pipeline' && result && (
+          <div className="space-y-6">
+            <PromptPipelineView result={result} />
+            <AnalysisCard result={result} />
+          </div>
+        )}
+
+        {activeView === 'audit' && result && (
+          <div className="space-y-6">
+            <AnalysisCard result={result} />
+            <PromptPipelineView result={result} />
+          </div>
+        )}
 
         {/* Showcase: Learned from Your Real Workspace Sessions */}
-        <div className="bg-gradient-to-br from-slate-900/50 via-slate-950/60 to-slate-900/50 rounded-2xl border border-amber-500/20 p-6 space-y-4 shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+        <div className="craft-chassis rounded-2xl p-6 space-y-4 shadow-xl border border-white/[0.08]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/[0.08]">
             <div className="flex items-center space-x-2.5">
               <FolderGit2 className="w-5 h-5 text-amber-400" />
               <div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
                   Discovered From Your Real Projects & Developer Sessions
                 </h3>
                 <p className="text-xs text-slate-400">
@@ -289,21 +319,21 @@ export function App() {
               <div
                 key={item.id}
                 onClick={() => handleSelectLearnedPrompt(item)}
-                className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900/60 transition-all cursor-pointer space-y-2 group"
+                className="p-3.5 rounded-xl bg-black/40 border border-white/[0.06] hover:border-amber-500/50 hover:bg-black/60 transition-all cursor-pointer space-y-2 group"
               >
                 <div className="flex items-center justify-between text-[11px]">
                   <span className="font-semibold text-amber-300 font-mono">
                     {item.project}
                   </span>
-                  <span className="text-slate-500 text-[10px] uppercase font-bold">
+                  <span className="text-slate-500 text-[10px] uppercase font-bold font-mono">
                     {item.category}
                   </span>
                 </div>
                 <div className="text-xs text-slate-200 font-mono line-clamp-2">
                   &ldquo;{item.rawUserPrompt}&rdquo;
                 </div>
-                <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-900 text-slate-400">
-                  <span className="truncate max-w-[180px]">{item.targetStack}</span>
+                <div className="flex items-center justify-between text-[11px] pt-1 border-t border-white/[0.06] text-slate-400">
+                  <span className="truncate max-w-[180px] font-mono">{item.targetStack}</span>
                   <span className="text-amber-400 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center space-x-0.5">
                     <span>Enhance</span>
                     <ArrowRight className="w-3 h-3" />
@@ -315,10 +345,10 @@ export function App() {
         </div>
 
         {/* Developer Use Case Directory / Cheat-sheet */}
-        <div className="bg-slate-900/30 rounded-2xl border border-slate-800/80 p-6 space-y-4">
+        <div className="craft-chassis rounded-2xl p-6 space-y-4 border border-white/[0.08]">
           <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-indigo-400" />
-            <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
+            <Terminal className="w-4 h-4 text-amber-400" />
+            <h3 className="font-display text-sm font-bold text-slate-200 uppercase tracking-wider">
               All Supported Engineering Domains ({USE_CASES.length})
             </h3>
           </div>
@@ -336,18 +366,18 @@ export function App() {
                 }}
                 className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                   uc.id === useCase
-                    ? 'bg-indigo-950/30 border-indigo-500/50 text-white'
-                    : 'bg-slate-950/60 border-slate-800/70 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                    ? 'bg-amber-500/15 border-amber-500/50 text-white'
+                    : 'bg-black/30 border-white/[0.06] text-slate-400 hover:border-white/20 hover:text-slate-200'
                 }`}
               >
                 <div className="flex items-center justify-between text-xs font-semibold mb-1">
                   <span className="text-slate-200">{uc.name}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
                 </div>
-                <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">
                   {uc.description}
                 </p>
-                <div className="mt-2 text-[10px] text-indigo-400 font-mono">
+                <div className="mt-2 text-[10px] text-amber-400 font-mono">
                   Default: {uc.defaultFramework}
                 </div>
               </div>
