@@ -51,7 +51,48 @@ Prompt Maker transforms your draft into an **ad-ready, flake-free prompt** that 
   - **Cursor / Copilot / Windsurf**: Crisp `.cursorrules` style with zero conversational filler.
 - 🔍 **Prompt Engineering Audit Card**: Visual breakdown of vulnerabilities detected in your draft and the architectural safeguards injected.
 - 📋 **1-Click Copy & Export**: Copy to clipboard with celebratory feedback, export as `.cursorrules`, or download as `.md`.
+- 🤖 **Model Context Protocol (MCP) Server**: Exposes tools (`enhance_developer_prompt`, `analyze_developer_prompt`, `get_learned_workflows`, `list_supported_use_cases`) so AI agents in Cursor, Claude Desktop, Windsurf, and CLI can enhance prompts autonomously.
 - 💾 **Local History & Privacy**: Automatically archives previous prompt transformations in your browser's `localStorage`. API keys never leave your browser.
+
+---
+
+## 🤖 Model Context Protocol (MCP) Integration
+
+Any AI coding agent working in your project can call Prompt Maker as an MCP tool!
+
+### 1. Cursor IDE Setup
+Add the following to `.cursor/mcp.json` in any of your repositories:
+
+```json
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "node",
+      "args": ["/Users/abhisheksahu/repos/prompt-maker/bin/prompt-maker-mcp.js"]
+    }
+  }
+}
+```
+
+### 2. Claude Desktop Setup
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "node",
+      "args": ["/Users/abhisheksahu/repos/prompt-maker/bin/prompt-maker-mcp.js"]
+    }
+  }
+}
+```
+
+### 3. Tools Exposed to AI Agents:
+- `enhance_developer_prompt`: Automatically rewrites raw tasks into production prompts with personas, resilient locators, auto-waits, and output schemas.
+- `analyze_developer_prompt`: Diagnoses missing test assertions, brittle selectors, and gives a clarity score.
+- `get_learned_workflows`: Retrieves the exact workflows learned from your 11 projects (`WhisperRoom`, `Hospital Management`, `Sentinel`, `Terrace Farming`, etc.).
+- `list_supported_use_cases`: Lists all 16 engineering domain categories.
 
 ---
 

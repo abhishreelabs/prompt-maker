@@ -1,10 +1,11 @@
 import React from 'react';
-import { Sparkles, Settings, History, Cpu, Zap, FolderGit2 } from 'lucide-react';
+import { Sparkles, Settings, History, Cpu, Zap, FolderGit2, Bot } from 'lucide-react';
 
 interface HeaderProps {
   onOpenSettings: () => void;
   onOpenHistory: () => void;
   onOpenLearned: () => void;
+  onOpenMcp: () => void;
   historyCount: number;
   engineUsed: 'offline' | 'gemini' | 'openai';
 }
@@ -13,6 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenHistory,
   onOpenLearned,
+  onOpenMcp,
   historyCount,
   engineUsed,
 }) => {
@@ -41,6 +43,16 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Status & Actions */}
         <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* MCP Server Button */}
+          <button
+            onClick={onOpenMcp}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 transition-colors text-xs font-semibold cursor-pointer shadow-sm shadow-cyan-500/10"
+            title="Configure MCP Server for AI Agents (Cursor, Claude, Windsurf)"
+          >
+            <Bot className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden sm:inline">MCP Server</span>
+          </button>
+
           {/* Learned from Sessions Pill Button */}
           <button
             onClick={onOpenLearned}

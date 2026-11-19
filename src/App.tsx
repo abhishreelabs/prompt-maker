@@ -7,6 +7,7 @@ import { AnalysisCard } from './components/AnalysisCard';
 import { SettingsModal } from './components/SettingsModal';
 import { HistoryDrawer } from './components/HistoryDrawer';
 import { LearnedPromptsModal } from './components/LearnedPromptsModal';
+import { McpModal } from './components/McpModal';
 import { enhancePromptOffline } from './engine/offlineEnhancer.ts';
 import { enhancePromptWithAi } from './engine/aiEnhancer.ts';
 import { USE_CASES } from './data/useCases.ts';
@@ -29,6 +30,7 @@ export function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isLearnedOpen, setIsLearnedOpen] = useState(false);
+  const [isMcpOpen, setIsMcpOpen] = useState(false);
 
   // Settings state from localStorage
   const [settings, setSettings] = useState<SettingsState>(() => {
@@ -186,6 +188,7 @@ export function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenHistory={() => setIsHistoryOpen(true)}
         onOpenLearned={() => setIsLearnedOpen(true)}
+        onOpenMcp={() => setIsMcpOpen(true)}
         historyCount={history.length}
         engineUsed={currentEngine}
       />
@@ -392,6 +395,11 @@ export function App() {
         isOpen={isLearnedOpen}
         onClose={() => setIsLearnedOpen(false)}
         onSelectPrompt={handleSelectLearnedPrompt}
+      />
+
+      <McpModal
+        isOpen={isMcpOpen}
+        onClose={() => setIsMcpOpen(false)}
       />
     </div>
   );

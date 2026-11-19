@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "node",
+      "args": ["/Users/abhisheksahu/repos/prompt-maker/bin/prompt-maker-mcp.js"],
+      "env": {}
+    }
+  }
+}
