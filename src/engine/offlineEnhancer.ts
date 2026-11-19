@@ -83,6 +83,86 @@ function getVerificationCommands(framework: string, useCase: UseCaseId): string[
       'SELECT relname, seq_scan, idx_scan FROM pg_stat_user_tables;'
     ];
   }
+  if (useCase === 'webrtc-video' || fw.includes('webrtc')) {
+    return [
+      '# 1. Test WebRTC ICE candidate gathering and STUN/TURN latency:',
+      'npx playwright test tests/webrtc/ice-connection.spec.ts',
+      '# 2. Check local fake media stream permissions in headless browser:',
+      'npx playwright test --use-fake-ui-for-media-stream --use-fake-device-for-media-stream'
+    ];
+  }
+  if (useCase === 'pdf-document-ai' || fw.includes('pdf') || fw.includes('ocr')) {
+    return [
+      '# 1. Run PDF extraction and OCR pipeline benchmark:',
+      'pytest tests/test_pdf_extractor.py -v',
+      '# 2. Validate JSON schema extraction conformance against rubric:',
+      'python -m src.evaluator --input sample_exam.pdf --schema rubric.json'
+    ];
+  }
+  if (useCase === 'social-automation') {
+    return [
+      '# 1. Run OAuth 2.0 PKCE token refresh mock test:',
+      'npm test tests/oauth-refresh.test.ts',
+      '# 2. Test rate-limit backoff retry queue under simulated 429 throttling:',
+      'npm test tests/rate-limiter.test.ts'
+    ];
+  }
+  if (useCase === 'iot-terrace-farming' || fw.includes('mqtt')) {
+    return [
+      '# 1. Test weather forecast API irrigation suppression rule:',
+      'npm test tests/irrigation-rules.test.ts',
+      '# 2. Verify MQTT QoS 1 message persistence during connection flap:',
+      'npm test tests/mqtt-telemetry.test.ts'
+    ];
+  }
+  if (useCase === 'multi-tenant-branding' || fw.includes('rls')) {
+    return [
+      '# 1. Test edge middleware tenant hostname routing:',
+      'npm test tests/tenant-middleware.test.ts',
+      '# 2. Verify PostgreSQL Row Level Security (RLS) tenant isolation:',
+      'npx prisma test --preview-feature'
+    ];
+  }
+  if (useCase === 'state-cache-invalidation' || fw.includes('react query') || fw.includes('tanstack')) {
+    return [
+      '# 1. Run React Query mutation invalidation integration test:',
+      'npm test tests/cache-invalidation.test.tsx',
+      '# 2. Verify optimistic rollback snapshot on network drop:',
+      'npx vitest run tests/optimistic-updates.test.tsx'
+    ];
+  }
+  if (useCase === 'monorepo-branch-split' || fw.includes('turbo')) {
+    return [
+      '# 1. Run monorepo boundary linter (no internal imports in landing):',
+      'npx turbo lint',
+      '# 2. Verify landing page client bundle size is under 150KB:',
+      'npx @next/bundle-analyzer'
+    ];
+  }
+  if (useCase === 'mobile-touch-qa' || fw.includes('mobile')) {
+    return [
+      '# 1. Run mobile touch target audit (minimum 44x44px):',
+      'npx playwright test tests/mobile-a11y.spec.ts --project="Mobile Chrome"',
+      '# 2. Run soft keyboard viewport squish test (iPhone 14):',
+      'npx playwright test tests/mobile-keyboard.spec.ts --project="Mobile Safari"'
+    ];
+  }
+  if (useCase === 'local-cloud-emulation' || fw.includes('floci') || fw.includes('localstack')) {
+    return [
+      '# 1. Verify Floci / LocalStack container services are healthy:',
+      'docker compose ps && awslocal s3 ls',
+      '# 2. Test S3 presigned URL generation and upload locally:',
+      'npm test tests/local-s3-upload.test.ts'
+    ];
+  }
+  if (useCase === 'patent-compliance') {
+    return [
+      '# 1. Run license compliance audit for copyleft GPL/AGPL packages:',
+      'npx license-checker --onlyAllow "MIT;Apache-2.0;BSD-3-Clause;ISC"',
+      '# 2. Verify patent claim traceability documentation coverage:',
+      'npm run audit:ip-compliance'
+    ];
+  }
   // Default TypeScript / JavaScript commands
   return [
     '# 1. Run TypeScript type check in strict mode:',
@@ -223,6 +303,16 @@ export function enhancePromptOffline({
     'healthcare-doctor': 'Principal HealthTech Architect specializing in HIPAA-Compliant Symptom Triage, Doctor Scheduling, and Multi-Tenant Systems',
     'image-generation': 'Staff AI Creative Director & Prompt Engineer specializing in Photorealistic Infographics and Bilingual Composition',
     'concurrency-scaling': 'Distributed Systems Architect specializing in High-Concurrency WebSockets, Socket.io Redis Adapters, and Cluster Profiling',
+    'webrtc-video': 'Lead Real-Time Communications Architect specializing in WebRTC, MediaStream pipelines, and resilient STUN/TURN negotiation',
+    'pdf-document-ai': 'Principal Document AI Architect specializing in high-throughput PDF extraction, OCR deskewing, and structured LLM evaluation',
+    'social-automation': 'Senior Automation & API Integration Architect specializing in social platform APIs, OAuth2 lifecycle, and resilient queues',
+    'iot-terrace-farming': 'Senior IoT & Agronomy Systems Architect specializing in sensor telemetry, smart irrigation rule engines, and terrace farming',
+    'multi-tenant-branding': 'Principal Multi-Tenant Architect specializing in white-label SaaS, edge routing, and PostgreSQL Row-Level Security',
+    'state-cache-invalidation': 'Staff Frontend Performance Architect specializing in TanStack Query, optimistic updates, and cache synchronization',
+    'monorepo-branch-split': 'Principal Build Systems & Monorepo Architect specializing in Turborepo, workspace boundaries, and bundle optimization',
+    'mobile-touch-qa': 'Lead Mobile Web QA Architect specializing in touch ergonomics, virtual keyboard mechanics, and responsive viewports',
+    'local-cloud-emulation': 'Senior Cloud Platform & FinOps Engineer specializing in local cloud emulation, LocalStack/Floci, and zero-cost dev environments',
+    'patent-compliance': 'Staff IP & Software Compliance Architect specializing in patent claim alignment, clean-room design, and open-source license audits',
     'general-developer': 'Senior Software Architect and Systems Design Specialist'
   };
 
@@ -557,6 +647,209 @@ export function enhancePromptOffline({
       improvements.push('Designed Socket.io Redis adapter horizontal cluster architecture');
       improvements.push('Configured sticky-session reverse proxy requirements');
       improvements.push('Implemented zombie connection eviction and memory bounds');
+      break;
+
+    case 'webrtc-video':
+      instructions = [
+        `Implement robust WebRTC peer-to-peer signaling and media negotiation using ${framework}.`,
+        'Configure STUN and TURN server relays with credential expiration to guarantee connectivity behind symmetric NATs and corporate firewalls.',
+        'Implement dynamic bitrate and resolution downscaling on packet loss or network degradation.',
+        'Handle media track lifecycles gracefully (mute/unmute, camera switching, screen share track replacement via RTCRtpSender.replaceTrack).'
+      ];
+      edgeCases = [
+        'ICE gathering state timeout or complete ICE failure; trigger automatic TURN relay retry.',
+        'User revokes camera/microphone permissions mid-call; display non-blocking recovery guidance.',
+        'Signaling WebSocket disconnects while media tracks are active (reconnect signaling socket without tearing down PeerConnection).'
+      ];
+      constraints = [
+        'Always clean up active MediaStreamTracks (track.stop()) upon unmount to release camera hardware indicator.',
+        'Handle getUserMedia rejection without uncaught promise exceptions.'
+      ];
+      improvements.push('Injected WebRTC STUN/TURN fallback and dynamic bitrate adaptation');
+      improvements.push('Added camera/mic permission denial recovery handlers');
+      improvements.push('Separated signaling socket lifecycle from media peer connection');
+      break;
+
+    case 'pdf-document-ai':
+      instructions = [
+        `Construct an accurate document extraction and parsing pipeline using ${framework}.`,
+        'Apply OpenCV image preprocessing (deskewing, binarization, noise filtering) on low-DPI or photographed documents.',
+        'Extract nested question hierarchies (sections, question stems, MCQ options, marks allocation) into strict schema models.',
+        'Preserve embedded mathematical formulas and scientific symbols formatted as standard KaTeX / LaTeX.'
+      ];
+      edgeCases = [
+        'Corrupted PDF stream or password-protected document; emit clean RFC 7807 error payload.',
+        'Large 100+ page PDF processing: stream page-by-page to guarantee memory stays within bounds without process crash.',
+        'Student handwriting partially overlapping printed borders or table cell dividers.'
+      ];
+      constraints = [
+        'Never buffer multi-gigabyte document streams entirely in memory; use streaming or disk temporary storage.',
+        'All output must conform strictly to typed schemas with validation error reporting.'
+      ];
+      improvements.push('Injected OpenCV document deskewing and contrast thresholding');
+      improvements.push('Preserved LaTeX math equations and nested question schemas');
+      improvements.push('Enforced page-by-page streaming memory bounds');
+      break;
+
+    case 'social-automation':
+      instructions = [
+        `Architect a resilient social publishing and scheduler pipeline using ${framework}.`,
+        'Implement proactive OAuth 2.0 PKCE token refresh at least 5 minutes prior to access token expiration.',
+        'Handle platform API rate limits gracefully using exponential backoff with full jitter honoring x-rate-limit-reset headers.',
+        'Execute chunked asynchronous media uploads (INIT, APPEND, FINALIZE, STATUS) with progress polling.'
+      ];
+      edgeCases = [
+        'Platform API returns HTTP 429 Too Many Requests; pause worker queue until reset timestamp.',
+        'Network disconnect mid-chunk upload; resume from last verified chunk byte offset.',
+        'Revoked client credentials or expired refresh token; emit alert notification without crashing worker.'
+      ];
+      constraints = [
+        'Idempotent job execution: never publish duplicate posts if job retry occurs.',
+        'Never log raw OAuth access tokens or client secrets in plain text.'
+      ];
+      improvements.push('Injected proactive OAuth 2.0 token rotation before expiration');
+      improvements.push('Configured rate-limit exponential backoff with x-rate-limit-reset headers');
+      improvements.push('Implemented chunked resumable media upload protocol');
+      break;
+
+    case 'iot-terrace-farming':
+      instructions = [
+        `Formulate an intelligent terrace farming and irrigation control model using ${framework}.`,
+        'Define exact potting soil ratios (vermicompost, cocopeat, sand/perlite, neem khali) calibrated to specific crop types.',
+        'Implement weather-predictive irrigation logic: query local precipitation forecast and suppress watering if rain probability > 60%.',
+        'Process MQTT sensor telemetry (soil moisture %, ambient temperature, lux) with moving average smoothing to eliminate sensor noise.'
+      ];
+      edgeCases = [
+        'Wi-Fi disconnection at terrace node: buffer readings locally with flash persistence and batch upload on reconnect.',
+        'Sensor failure reporting 0% or 100% moisture continuously; trigger hardware fault alert.'
+      ];
+      constraints = [
+        'Never run pump continuously on sensor communication timeout; enforce hardware watchdog cutoff (max 60 seconds).',
+        'Provide multilingual localized agronomy guidance (Hindi and English).'
+      ];
+      improvements.push('Injected weather-aware smart irrigation suppression logic');
+      improvements.push('Added exact potting soil ratios and crop disease remediation specs');
+      improvements.push('Configured MQTT QoS 1 message persistence for intermittent sensor Wi-Fi');
+      break;
+
+    case 'multi-tenant-branding':
+      instructions = [
+        `Implement dynamic tenant resolution and white-label branding using ${framework}.`,
+        'Resolve tenant identity at the edge/middleware from request hostname (subdomain or mapped custom domain) with zero database roundtrips.',
+        'Inject dynamic CSS variable themes (primary colors, border radii, brand logos) without layout shifts or FOUC.',
+        'Enforce strict multi-tenant data partitioning in PostgreSQL using Row Level Security (RLS) policies scoped to current tenant_id.'
+      ];
+      edgeCases = [
+        'Request arrives from unmapped or expired custom domain; gracefully fallback to default platform tenant.',
+        'Tenant theme specifies low-contrast colors; apply WCAG 2.1 AA luminance correction for accessibility.'
+      ];
+      constraints = [
+        'Zero cross-tenant data leakage: all database queries must include tenant_id filter or enforce RLS.',
+        'Cache-Control headers must not cache tenant-specific configuration across different hostnames.'
+      ];
+      improvements.push('Configured edge middleware hostname tenant resolution');
+      improvements.push('Enforced PostgreSQL Row Level Security (RLS) tenant isolation');
+      improvements.push('Injected dynamic CSS variable theming with zero layout shift');
+      break;
+
+    case 'state-cache-invalidation':
+      instructions = [
+        `Diagnose and resolve data staleness and cache synchronization issues using ${framework}.`,
+        'Enforce targeted query cache invalidation (queryClient.invalidateQueries) immediately after successful mutations.',
+        'Implement optimistic UI updates with pre-mutation snapshot capture and automatic rollback on network error.',
+        'Configure stale-while-revalidate timings and window focus refetch boundaries to maintain real-time accuracy.'
+      ];
+      edgeCases = [
+        'Write-after-read replication lag: read replica has not synchronized newly written record (implement read-your-writes header).',
+        'Mutation fails while user has queued subsequent actions; cleanly revert state without corrupting adjacent store data.'
+      ];
+      constraints = [
+        'Do not trigger infinite refetch loops: never invalidate queries inside render lifecycle or unmemoized useEffects.',
+        'Always clean up mutation abort signals when unmounting components.'
+      ];
+      improvements.push('Configured targeted query cache invalidation on mutations');
+      improvements.push('Added optimistic UI updates with error rollback snapshots');
+      improvements.push('Mitigated write-after-read database replication lag');
+      break;
+
+    case 'monorepo-branch-split':
+      instructions = [
+        `Architect a clean monorepo workspace separation using ${framework}.`,
+        'Isolate public customer applications (e.g. landing pages) from internal backoffice portals into separate workspace packages.',
+        'Enforce strict package dependency rules: public apps must never import internal portal modules or private credentials.',
+        'Establish a shared design system package (@workspace/ui) with peer-dependency deduplication and tree-shakeable exports.'
+      ];
+      edgeCases = [
+        'Accidental export of private server-side secret or internal API route into public client bundle.',
+        'Circular dependencies between shared workspace packages breaking build cache.'
+      ];
+      constraints = [
+        'Landing page bundle must remain lightweight: enforce bundle size limits (<150KB first-load JS).',
+        'Internal staff components must be strictly isolated to authenticated portal routes.'
+      ];
+      improvements.push('Partitioned public landing page from internal portal packages');
+      improvements.push('Enforced strict dependency boundaries preventing credential leaks');
+      improvements.push('Configured shared design system package with tree-shakeable exports');
+      break;
+
+    case 'mobile-touch-qa':
+      instructions = [
+        `Construct an exhaustive mobile web test suite using ${framework}.`,
+        'Enforce WCAG 2.1 touch target requirements: all clickable buttons, links, and inputs must measure at least 44x44 CSS pixels.',
+        'Simulate mobile soft keyboard appearance (window.visualViewport height reduction) and assert zero occlusion of form inputs and submit buttons.',
+        'Verify safe area inset padding (env(safe-area-inset-top), env(safe-area-inset-bottom)) preventing layout overlaps with device notches and home indicators.'
+      ];
+      edgeCases = [
+        'Virtual keyboard opens while user is focused on the bottom-most input in a scrollable modal.',
+        'Rapid orientation changes (portrait <-> landscape) with active dropdown menus or modals.'
+      ];
+      constraints = [
+        'Never use fixed pixel widths on container elements; enforce fluid responsive percentages and viewport units.',
+        'Touch interactions must not trigger unwanted double-tap zoom delay.'
+      ];
+      improvements.push('Enforced WCAG 2.1 44x44px minimum touch target compliance');
+      improvements.push('Added visual viewport virtual keyboard occlusion assertions');
+      improvements.push('Injected safe-area-inset padding checks for mobile notch hardware');
+      break;
+
+    case 'local-cloud-emulation':
+      instructions = [
+        `Configure a zero-cost, fully offline local cloud environment using ${framework}.`,
+        'Provide complete Docker Compose configuration for local AWS service emulation (S3, DynamoDB, SQS, IAM).',
+        'Configure AWS SDK v3 client initialization with local endpoint overrides (http://localhost:4566) and test credentials.',
+        'Automate local bucket creation and test asset seeding via reproducible shell startup scripts.'
+      ];
+      edgeCases = [
+        'S3 presigned URLs generated with localhost:4566 breaking when accessed from inside another container network.',
+        'Local persistence volume data corruption across docker restart cycles.'
+      ];
+      constraints = [
+        'Zero cloud billing risk: verify zero network traffic leaves localhost to real AWS endpoints during local runs.',
+        'Never commit local mock AWS credentials to public repositories.'
+      ];
+      improvements.push('Configured Floci / LocalStack zero-cost cloud emulation stack');
+      improvements.push('Injected AWS SDK v3 client endpoint overrides and mock credentials');
+      improvements.push('Added automated bucket provisioning and seeding shell script');
+      break;
+
+    case 'patent-compliance':
+      instructions = [
+        `Perform an intellectual property and commercial adoption compliance audit using ${framework}.`,
+        'Construct a traceability matrix linking patent claim specifications and architectural drawings to concrete source code modules.',
+        'Audit all project direct and transitive dependencies: identify and flag copyleft licenses (GPL, AGPL, SSPL) incompatible with proprietary commercial distribution.',
+        'Document clean-room independent invention boundaries and verify absence of proprietary competitor code or copyrighted assets.'
+      ];
+      edgeCases = [
+        'Dual-licensed dependencies (e.g. AGPL / Commercial) causing licensing confusion during commercial deployment.',
+        'Patent claim requirements relying on deprecated or proprietary third-party libraries.'
+      ];
+      constraints = [
+        'Commercial safety: every dependency must possess a permissive open-source license (MIT, Apache-2.0, BSD-3-Clause).',
+        'Preserve full claim traceability documentation for patent examiners and IP auditors.'
+      ];
+      improvements.push('Constructed patent claim to code traceability matrix');
+      improvements.push('Injected copyleft license audit filtering out GPL/AGPL dependencies');
+      improvements.push('Documented clean-room independent invention boundaries');
       break;
 
     default:

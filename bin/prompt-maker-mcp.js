@@ -36941,6 +36941,86 @@ function getVerificationCommands(framework, useCase) {
       "SELECT relname, seq_scan, idx_scan FROM pg_stat_user_tables;"
     ];
   }
+  if (useCase === "webrtc-video" || fw.includes("webrtc")) {
+    return [
+      "# 1. Test WebRTC ICE candidate gathering and STUN/TURN latency:",
+      "npx playwright test tests/webrtc/ice-connection.spec.ts",
+      "# 2. Check local fake media stream permissions in headless browser:",
+      "npx playwright test --use-fake-ui-for-media-stream --use-fake-device-for-media-stream"
+    ];
+  }
+  if (useCase === "pdf-document-ai" || fw.includes("pdf") || fw.includes("ocr")) {
+    return [
+      "# 1. Run PDF extraction and OCR pipeline benchmark:",
+      "pytest tests/test_pdf_extractor.py -v",
+      "# 2. Validate JSON schema extraction conformance against rubric:",
+      "python -m src.evaluator --input sample_exam.pdf --schema rubric.json"
+    ];
+  }
+  if (useCase === "social-automation") {
+    return [
+      "# 1. Run OAuth 2.0 PKCE token refresh mock test:",
+      "npm test tests/oauth-refresh.test.ts",
+      "# 2. Test rate-limit backoff retry queue under simulated 429 throttling:",
+      "npm test tests/rate-limiter.test.ts"
+    ];
+  }
+  if (useCase === "iot-terrace-farming" || fw.includes("mqtt")) {
+    return [
+      "# 1. Test weather forecast API irrigation suppression rule:",
+      "npm test tests/irrigation-rules.test.ts",
+      "# 2. Verify MQTT QoS 1 message persistence during connection flap:",
+      "npm test tests/mqtt-telemetry.test.ts"
+    ];
+  }
+  if (useCase === "multi-tenant-branding" || fw.includes("rls")) {
+    return [
+      "# 1. Test edge middleware tenant hostname routing:",
+      "npm test tests/tenant-middleware.test.ts",
+      "# 2. Verify PostgreSQL Row Level Security (RLS) tenant isolation:",
+      "npx prisma test --preview-feature"
+    ];
+  }
+  if (useCase === "state-cache-invalidation" || fw.includes("react query") || fw.includes("tanstack")) {
+    return [
+      "# 1. Run React Query mutation invalidation integration test:",
+      "npm test tests/cache-invalidation.test.tsx",
+      "# 2. Verify optimistic rollback snapshot on network drop:",
+      "npx vitest run tests/optimistic-updates.test.tsx"
+    ];
+  }
+  if (useCase === "monorepo-branch-split" || fw.includes("turbo")) {
+    return [
+      "# 1. Run monorepo boundary linter (no internal imports in landing):",
+      "npx turbo lint",
+      "# 2. Verify landing page client bundle size is under 150KB:",
+      "npx @next/bundle-analyzer"
+    ];
+  }
+  if (useCase === "mobile-touch-qa" || fw.includes("mobile")) {
+    return [
+      "# 1. Run mobile touch target audit (minimum 44x44px):",
+      'npx playwright test tests/mobile-a11y.spec.ts --project="Mobile Chrome"',
+      "# 2. Run soft keyboard viewport squish test (iPhone 14):",
+      'npx playwright test tests/mobile-keyboard.spec.ts --project="Mobile Safari"'
+    ];
+  }
+  if (useCase === "local-cloud-emulation" || fw.includes("floci") || fw.includes("localstack")) {
+    return [
+      "# 1. Verify Floci / LocalStack container services are healthy:",
+      "docker compose ps && awslocal s3 ls",
+      "# 2. Test S3 presigned URL generation and upload locally:",
+      "npm test tests/local-s3-upload.test.ts"
+    ];
+  }
+  if (useCase === "patent-compliance") {
+    return [
+      "# 1. Run license compliance audit for copyleft GPL/AGPL packages:",
+      'npx license-checker --onlyAllow "MIT;Apache-2.0;BSD-3-Clause;ISC"',
+      "# 2. Verify patent claim traceability documentation coverage:",
+      "npm run audit:ip-compliance"
+    ];
+  }
   return [
     "# 1. Run TypeScript type check in strict mode:",
     "npx tsc --noEmit",
@@ -37076,6 +37156,16 @@ function enhancePromptOffline({
     "healthcare-doctor": "Principal HealthTech Architect specializing in HIPAA-Compliant Symptom Triage, Doctor Scheduling, and Multi-Tenant Systems",
     "image-generation": "Staff AI Creative Director & Prompt Engineer specializing in Photorealistic Infographics and Bilingual Composition",
     "concurrency-scaling": "Distributed Systems Architect specializing in High-Concurrency WebSockets, Socket.io Redis Adapters, and Cluster Profiling",
+    "webrtc-video": "Lead Real-Time Communications Architect specializing in WebRTC, MediaStream pipelines, and resilient STUN/TURN negotiation",
+    "pdf-document-ai": "Principal Document AI Architect specializing in high-throughput PDF extraction, OCR deskewing, and structured LLM evaluation",
+    "social-automation": "Senior Automation & API Integration Architect specializing in social platform APIs, OAuth2 lifecycle, and resilient queues",
+    "iot-terrace-farming": "Senior IoT & Agronomy Systems Architect specializing in sensor telemetry, smart irrigation rule engines, and terrace farming",
+    "multi-tenant-branding": "Principal Multi-Tenant Architect specializing in white-label SaaS, edge routing, and PostgreSQL Row-Level Security",
+    "state-cache-invalidation": "Staff Frontend Performance Architect specializing in TanStack Query, optimistic updates, and cache synchronization",
+    "monorepo-branch-split": "Principal Build Systems & Monorepo Architect specializing in Turborepo, workspace boundaries, and bundle optimization",
+    "mobile-touch-qa": "Lead Mobile Web QA Architect specializing in touch ergonomics, virtual keyboard mechanics, and responsive viewports",
+    "local-cloud-emulation": "Senior Cloud Platform & FinOps Engineer specializing in local cloud emulation, LocalStack/Floci, and zero-cost dev environments",
+    "patent-compliance": "Staff IP & Software Compliance Architect specializing in patent claim alignment, clean-room design, and open-source license audits",
     "general-developer": "Senior Software Architect and Systems Design Specialist"
   };
   const role = roles[useCase] || roles["general-developer"];
@@ -37394,6 +37484,199 @@ Clarity & Completeness: Self-contained, runnable, and defensively programmed.`;
       improvements.push("Designed Socket.io Redis adapter horizontal cluster architecture");
       improvements.push("Configured sticky-session reverse proxy requirements");
       improvements.push("Implemented zombie connection eviction and memory bounds");
+      break;
+    case "webrtc-video":
+      instructions = [
+        `Implement robust WebRTC peer-to-peer signaling and media negotiation using ${framework}.`,
+        "Configure STUN and TURN server relays with credential expiration to guarantee connectivity behind symmetric NATs and corporate firewalls.",
+        "Implement dynamic bitrate and resolution downscaling on packet loss or network degradation.",
+        "Handle media track lifecycles gracefully (mute/unmute, camera switching, screen share track replacement via RTCRtpSender.replaceTrack)."
+      ];
+      edgeCases = [
+        "ICE gathering state timeout or complete ICE failure; trigger automatic TURN relay retry.",
+        "User revokes camera/microphone permissions mid-call; display non-blocking recovery guidance.",
+        "Signaling WebSocket disconnects while media tracks are active (reconnect signaling socket without tearing down PeerConnection)."
+      ];
+      constraints = [
+        "Always clean up active MediaStreamTracks (track.stop()) upon unmount to release camera hardware indicator.",
+        "Handle getUserMedia rejection without uncaught promise exceptions."
+      ];
+      improvements.push("Injected WebRTC STUN/TURN fallback and dynamic bitrate adaptation");
+      improvements.push("Added camera/mic permission denial recovery handlers");
+      improvements.push("Separated signaling socket lifecycle from media peer connection");
+      break;
+    case "pdf-document-ai":
+      instructions = [
+        `Construct an accurate document extraction and parsing pipeline using ${framework}.`,
+        "Apply OpenCV image preprocessing (deskewing, binarization, noise filtering) on low-DPI or photographed documents.",
+        "Extract nested question hierarchies (sections, question stems, MCQ options, marks allocation) into strict schema models.",
+        "Preserve embedded mathematical formulas and scientific symbols formatted as standard KaTeX / LaTeX."
+      ];
+      edgeCases = [
+        "Corrupted PDF stream or password-protected document; emit clean RFC 7807 error payload.",
+        "Large 100+ page PDF processing: stream page-by-page to guarantee memory stays within bounds without process crash.",
+        "Student handwriting partially overlapping printed borders or table cell dividers."
+      ];
+      constraints = [
+        "Never buffer multi-gigabyte document streams entirely in memory; use streaming or disk temporary storage.",
+        "All output must conform strictly to typed schemas with validation error reporting."
+      ];
+      improvements.push("Injected OpenCV document deskewing and contrast thresholding");
+      improvements.push("Preserved LaTeX math equations and nested question schemas");
+      improvements.push("Enforced page-by-page streaming memory bounds");
+      break;
+    case "social-automation":
+      instructions = [
+        `Architect a resilient social publishing and scheduler pipeline using ${framework}.`,
+        "Implement proactive OAuth 2.0 PKCE token refresh at least 5 minutes prior to access token expiration.",
+        "Handle platform API rate limits gracefully using exponential backoff with full jitter honoring x-rate-limit-reset headers.",
+        "Execute chunked asynchronous media uploads (INIT, APPEND, FINALIZE, STATUS) with progress polling."
+      ];
+      edgeCases = [
+        "Platform API returns HTTP 429 Too Many Requests; pause worker queue until reset timestamp.",
+        "Network disconnect mid-chunk upload; resume from last verified chunk byte offset.",
+        "Revoked client credentials or expired refresh token; emit alert notification without crashing worker."
+      ];
+      constraints = [
+        "Idempotent job execution: never publish duplicate posts if job retry occurs.",
+        "Never log raw OAuth access tokens or client secrets in plain text."
+      ];
+      improvements.push("Injected proactive OAuth 2.0 token rotation before expiration");
+      improvements.push("Configured rate-limit exponential backoff with x-rate-limit-reset headers");
+      improvements.push("Implemented chunked resumable media upload protocol");
+      break;
+    case "iot-terrace-farming":
+      instructions = [
+        `Formulate an intelligent terrace farming and irrigation control model using ${framework}.`,
+        "Define exact potting soil ratios (vermicompost, cocopeat, sand/perlite, neem khali) calibrated to specific crop types.",
+        "Implement weather-predictive irrigation logic: query local precipitation forecast and suppress watering if rain probability > 60%.",
+        "Process MQTT sensor telemetry (soil moisture %, ambient temperature, lux) with moving average smoothing to eliminate sensor noise."
+      ];
+      edgeCases = [
+        "Wi-Fi disconnection at terrace node: buffer readings locally with flash persistence and batch upload on reconnect.",
+        "Sensor failure reporting 0% or 100% moisture continuously; trigger hardware fault alert."
+      ];
+      constraints = [
+        "Never run pump continuously on sensor communication timeout; enforce hardware watchdog cutoff (max 60 seconds).",
+        "Provide multilingual localized agronomy guidance (Hindi and English)."
+      ];
+      improvements.push("Injected weather-aware smart irrigation suppression logic");
+      improvements.push("Added exact potting soil ratios and crop disease remediation specs");
+      improvements.push("Configured MQTT QoS 1 message persistence for intermittent sensor Wi-Fi");
+      break;
+    case "multi-tenant-branding":
+      instructions = [
+        `Implement dynamic tenant resolution and white-label branding using ${framework}.`,
+        "Resolve tenant identity at the edge/middleware from request hostname (subdomain or mapped custom domain) with zero database roundtrips.",
+        "Inject dynamic CSS variable themes (primary colors, border radii, brand logos) without layout shifts or FOUC.",
+        "Enforce strict multi-tenant data partitioning in PostgreSQL using Row Level Security (RLS) policies scoped to current tenant_id."
+      ];
+      edgeCases = [
+        "Request arrives from unmapped or expired custom domain; gracefully fallback to default platform tenant.",
+        "Tenant theme specifies low-contrast colors; apply WCAG 2.1 AA luminance correction for accessibility."
+      ];
+      constraints = [
+        "Zero cross-tenant data leakage: all database queries must include tenant_id filter or enforce RLS.",
+        "Cache-Control headers must not cache tenant-specific configuration across different hostnames."
+      ];
+      improvements.push("Configured edge middleware hostname tenant resolution");
+      improvements.push("Enforced PostgreSQL Row Level Security (RLS) tenant isolation");
+      improvements.push("Injected dynamic CSS variable theming with zero layout shift");
+      break;
+    case "state-cache-invalidation":
+      instructions = [
+        `Diagnose and resolve data staleness and cache synchronization issues using ${framework}.`,
+        "Enforce targeted query cache invalidation (queryClient.invalidateQueries) immediately after successful mutations.",
+        "Implement optimistic UI updates with pre-mutation snapshot capture and automatic rollback on network error.",
+        "Configure stale-while-revalidate timings and window focus refetch boundaries to maintain real-time accuracy."
+      ];
+      edgeCases = [
+        "Write-after-read replication lag: read replica has not synchronized newly written record (implement read-your-writes header).",
+        "Mutation fails while user has queued subsequent actions; cleanly revert state without corrupting adjacent store data."
+      ];
+      constraints = [
+        "Do not trigger infinite refetch loops: never invalidate queries inside render lifecycle or unmemoized useEffects.",
+        "Always clean up mutation abort signals when unmounting components."
+      ];
+      improvements.push("Configured targeted query cache invalidation on mutations");
+      improvements.push("Added optimistic UI updates with error rollback snapshots");
+      improvements.push("Mitigated write-after-read database replication lag");
+      break;
+    case "monorepo-branch-split":
+      instructions = [
+        `Architect a clean monorepo workspace separation using ${framework}.`,
+        "Isolate public customer applications (e.g. landing pages) from internal backoffice portals into separate workspace packages.",
+        "Enforce strict package dependency rules: public apps must never import internal portal modules or private credentials.",
+        "Establish a shared design system package (@workspace/ui) with peer-dependency deduplication and tree-shakeable exports."
+      ];
+      edgeCases = [
+        "Accidental export of private server-side secret or internal API route into public client bundle.",
+        "Circular dependencies between shared workspace packages breaking build cache."
+      ];
+      constraints = [
+        "Landing page bundle must remain lightweight: enforce bundle size limits (<150KB first-load JS).",
+        "Internal staff components must be strictly isolated to authenticated portal routes."
+      ];
+      improvements.push("Partitioned public landing page from internal portal packages");
+      improvements.push("Enforced strict dependency boundaries preventing credential leaks");
+      improvements.push("Configured shared design system package with tree-shakeable exports");
+      break;
+    case "mobile-touch-qa":
+      instructions = [
+        `Construct an exhaustive mobile web test suite using ${framework}.`,
+        "Enforce WCAG 2.1 touch target requirements: all clickable buttons, links, and inputs must measure at least 44x44 CSS pixels.",
+        "Simulate mobile soft keyboard appearance (window.visualViewport height reduction) and assert zero occlusion of form inputs and submit buttons.",
+        "Verify safe area inset padding (env(safe-area-inset-top), env(safe-area-inset-bottom)) preventing layout overlaps with device notches and home indicators."
+      ];
+      edgeCases = [
+        "Virtual keyboard opens while user is focused on the bottom-most input in a scrollable modal.",
+        "Rapid orientation changes (portrait <-> landscape) with active dropdown menus or modals."
+      ];
+      constraints = [
+        "Never use fixed pixel widths on container elements; enforce fluid responsive percentages and viewport units.",
+        "Touch interactions must not trigger unwanted double-tap zoom delay."
+      ];
+      improvements.push("Enforced WCAG 2.1 44x44px minimum touch target compliance");
+      improvements.push("Added visual viewport virtual keyboard occlusion assertions");
+      improvements.push("Injected safe-area-inset padding checks for mobile notch hardware");
+      break;
+    case "local-cloud-emulation":
+      instructions = [
+        `Configure a zero-cost, fully offline local cloud environment using ${framework}.`,
+        "Provide complete Docker Compose configuration for local AWS service emulation (S3, DynamoDB, SQS, IAM).",
+        "Configure AWS SDK v3 client initialization with local endpoint overrides (http://localhost:4566) and test credentials.",
+        "Automate local bucket creation and test asset seeding via reproducible shell startup scripts."
+      ];
+      edgeCases = [
+        "S3 presigned URLs generated with localhost:4566 breaking when accessed from inside another container network.",
+        "Local persistence volume data corruption across docker restart cycles."
+      ];
+      constraints = [
+        "Zero cloud billing risk: verify zero network traffic leaves localhost to real AWS endpoints during local runs.",
+        "Never commit local mock AWS credentials to public repositories."
+      ];
+      improvements.push("Configured Floci / LocalStack zero-cost cloud emulation stack");
+      improvements.push("Injected AWS SDK v3 client endpoint overrides and mock credentials");
+      improvements.push("Added automated bucket provisioning and seeding shell script");
+      break;
+    case "patent-compliance":
+      instructions = [
+        `Perform an intellectual property and commercial adoption compliance audit using ${framework}.`,
+        "Construct a traceability matrix linking patent claim specifications and architectural drawings to concrete source code modules.",
+        "Audit all project direct and transitive dependencies: identify and flag copyleft licenses (GPL, AGPL, SSPL) incompatible with proprietary commercial distribution.",
+        "Document clean-room independent invention boundaries and verify absence of proprietary competitor code or copyrighted assets."
+      ];
+      edgeCases = [
+        "Dual-licensed dependencies (e.g. AGPL / Commercial) causing licensing confusion during commercial deployment.",
+        "Patent claim requirements relying on deprecated or proprietary third-party libraries."
+      ];
+      constraints = [
+        "Commercial safety: every dependency must possess a permissive open-source license (MIT, Apache-2.0, BSD-3-Clause).",
+        "Preserve full claim traceability documentation for patent examiners and IP auditors."
+      ];
+      improvements.push("Constructed patent claim to code traceability matrix");
+      improvements.push("Injected copyleft license audit filtering out GPL/AGPL dependencies");
+      improvements.push("Documented clean-room independent invention boundaries");
       break;
     default:
       instructions = [
@@ -37905,6 +38188,296 @@ var USE_CASES = [
     ]
   },
   {
+    id: "webrtc-video",
+    name: "WebRTC Video & Live Interview QA",
+    icon: "Video",
+    description: "Learned from Interview Portal: Real-time peer-to-peer video/audio calling, ICE candidate STUN/TURN negotiation, and screen sharing.",
+    defaultFramework: "WebRTC + Socket.io + MediaStream",
+    suggestedFrameworks: ["WebRTC (Simple-Peer)", "Socket.io Signaling", "STUN/TURN (Coturn)", "Canvas Stream Recording"],
+    associatedProject: "Interview Portal",
+    sampleBadPrompts: [
+      {
+        title: "Video Freezing in Interview",
+        prompt: "candidate video is freezing during live technical interview fix audio video desync",
+        suggestedStack: "WebRTC PeerConnection + Socket.io",
+        sourceProject: "Interview Portal"
+      },
+      {
+        title: "Screen Sharing with Tab Audio",
+        prompt: "add screen sharing toggle to webrtc video call with tab audio capture and fallback",
+        suggestedStack: "MediaStream API + WebRTC",
+        sourceProject: "Interview Portal"
+      }
+    ],
+    keyChecklist: [
+      "ICE candidate gathering timeout & TURN server relay fallback",
+      "Bandwidth renegotiation & dynamic bitrate adaptation on packet loss",
+      "Auto-reconnect on socket disconnect without dropping active media tracks",
+      "Microphone/Camera permission denial graceful recovery dialog"
+    ]
+  },
+  {
+    id: "pdf-document-ai",
+    name: "PDF Extraction & Exam Analytics",
+    icon: "FileText",
+    description: "Learned from ExamAnalytics AI: Parsing scanned question papers, OCR deskewing, LaTeX equation extraction, and rubric grading.",
+    defaultFramework: "Python / pdfplumber / Tesseract OCR",
+    suggestedFrameworks: ["pdfplumber / PyPDF2", "Tesseract OCR + OpenCV", "FastAPI + Pydantic", "KaTeX / LaTeX Parser"],
+    associatedProject: "ExamAnalytics AI",
+    sampleBadPrompts: [
+      {
+        title: "Extract MCQ Questions from Scanned PDF",
+        prompt: "extract questions and mcq options from scanned question paper pdf into json with answer keys",
+        suggestedStack: "Python / pdfplumber / Pydantic",
+        sourceProject: "ExamAnalytics AI"
+      },
+      {
+        title: "Handwritten Answer Sheet Evaluation",
+        prompt: "evaluate student handwritten answer sheet against rubric and output marks breakdown and feedback",
+        suggestedStack: "OCR + Vision LLM Evaluation",
+        sourceProject: "ExamAnalytics AI"
+      }
+    ],
+    keyChecklist: [
+      "OpenCV document deskewing and contrast thresholding for low-DPI scans",
+      "LaTeX mathematical equation preservation inside question stems",
+      "Strict Pydantic JSON schema output with question-by-question scoring",
+      "Streaming page-by-page processing preventing memory exhaustion on 100+ page PDFs"
+    ]
+  },
+  {
+    id: "social-automation",
+    name: "Social Media Automation & Bot APIs",
+    icon: "Share2",
+    description: "Learned from AI Social Automation: Scheduled social publishing, OAuth 2.0 PKCE token refresh, rate-limit backoff, and chunked uploads.",
+    defaultFramework: "Node.js + Twitter API v2 + LinkedIn REST",
+    suggestedFrameworks: ["Twitter API v2", "LinkedIn REST API", "BullMQ Redis Queue", "OAuth 2.0 PKCE"],
+    associatedProject: "AI Social Automation",
+    sampleBadPrompts: [
+      {
+        title: "LinkedIn Scheduled Post with Image",
+        prompt: "schedule linkedin post with image and handle oauth token refresh automatically in background",
+        suggestedStack: "LinkedIn REST API + BullMQ",
+        sourceProject: "AI Social Automation"
+      },
+      {
+        title: "Twitter Thread Publisher with Rate Limits",
+        prompt: "bot to publish twitter thread with rate limit backoff and error retry when api is throttled",
+        suggestedStack: "Twitter API v2 (Node.js)",
+        sourceProject: "AI Social Automation"
+      }
+    ],
+    keyChecklist: [
+      "OAuth 2.0 token rotation with proactive refresh before access token expiration",
+      "Rate-limit handling with exponential jitter honoring x-rate-limit-reset headers",
+      "Chunked asynchronous media upload protocol (INIT, APPEND, FINALIZE, STATUS)",
+      "Idempotent job queue execution preventing duplicate post broadcasts"
+    ]
+  },
+  {
+    id: "iot-terrace-farming",
+    name: "Smart Agriculture & IoT Telemetry",
+    icon: "Sprout",
+    description: "Learned from Terrace Farming Smart Assistant: Soil moisture telemetry, potting soil ratios, weather-aware irrigation, and crop disease diagnosis.",
+    defaultFramework: "ESP32 / MQTT / Next.js / Weather API",
+    suggestedFrameworks: ["MQTT Client / Mosquitto", "OpenWeatherMap API", "Soil Moisture Calibration", "Plant Disease Classifier"],
+    associatedProject: "Terrace Farming Smart Assistant",
+    sampleBadPrompts: [
+      {
+        title: "Weather-Aware Smart Irrigation",
+        prompt: "smart irrigation rule based on soil moisture sensor readings and rain forecast to avoid overwatering",
+        suggestedStack: "MQTT Telemetry + Weather API Rule Engine",
+        sourceProject: "Terrace Farming"
+      },
+      {
+        title: "Crop Disease Image Diagnosis",
+        prompt: "plant leaf disease image diagnosis with organic treatment and fertilizer recommendation",
+        suggestedStack: "Mobile Vision + Agronomy Expert Prompt",
+        sourceProject: "Terrace Farming"
+      }
+    ],
+    keyChecklist: [
+      "Exact potting soil ratio formulas (vermicompost, cocopeat, perlite, neem khali)",
+      "Weather-aware delay: suppress watering when precipitation probability > 60%",
+      "MQTT QoS 1 message persistence for intermittent Wi-Fi sensor dropouts",
+      "Multilingual localized agronomy guidance (Hindi and English)"
+    ]
+  },
+  {
+    id: "multi-tenant-branding",
+    name: "Multi-Tenant White-Labeling & Routing",
+    icon: "Layers",
+    description: "Learned from Hospital Vedant & Life Platform: Dynamic subdomain/custom domain host routing, tenant CSS theming, and database data isolation.",
+    defaultFramework: "Next.js Middleware + Prisma / PostgreSQL RLS",
+    suggestedFrameworks: ["Next.js Edge Middleware", "PostgreSQL Row Level Security", "CSS Variables Theming", "Subdomain Multi-tenancy"],
+    associatedProject: "Hospital Vedant / Life Platform",
+    sampleBadPrompts: [
+      {
+        title: "Custom Domain Clinic Branding",
+        prompt: "configure custom domain routing so clinic1.com and clinic2.com show their own hospital logo and theme",
+        suggestedStack: "Next.js Middleware + Dynamic Theme Provider",
+        sourceProject: "Hospital Vedant"
+      },
+      {
+        title: "Cross-Tenant Data Leak Prevention",
+        prompt: "ensure tenant A doctors cannot see tenant B patient records in database queries or search APIs",
+        suggestedStack: "PostgreSQL Row Level Security (RLS) + Prisma",
+        sourceProject: "Hospital Management System"
+      }
+    ],
+    keyChecklist: [
+      "Edge Middleware hostname inspection and tenant resolution without DB roundtrips",
+      "PostgreSQL Row Level Security (RLS) policies scoped strictly to current tenant_id",
+      "Dynamic CSS variable palette injection with zero flashing of unstyled content (FOUC)",
+      "Fallback brand presets when accessing via unmapped custom domains"
+    ]
+  },
+  {
+    id: "state-cache-invalidation",
+    name: "Real-Time State Sync & Cache Tuning",
+    icon: "RefreshCw",
+    description: "Learned from Hospital Management System: Diagnosing stale React Query caches, optimistic update rollbacks, and write-after-read lag.",
+    defaultFramework: "React Query (TanStack Query) + WebSocket",
+    suggestedFrameworks: ["TanStack Query v5", "SWR", "Zustand Store Invalidation", "Optimistic UI Updates"],
+    associatedProject: "Hospital Management System",
+    sampleBadPrompts: [
+      {
+        title: "Patient Added Not Showing in List",
+        prompt: "why pateint Abhishek Sahu which i added why its not coming. does it has to be reloaded ?",
+        suggestedStack: "TanStack Query (React Query) Cache Invalidation",
+        sourceProject: "Hospital Management System"
+      },
+      {
+        title: "Optimistic Appointment Cancellation",
+        prompt: "cancel appointment optimistically in ui with instant rollback and toast notification on server error",
+        suggestedStack: "React Query useMutation onMutate / onError",
+        sourceProject: "Hospital Management System"
+      }
+    ],
+    keyChecklist: [
+      "Targeted query cache invalidation (queryClient.invalidateQueries) matching exact query key tags",
+      "Optimistic snapshot capture and rolling back previous query data on mutation failure",
+      "Write-after-read consistency checks preventing stale replica reading right after inserts",
+      "StaleTime and gcTime tuning to prevent unnecessary background network spamming"
+    ]
+  },
+  {
+    id: "monorepo-branch-split",
+    name: "Monorepo & Branch Architecture Separation",
+    icon: "GitBranch",
+    description: "Learned from HMS Landing vs Staff Portal: Isolating public landing pages from internal staff apps, code sharing, and bundle hygiene.",
+    defaultFramework: "Turborepo / pnpm Workspaces / Next.js",
+    suggestedFrameworks: ["Turborepo", "pnpm Workspaces", "Nx", "Bundle Analyzer"],
+    associatedProject: "HMS Landing Page / HMS Portal",
+    sampleBadPrompts: [
+      {
+        title: "Separate Landing Page from Staff Portal",
+        prompt: "i dont understand we have created landing-page branch and that suppose to have landing and staff code has to go somewhere else separate it",
+        suggestedStack: "Turborepo Apps Separation (Landing vs Staff)",
+        sourceProject: "Hospital Management System"
+      },
+      {
+        title: "Shared Component Library Hygiene",
+        prompt: "share ui components between landing page and admin dashboard in a clean monorepo without leaking admin code",
+        suggestedStack: "pnpm Workspace Shared UI Package",
+        sourceProject: "HMS Landing Page"
+      }
+    ],
+    keyChecklist: [
+      "Clean package workspace separation: apps/landing (public) and apps/portal (internal)",
+      "Strict export boundaries preventing private staff credentials or types from bundling into public web",
+      "Next.js bundle analyzer check ensuring landing page JavaScript bundle remains under 150KB",
+      "Shared design system UI package (@workspace/ui) with peer dependency deduplication"
+    ]
+  },
+  {
+    id: "mobile-touch-qa",
+    name: "Mobile Touch Target & Viewport QA",
+    icon: "Smartphone",
+    description: "Learned from WhisperRoom & HMS: WCAG 2.1 touch target compliance, virtual keyboard viewport squishing, and drawer touch gestures.",
+    defaultFramework: "Playwright Mobile Emulation + WCAG 2.1",
+    suggestedFrameworks: ["Playwright (iPhone 14 / Pixel 7)", "axe-core Touch Audit", "Visual Viewport API", "Mobile Gestures Emulation"],
+    associatedProject: "WhisperRoom / HMS Landing Page",
+    sampleBadPrompts: [
+      {
+        title: "Mobile Virtual Keyboard Squish Layout",
+        prompt: "is propelry tested for mobile as it will be used much in mobile what happens when keyboard opens",
+        suggestedStack: "Playwright Mobile Viewport + Keyboard Simulation",
+        sourceProject: "WhisperRoom"
+      },
+      {
+        title: "Touch Target & Navigation Bar Audit",
+        prompt: "audit touch target sizes on navigation bar and buttons for mobile compliance so thumbs can tap easily",
+        suggestedStack: "Playwright + WCAG Touch Target 44px Check",
+        sourceProject: "HMS Landing Page"
+      }
+    ],
+    keyChecklist: [
+      "Minimum 44x44 CSS pixel touch target bounding box assertions per WCAG 2.1 Success Criterion 2.5.5",
+      "Visual Viewport API (window.visualViewport) simulation when soft keyboard expands on mobile",
+      "Safe-area-inset padding (env(safe-area-inset-bottom)) assertions preventing iOS home bar overlaps",
+      "Touch event gesture testing (swipe-to-dismiss, drawer drag) with zero coordinate hardcoding"
+    ]
+  },
+  {
+    id: "local-cloud-emulation",
+    name: "Local Cloud & Floci/AWS Emulation",
+    icon: "Cloud",
+    description: "Learned from AWS Local Cost Optimization: Running local S3, DynamoDB, and IAM using Floci/LocalStack without incurring cloud charges.",
+    defaultFramework: "Floci / LocalStack / AWS SDK v3",
+    suggestedFrameworks: ["Floci Local AWS", "LocalStack Community", "Docker Compose", "AWS SDK v3 Endpoint Overrides"],
+    associatedProject: "Abhishree Sentinel / Labs",
+    sampleBadPrompts: [
+      {
+        title: "Local AWS S3 & DynamoDB with Floci",
+        prompt: "can we use https://github.com/floci-io/floci for aws for local to avoid paying any cloud bills",
+        suggestedStack: "Floci Local AWS + Docker Compose",
+        sourceProject: "Abhishree Labs"
+      },
+      {
+        title: "AWS SDK Endpoint Overrides for Local Testing",
+        prompt: "configure local aws credentials and endpoint overrides for s3 upload testing in dev without hitting real aws",
+        suggestedStack: "AWS SDK v3 + Local S3 Bucket Provisioning",
+        sourceProject: "Abhishree Labs"
+      }
+    ],
+    keyChecklist: [
+      "Docker Compose service configuration for Floci / LocalStack with local persistence volume",
+      "AWS SDK v3 client initialization with custom endpoint override (http://localhost:4566)",
+      "Automated bucket provisioning initialization script (awslocal s3 mb s3://local-bucket)",
+      "S3 presigned URL generation compatibility with local localhost vs container network hosts"
+    ]
+  },
+  {
+    id: "patent-compliance",
+    name: "Patent, IP & Commercial Adoption",
+    icon: "Scale",
+    description: "Learned from ExamAnalytics AI: Aligning codebase architecture with patent claims/drawings and auditing copyleft open-source licenses.",
+    defaultFramework: "Software IP Compliance & License Audit",
+    suggestedFrameworks: ["License-Checker CLI", "Patent Claim Mapping", "Clean-Room Architecture", "FOSSA / Snyk License"],
+    associatedProject: "ExamAnalytics AI",
+    sampleBadPrompts: [
+      {
+        title: "Align Code with Patent Description & Drawings",
+        prompt: "i have pasted Description English-3.pdf Drawings English-4.pdf can you check if our project is alligned with patent adoption and commertial use",
+        suggestedStack: "Patent Architecture Alignment Matrix",
+        sourceProject: "ExamAnalytics AI"
+      },
+      {
+        title: "GPL / Copyleft Dependency Audit",
+        prompt: "scan all npm and python packages to make sure zero copyleft gpl licenses are present for commercial software release",
+        suggestedStack: "License-Checker + Dependency Audit",
+        sourceProject: "ExamAnalytics AI"
+      }
+    ],
+    keyChecklist: [
+      "Strict license auditing: filter out AGPL-3.0, GPL-2.0/3.0, prioritizing MIT, Apache 2.0, BSD-3-Clause",
+      "Traceability matrix linking patent claim paragraphs to specific software modules and algorithms",
+      "Clean-room architectural boundary documentation ensuring independent development proof",
+      "Verification that all third-party SDKs permit commercial redistribution without viral source disclosure"
+    ]
+  },
+  {
     id: "general-developer",
     name: "General Developer Task",
     icon: "Code2",
@@ -38123,6 +38696,111 @@ var LEARNED_USER_PROMPTS = [
       "Photorealistic prompt keywords (morning dew, terracotta pots, 8K, authentic rooftop garden)",
       "Crop timeline, germination days, and harvest cycles table"
     ]
+  },
+  // 8. WebRTC & Live Technical Interviews
+  {
+    id: "learned-interview-portal-video",
+    project: "Interview Portal",
+    category: "webrtc-video",
+    rawUserPrompt: "candidate video is freezing during live technical interview fix audio video desync",
+    context: "Live candidate coding interview with simultaneous Monaco editor, screen sharing, and WebRTC video.",
+    targetStack: "WebRTC SimplePeer + Socket.io Signaling",
+    whyItFailedBefore: "AI guessed random timeouts instead of configuring STUN/TURN fallback relays, checking renegotiation state, and monitoring packet loss.",
+    keyUpgrades: [
+      "STUN/TURN fallback credentials for symmetric NAT networks",
+      "Dynamic bitrate adaptation via RTCRtpSender",
+      "Independent signaling socket reconnection without dropping active media streams"
+    ]
+  },
+  // 9. Patent Alignment & IP Auditing
+  {
+    id: "learned-examanalytics-pdf",
+    project: "ExamAnalytics AI",
+    category: "patent-compliance",
+    rawUserPrompt: "i have pasted Description English-3.pdf Drawings English-4.pdf can you check if our project is alligned with patent adoption and commertial use",
+    context: "Exam paper analysis and patent criteria evaluation pipeline.",
+    targetStack: "Patent Compliance Matrix + pdfplumber",
+    whyItFailedBefore: "AI gave a conversational summary without building a paragraph-to-module traceability matrix or checking copyleft dependencies.",
+    keyUpgrades: [
+      "Patent claim-to-code traceability matrix",
+      "Copyleft license audit (banning GPL/AGPL from commercial release)",
+      "Clean-room independent invention documentation"
+    ]
+  },
+  // 10. Local Cloud & FinOps
+  {
+    id: "learned-floci-local-aws",
+    project: "Abhishree Labs / FinOps",
+    category: "local-cloud-emulation",
+    rawUserPrompt: "can we use https://github.com/floci-io/floci for aws for local to avoid paying any cloud bills",
+    context: "Local cloud emulation for testing S3 uploads and DynamoDB without incurring AWS expenses.",
+    targetStack: "Floci Local AWS + Docker Compose",
+    whyItFailedBefore: "AI suggested deploying directly to AWS rather than configuring a zero-cost local Floci container with endpoint overrides.",
+    keyUpgrades: [
+      "Docker Compose Floci / LocalStack orchestration",
+      "AWS SDK v3 custom endpoint URL override (http://localhost:4566)",
+      "Automated local bucket provisioning script on startup"
+    ]
+  },
+  // 11. State Sync & Cache Invalidation
+  {
+    id: "learned-patient-cache-sync",
+    project: "Hospital Management System",
+    category: "state-cache-invalidation",
+    rawUserPrompt: "why pateint Abhishek Sahu which i added why its not coming. does it has to be reloaded ?",
+    context: "Doctor and reception dashboard after adding a new patient.",
+    targetStack: "TanStack Query (React Query) Cache Invalidation",
+    whyItFailedBefore: "AI told user to press F5 instead of fixing React Query mutation cache invalidation and write-after-read replication lag.",
+    keyUpgrades: [
+      "queryClient.invalidateQueries matching exact query key tags",
+      "Optimistic UI state updates for immediate table insertion",
+      "Write-after-read consistency handling"
+    ]
+  },
+  // 12. Monorepo & Branch Architecture Separation
+  {
+    id: "learned-landing-branch-split",
+    project: "Hospital Management System / Landing Page",
+    category: "monorepo-branch-split",
+    rawUserPrompt: "i dont understand we have created landing-page branch and that suppose to have landing and staff code has to go somewhere else separate it",
+    context: "Separating customer-facing hospital landing page from internal hospital staff portal.",
+    targetStack: "Turborepo Apps Separation (Landing vs Staff)",
+    whyItFailedBefore: "AI mixed staff portal components and admin routes into the public landing page repository.",
+    keyUpgrades: [
+      "Strict package boundary isolation: apps/landing (public) vs apps/portal (internal)",
+      "Ensuring public web bundle has zero staff credentials or private API routes",
+      "Shared UI design system package with peer-dependency deduplication"
+    ]
+  },
+  // 13. Social Media Automation & Rate Limits
+  {
+    id: "learned-social-automation",
+    project: "AI Social Automation",
+    category: "social-automation",
+    rawUserPrompt: "schedule linkedin post with image and handle oauth token refresh automatically in background",
+    context: "Scheduled social publishing with OAuth 2.0 PKCE and media uploads.",
+    targetStack: "LinkedIn REST API + BullMQ + Node.js",
+    whyItFailedBefore: "AI wrote code that failed as soon as the 60-day access token expired because it lacked background refresh rotation.",
+    keyUpgrades: [
+      "Proactive OAuth 2.0 token refresh rotation before expiration",
+      "Exponential backoff rate-limit retry respecting platform headers",
+      "Chunked resumable media upload protocol"
+    ]
+  },
+  // 14. IoT Smart Irrigation & Agronomy
+  {
+    id: "learned-terrace-farming-iot",
+    project: "Terrace Farming Smart Assistant",
+    category: "iot-terrace-farming",
+    rawUserPrompt: "smart irrigation rule based on soil moisture sensor readings and rain forecast to avoid overwatering",
+    context: "ESP32 IoT soil moisture sensor controlling terrace irrigation valve with OpenWeatherMap forecast.",
+    targetStack: "MQTT Telemetry + Weather API Rule Engine",
+    whyItFailedBefore: "AI wrote an unconditional threshold trigger that watered plants even during torrential rain.",
+    keyUpgrades: [
+      "Weather forecast precipitation suppression (>60% rain probability delay)",
+      "Exact potting soil ratio formulas for urban terrace containers",
+      "MQTT QoS 1 message persistence for Wi-Fi reconnection recovery"
+    ]
   }
 ];
 
@@ -38153,6 +38831,16 @@ function createPromptMakerServer() {
         "healthcare-doctor",
         "image-generation",
         "concurrency-scaling",
+        "webrtc-video",
+        "pdf-document-ai",
+        "social-automation",
+        "iot-terrace-farming",
+        "multi-tenant-branding",
+        "state-cache-invalidation",
+        "monorepo-branch-split",
+        "mobile-touch-qa",
+        "local-cloud-emulation",
+        "patent-compliance",
         "general-developer"
       ]).optional().describe("The engineering domain category (defaults to ui-testing or auto-detected)"),
       framework: external_exports.string().optional().describe('Target tech stack or framework (e.g. "Playwright (TypeScript)", "Next.js 16", "Cloudflare DNS", "Django REST")'),
@@ -38213,6 +38901,16 @@ function createPromptMakerServer() {
         "healthcare-doctor",
         "image-generation",
         "concurrency-scaling",
+        "webrtc-video",
+        "pdf-document-ai",
+        "social-automation",
+        "iot-terrace-farming",
+        "multi-tenant-branding",
+        "state-cache-invalidation",
+        "monorepo-branch-split",
+        "mobile-touch-qa",
+        "local-cloud-emulation",
+        "patent-compliance",
         "general-developer"
       ]).optional().describe("The engineering domain category")
     },

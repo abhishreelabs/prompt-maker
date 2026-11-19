@@ -28,18 +28,7 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
 
   if (!isOpen) return null;
 
-  const projects = [
-    'all',
-    'WhisperRoom / HMS Landing',
-    'Hospital Management System',
-    'Virtual Doctor / HMS',
-    'Abhishree Sentinel / Labs',
-    'WhisperRoom / Sentinel',
-    'WhisperRoom',
-    'WhisperRoom / Interview Portal',
-    'Abhishree Studio / Sentinel',
-    'Terrace Farming / Social Automation'
-  ];
+  const projects = ['all', ...Array.from(new Set(LEARNED_USER_PROMPTS.map(item => item.project)))];
 
   const filtered = LEARNED_USER_PROMPTS.filter(item => {
     const matchesProj = selectedProject === 'all' || item.project.includes(selectedProject);

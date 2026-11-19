@@ -14,6 +14,16 @@ export type UseCaseId =
   | 'healthcare-doctor'
   | 'image-generation'
   | 'concurrency-scaling'
+  | 'webrtc-video'
+  | 'pdf-document-ai'
+  | 'social-automation'
+  | 'iot-terrace-farming'
+  | 'multi-tenant-branding'
+  | 'state-cache-invalidation'
+  | 'monorepo-branch-split'
+  | 'mobile-touch-qa'
+  | 'local-cloud-emulation'
+  | 'patent-compliance'
   | 'general-developer';
 
 export type TargetModel = 'claude' | 'gpt4o' | 'gemini' | 'cursor';

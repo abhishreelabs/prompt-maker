@@ -51,6 +51,9 @@ prompt-maker analyze "my sql query is slow" --use-case db-optimization
 # Explore learned real-world workflows from active workspace repositories:
 prompt-maker learned --project WhisperRoom
 
+# Mine all real developer prompts from local agent sessions across 26 domains:
+prompt-maker mine
+
 # Start the MCP stdio server:
 prompt-maker mcp
 ```
@@ -58,7 +61,7 @@ prompt-maker mcp
 #### CLI Options:
 | Option | Description |
 | :--- | :--- |
-| `-u, --use-case <id>` | `ui-testing`, `unit-testing`, `bug-fixing`, `code-refactoring`, `feature-implementation`, `api-design`, `code-review`, `db-optimization`, `devops-docker`, `devops-infra`, `security-privacy`, `secrets-observability`, `healthcare-doctor`, `image-generation`, `concurrency-scaling`, `general-developer` |
+| `-u, --use-case <id>` | 26 domains: `ui-testing`, `unit-testing`, `bug-fixing`, `code-refactoring`, `feature-implementation`, `api-design`, `code-review`, `db-optimization`, `devops-docker`, `devops-infra`, `security-privacy`, `secrets-observability`, `healthcare-doctor`, `image-generation`, `concurrency-scaling`, `webrtc-video`, `pdf-document-ai`, `social-automation`, `iot-terrace-farming`, `multi-tenant-branding`, `state-cache-invalidation`, `monorepo-branch-split`, `mobile-touch-qa`, `local-cloud-emulation`, `patent-compliance`, `general-developer` |
 | `-f, --framework <name>` | Target framework (e.g. `Playwright (TypeScript)`, `Next.js 16`, `FastAPI`, `Cloudflare DNS`) |
 | `-m, --model <model>` | Target model wrapper: `claude` (Anthropic XML tags), `gpt4o` (Markdown), `gemini` (Grounding), `cursor` (Concise rules) |
 | `-t, --tone <tone>` | `production`, `crisp`, `step-by-step`, `qa-adversarial` |

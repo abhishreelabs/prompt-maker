@@ -61,3 +61,34 @@ test('CLI learned filters workflows by project with --json output', async () => 
   assert.ok(list.length > 0);
   assert.ok(list.every(item => item.project.toLowerCase().includes('whisperroom')));
 });
+
+test('CLI mine extracts real developer prompts from local sessions with --json output', async () => {
+  const { stdout } = await execFileAsync('node', [cliBinary, 'mine', '--json']);
+  const parsed = JSON.parse(stdout);
+  assert.ok(parsed.total_prompts > 0, 'Should find local prompts in brain sessions');
+  assert.ok(parsed.categories, 'Should have categorized breakdown');
+  assert.ok(Array.isArray(parsed.sample_prompts), 'Should return sample prompts array');
+});
+
+test('CLI auto-detects new engineering domains (webrtc, patent, iot)', async () => {
+  const { stdout: webrtcOut } = await execFileAsync('node', [
+    cliBinary,
+    'fix video freezing in webrtc peer connection',
+    '--json'
+  ]);
+  assert.equal(JSON.parse(webrtcOut).useCase, 'webrtc-video');
+
+  const { stdout: patentOut } = await execFileAsync('node', [
+    cliBinary,
+    'check patent claims and gpl copyleft licenses',
+    '--json'
+  ]);
+  assert.equal(JSON.parse(patentOut).useCase, 'patent-compliance');
+
+  const { stdout: iotOut } = await execFileAsync('node', [
+    cliBinary,
+    'smart irrigation rule for soil moisture on terrace farming',
+    '--json'
+  ]);
+  assert.equal(JSON.parse(iotOut).useCase, 'iot-terrace-farming');
+});

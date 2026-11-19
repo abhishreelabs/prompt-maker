@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
 import { enhancePromptOffline } from './engine/offlineEnhancer.ts';
 import { analyzeBadPrompt } from './engine/promptAnalyzer.ts';
 import { USE_CASES } from './data/useCases.ts';
@@ -20,6 +23,7 @@ function printHelp() {
   \x1b[32mprompt-maker\x1b[0m "<prompt>" [options]
   \x1b[32mprompt-maker\x1b[0m \x1b[33manalyze\x1b[0m "<prompt>" [options]
   \x1b[32mprompt-maker\x1b[0m \x1b[33mlearned\x1b[0m [options]
+  \x1b[32mprompt-maker\x1b[0m \x1b[33mmine\x1b[0m [options]
   \x1b[32mprompt-maker\x1b[0m \x1b[33mmcp\x1b[0m
   \x1b[32mprompt-maker\x1b[0m \x1b[33m--help\x1b[0m | \x1b[33m--version\x1b[0m
 
@@ -27,14 +31,19 @@ function printHelp() {
   \x1b[33m<prompt>\x1b[0m                Enhance a raw developer prompt into a production-grade prompt.
   \x1b[33manalyze <prompt>\x1b[0m        Audit a prompt and diagnose clarity vulnerabilities & missing guards.
   \x1b[33mlearned\x1b[0m                 Explore real-world prompt workflows learned from active repositories.
+  \x1b[33mmine\x1b[0m                    Scan local agent sessions and mine real developer prompts across all 26 domains.
   \x1b[33mmcp\x1b[0m                     Start the Model Context Protocol (MCP) server over stdio for AI agents.
 
 \x1b[1mOPTIONS:\x1b[0m
   \x1b[36m-u, --use-case\x1b[0m <id>      Domain use case (default: auto-detected or ui-testing)
-                          Available: ui-testing, unit-testing, bug-fixing, code-refactoring,
-                          feature-implementation, api-design, code-review, db-optimization,
-                          devops-docker, devops-infra, security-privacy, secrets-observability,
-                          healthcare-doctor, image-generation, concurrency-scaling, general-developer
+                          Available (26 domains): ui-testing, unit-testing, bug-fixing,
+                          code-refactoring, feature-implementation, api-design, code-review,
+                          db-optimization, devops-docker, devops-infra, security-privacy,
+                          secrets-observability, healthcare-doctor, image-generation,
+                          concurrency-scaling, webrtc-video, pdf-document-ai, social-automation,
+                          iot-terrace-farming, multi-tenant-branding, state-cache-invalidation,
+                          monorepo-branch-split, mobile-touch-qa, local-cloud-emulation,
+                          patent-compliance, general-developer
   \x1b[36m-f, --framework\x1b[0m <name>   Target tech stack/framework (e.g. "Playwright", "FastAPI", "Next.js 16")
   \x1b[36m-m, --model\x1b[0m <model>      Format wrapper: claude (XML), gpt4o (Markdown), gemini, cursor (default: claude)
   \x1b[36m-t, --tone\x1b[0m <tone>        Tone: production, crisp, step-by-step, qa-adversarial (default: production)
@@ -53,8 +62,8 @@ function printHelp() {
   \x1b[90m# 3. Analyze prompt defects:\x1b[0m
   prompt-maker analyze "my sql query is slow" --use-case db-optimization
 
-  \x1b[90m# 4. Agent tool JSON output:\x1b[0m
-  prompt-maker "dockerize nextjs app with non-root user" --use-case devops-docker --json
+  \x1b[90m# 4. Mine all real prompts typed across past agent sessions:\x1b[0m
+  prompt-maker mine
 
   \x1b[90m# 5. Launch MCP stdio server for Cursor / Claude Desktop / Windsurf:\x1b[0m
   prompt-maker mcp
@@ -62,7 +71,7 @@ function printHelp() {
 }
 
 interface ParsedArgs {
-  command: 'enhance' | 'analyze' | 'learned' | 'mcp' | 'help' | 'version';
+  command: 'enhance' | 'analyze' | 'learned' | 'mine' | 'mcp' | 'help' | 'version';
   promptText: string;
   useCase?: string;
   framework?: string;
@@ -72,6 +81,86 @@ interface ParsedArgs {
   quiet: boolean;
   project?: string;
   category?: string;
+}
+
+export function inferUseCase(text: string): UseCaseId {
+  const t = text.toLowerCase();
+  if (t.includes('webrtc') || t.includes('video call') || t.includes('screen share') || t.includes('ice candidate')) {
+    return 'webrtc-video';
+  }
+  if (t.includes('pdf') || t.includes('ocr') || t.includes('exam') || t.includes('scanned')) {
+    return 'pdf-document-ai';
+  }
+  if (t.includes('social') || t.includes('linkedin') || t.includes('twitter') || t.includes('tweet') || t.includes('schedule post')) {
+    return 'social-automation';
+  }
+  if (t.includes('farming') || t.includes('terrace') || t.includes('soil') || t.includes('irrigation') || t.includes('plant')) {
+    return 'iot-terrace-farming';
+  }
+  if (t.includes('white label') || t.includes('tenant') || t.includes('custom domain') || t.includes('clinic1') || t.includes('branding')) {
+    return 'multi-tenant-branding';
+  }
+  if (t.includes('stale') || t.includes('cache') || t.includes('react query') || t.includes('not showing up') || t.includes('optimistic')) {
+    return 'state-cache-invalidation';
+  }
+  if (t.includes('monorepo') || t.includes('branch split') || t.includes('landing page branch') || t.includes('staff portal')) {
+    return 'monorepo-branch-split';
+  }
+  if (t.includes('touch target') || t.includes('virtual keyboard') || t.includes('mobile web') || t.includes('iphone') || t.includes('touch')) {
+    return 'mobile-touch-qa';
+  }
+  if (t.includes('floci') || t.includes('localstack') || t.includes('local aws') || t.includes('s3 local')) {
+    return 'local-cloud-emulation';
+  }
+  if (t.includes('patent') || t.includes('gpl') || t.includes('copyleft') || t.includes('license audit') || t.includes('claims')) {
+    return 'patent-compliance';
+  }
+  if (t.includes('dns') || t.includes('uptime') || t.includes('cloudflare') || t.includes('render') || t.includes('better stack')) {
+    return 'devops-infra';
+  }
+  if (t.includes('docker') || t.includes('dockerfile') || t.includes('container') || t.includes('k8s') || t.includes('kubernetes')) {
+    return 'devops-docker';
+  }
+  if (t.includes('sql') || t.includes('database') || t.includes('postgres') || t.includes('prisma') || t.includes('query')) {
+    return 'db-optimization';
+  }
+  if (t.includes('api') || t.includes('endpoint') || t.includes('rest') || t.includes('webhook') || t.includes('graphql')) {
+    return 'api-design';
+  }
+  if (t.includes('unit test') || t.includes('coverage') || t.includes('mock') || t.includes('jest') || t.includes('vitest')) {
+    return 'unit-testing';
+  }
+  if (t.includes('playwright') || t.includes('cypress') || t.includes('e2e') || t.includes('locator') || (t.includes('test') && !t.includes('unit'))) {
+    return 'ui-testing';
+  }
+  if (t.includes('bug') || t.includes('fix') || t.includes('error') || t.includes('leak') || t.includes('failing') || t.includes('why')) {
+    return 'bug-fixing';
+  }
+  if (t.includes('refactor') || t.includes('clean up') || t.includes('solid')) {
+    return 'code-refactoring';
+  }
+  if (t.includes('security') || t.includes('vulnerability') || t.includes('privacy') || t.includes('zero-trace') || t.includes('auto-burn')) {
+    return 'security-privacy';
+  }
+  if (t.includes('infisical') || t.includes('sentry') || t.includes('secret') || t.includes('env key')) {
+    return 'secrets-observability';
+  }
+  if (t.includes('doctor') || t.includes('patient') || t.includes('hospital') || t.includes('triage') || t.includes('appointment')) {
+    return 'healthcare-doctor';
+  }
+  if (t.includes('image') || t.includes('infographic') || t.includes('midjourney') || t.includes('imagen')) {
+    return 'image-generation';
+  }
+  if (t.includes('concurrency') || t.includes('websocket') || t.includes('socket.io') || t.includes('redis adapter')) {
+    return 'concurrency-scaling';
+  }
+  if (t.includes('code review') || t.includes('pr review') || t.includes('audit')) {
+    return 'code-review';
+  }
+  if (t.includes('create') || t.includes('implement') || t.includes('feature') || t.includes('add')) {
+    return 'feature-implementation';
+  }
+  return 'general-developer';
 }
 
 function parseCliArgs(args: string[]): ParsedArgs {
@@ -142,6 +231,8 @@ function parseCliArgs(args: string[]): ParsedArgs {
       result.promptText = positional.slice(1).join(' ').trim();
     } else if (first === 'learned') {
       result.command = 'learned';
+    } else if (first === 'mine' || first === 'extract') {
+      result.command = 'mine';
     } else if (first === 'help') {
       result.command = 'help';
     } else {
@@ -151,6 +242,45 @@ function parseCliArgs(args: string[]): ParsedArgs {
   }
 
   return result;
+}
+
+function mineLocalPrompts(): { session: string; prompt: string; inferredUseCase: UseCaseId }[] {
+  const brainDir = path.join(os.homedir(), '.gemini/antigravity/brain');
+  const results: { session: string; prompt: string; inferredUseCase: UseCaseId }[] = [];
+  if (!fs.existsSync(brainDir)) return results;
+
+  const entries = fs.readdirSync(brainDir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const logPath = path.join(brainDir, entry.name, '.system_generated', 'logs', 'transcript.jsonl');
+    if (!fs.existsSync(logPath)) continue;
+
+    try {
+      const content = fs.readFileSync(logPath, 'utf-8');
+      const lines = content.split('\n');
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        const data = JSON.parse(line);
+        if (data.type === 'USER_INPUT' && typeof data.content === 'string') {
+          let text = data.content;
+          text = text.replace(/<[^>]+>/g, '').trim();
+          if (text.includes('The current local time is:')) {
+            text = text.split('The current local time is:')[0].trim();
+          }
+          if (text.length > 10 && !text.startsWith('Comments on artifact') && !text.startsWith('{"action":')) {
+            results.push({
+              session: entry.name.slice(0, 8),
+              prompt: text,
+              inferredUseCase: inferUseCase(text)
+            });
+          }
+        }
+      }
+    } catch {
+      // Continue parsing other sessions
+    }
+  }
+  return results;
 }
 
 async function main() {
@@ -174,8 +304,52 @@ async function main() {
   }
 
   if (parsed.command === 'mcp') {
-    // Launch stdio MCP server directly
     await runStdioServer();
+    return;
+  }
+
+  if (parsed.command === 'mine') {
+    const mined = mineLocalPrompts();
+    const totalPrompts = mined.length;
+    const categoryCounts: Record<string, number> = {};
+    for (const item of mined) {
+      categoryCounts[item.inferredUseCase] = (categoryCounts[item.inferredUseCase] || 0) + 1;
+    }
+
+    if (parsed.json) {
+      console.log(JSON.stringify({
+        total_prompts: totalPrompts,
+        categories: categoryCounts,
+        sample_prompts: mined.slice(0, 30)
+      }, null, 2));
+      return;
+    }
+
+    printBanner();
+    console.log(`\x1b[1m⚡ Local Developer Prompt Mining Report\x1b[0m`);
+    console.log(`---------------------------------------------------------`);
+    console.log(`Total Real Prompts Discovered: \x1b[32m\x1b[1m${totalPrompts}\x1b[0m across ~/.gemini/antigravity/brain/\n`);
+    console.log(`\x1b[1mDistribution Across Engineering Domains:\x1b[0m`);
+
+    const sortedCats = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
+    for (const [cat, count] of sortedCats) {
+      const pct = ((count / totalPrompts) * 100).toFixed(1);
+      const bar = '█'.repeat(Math.min(25, Math.max(1, Math.round(count / 15))));
+      console.log(`  \x1b[36m${cat.padEnd(25)}\x1b[0m \x1b[33m${count.toString().padStart(4)}\x1b[0m (${pct.padStart(5)}%) \x1b[90m${bar}\x1b[0m`);
+    }
+
+    console.log(`\n\x1b[1mSample Mined Developer Prompts Ready to Compile:\x1b[0m`);
+    const seen = new Set<string>();
+    let displayed = 0;
+    for (const item of mined) {
+      if (displayed >= 8) break;
+      const snippet = item.prompt.slice(0, 80);
+      if (seen.has(snippet)) continue;
+      seen.add(snippet);
+      displayed++;
+      console.log(`  \x1b[35m[${item.session}]\x1b[0m \x1b[1m"${snippet}..."\x1b[0m`);
+      console.log(`    \x1b[90m➔ Run:\x1b[0m \x1b[32mprompt-maker "${item.prompt.replace(/"/g, '\\"')}" --use-case ${item.inferredUseCase}\x1b[0m\n`);
+    }
     return;
   }
 
@@ -211,7 +385,7 @@ async function main() {
       process.exit(1);
     }
 
-    const useCase = (parsed.useCase as UseCaseId) || 'ui-testing';
+    const useCase = (parsed.useCase as UseCaseId) || inferUseCase(parsed.promptText);
     const analysis = analyzeBadPrompt(parsed.promptText, useCase);
 
     if (parsed.json) {
@@ -249,29 +423,7 @@ async function main() {
   }
 
   // Determine effective use case
-  let useCase = (parsed.useCase as UseCaseId) || 'ui-testing';
-  // Simple heuristic if not specified
-  if (!parsed.useCase) {
-    const textLower = parsed.promptText.toLowerCase();
-    if (textLower.includes('dns') || textLower.includes('uptime') || textLower.includes('cloudflare') || textLower.includes('render')) {
-      useCase = 'devops-infra';
-    } else if (textLower.includes('docker') || textLower.includes('container') || textLower.includes('k8s')) {
-      useCase = 'devops-docker';
-    } else if (textLower.includes('sql') || textLower.includes('database') || textLower.includes('postgres') || textLower.includes('query')) {
-      useCase = 'db-optimization';
-    } else if (textLower.includes('api') || textLower.includes('endpoint') || textLower.includes('rest') || textLower.includes('webhook')) {
-      useCase = 'api-design';
-    } else if (textLower.includes('unit test') || textLower.includes('coverage') || textLower.includes('mock')) {
-      useCase = 'unit-testing';
-    } else if (textLower.includes('bug') || textLower.includes('fix') || textLower.includes('error') || textLower.includes('leak')) {
-      useCase = 'bug-fixing';
-    } else if (textLower.includes('refactor') || textLower.includes('clean up')) {
-      useCase = 'code-refactoring';
-    } else if (textLower.includes('security') || textLower.includes('vulnerability') || textLower.includes('privacy') || textLower.includes('trace')) {
-      useCase = 'security-privacy';
-    }
-  }
-
+  const useCase = (parsed.useCase as UseCaseId) || inferUseCase(parsed.promptText);
   const selectedDef = USE_CASES.find(u => u.id === useCase);
   const framework = parsed.framework || selectedDef?.defaultFramework || 'TypeScript';
   const targetModel = (parsed.model as TargetModel) || 'claude';

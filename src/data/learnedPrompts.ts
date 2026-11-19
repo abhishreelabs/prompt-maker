@@ -195,5 +195,117 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
       'Photorealistic prompt keywords (morning dew, terracotta pots, 8K, authentic rooftop garden)',
       'Crop timeline, germination days, and harvest cycles table'
     ]
+  },
+
+  // 8. WebRTC & Live Technical Interviews
+  {
+    id: 'learned-interview-portal-video',
+    project: 'Interview Portal',
+    category: 'webrtc-video',
+    rawUserPrompt: 'candidate video is freezing during live technical interview fix audio video desync',
+    context: 'Live candidate coding interview with simultaneous Monaco editor, screen sharing, and WebRTC video.',
+    targetStack: 'WebRTC SimplePeer + Socket.io Signaling',
+    whyItFailedBefore: 'AI guessed random timeouts instead of configuring STUN/TURN fallback relays, checking renegotiation state, and monitoring packet loss.',
+    keyUpgrades: [
+      'STUN/TURN fallback credentials for symmetric NAT networks',
+      'Dynamic bitrate adaptation via RTCRtpSender',
+      'Independent signaling socket reconnection without dropping active media streams'
+    ]
+  },
+
+  // 9. Patent Alignment & IP Auditing
+  {
+    id: 'learned-examanalytics-pdf',
+    project: 'ExamAnalytics AI',
+    category: 'patent-compliance',
+    rawUserPrompt: 'i have pasted Description English-3.pdf Drawings English-4.pdf can you check if our project is alligned with patent adoption and commertial use',
+    context: 'Exam paper analysis and patent criteria evaluation pipeline.',
+    targetStack: 'Patent Compliance Matrix + pdfplumber',
+    whyItFailedBefore: 'AI gave a conversational summary without building a paragraph-to-module traceability matrix or checking copyleft dependencies.',
+    keyUpgrades: [
+      'Patent claim-to-code traceability matrix',
+      'Copyleft license audit (banning GPL/AGPL from commercial release)',
+      'Clean-room independent invention documentation'
+    ]
+  },
+
+  // 10. Local Cloud & FinOps
+  {
+    id: 'learned-floci-local-aws',
+    project: 'Abhishree Labs / FinOps',
+    category: 'local-cloud-emulation',
+    rawUserPrompt: 'can we use https://github.com/floci-io/floci for aws for local to avoid paying any cloud bills',
+    context: 'Local cloud emulation for testing S3 uploads and DynamoDB without incurring AWS expenses.',
+    targetStack: 'Floci Local AWS + Docker Compose',
+    whyItFailedBefore: 'AI suggested deploying directly to AWS rather than configuring a zero-cost local Floci container with endpoint overrides.',
+    keyUpgrades: [
+      'Docker Compose Floci / LocalStack orchestration',
+      'AWS SDK v3 custom endpoint URL override (http://localhost:4566)',
+      'Automated local bucket provisioning script on startup'
+    ]
+  },
+
+  // 11. State Sync & Cache Invalidation
+  {
+    id: 'learned-patient-cache-sync',
+    project: 'Hospital Management System',
+    category: 'state-cache-invalidation',
+    rawUserPrompt: 'why pateint Abhishek Sahu which i added why its not coming. does it has to be reloaded ?',
+    context: 'Doctor and reception dashboard after adding a new patient.',
+    targetStack: 'TanStack Query (React Query) Cache Invalidation',
+    whyItFailedBefore: 'AI told user to press F5 instead of fixing React Query mutation cache invalidation and write-after-read replication lag.',
+    keyUpgrades: [
+      'queryClient.invalidateQueries matching exact query key tags',
+      'Optimistic UI state updates for immediate table insertion',
+      'Write-after-read consistency handling'
+    ]
+  },
+
+  // 12. Monorepo & Branch Architecture Separation
+  {
+    id: 'learned-landing-branch-split',
+    project: 'Hospital Management System / Landing Page',
+    category: 'monorepo-branch-split',
+    rawUserPrompt: 'i dont understand we have created landing-page branch and that suppose to have landing and staff code has to go somewhere else separate it',
+    context: 'Separating customer-facing hospital landing page from internal hospital staff portal.',
+    targetStack: 'Turborepo Apps Separation (Landing vs Staff)',
+    whyItFailedBefore: 'AI mixed staff portal components and admin routes into the public landing page repository.',
+    keyUpgrades: [
+      'Strict package boundary isolation: apps/landing (public) vs apps/portal (internal)',
+      'Ensuring public web bundle has zero staff credentials or private API routes',
+      'Shared UI design system package with peer-dependency deduplication'
+    ]
+  },
+
+  // 13. Social Media Automation & Rate Limits
+  {
+    id: 'learned-social-automation',
+    project: 'AI Social Automation',
+    category: 'social-automation',
+    rawUserPrompt: 'schedule linkedin post with image and handle oauth token refresh automatically in background',
+    context: 'Scheduled social publishing with OAuth 2.0 PKCE and media uploads.',
+    targetStack: 'LinkedIn REST API + BullMQ + Node.js',
+    whyItFailedBefore: 'AI wrote code that failed as soon as the 60-day access token expired because it lacked background refresh rotation.',
+    keyUpgrades: [
+      'Proactive OAuth 2.0 token refresh rotation before expiration',
+      'Exponential backoff rate-limit retry respecting platform headers',
+      'Chunked resumable media upload protocol'
+    ]
+  },
+
+  // 14. IoT Smart Irrigation & Agronomy
+  {
+    id: 'learned-terrace-farming-iot',
+    project: 'Terrace Farming Smart Assistant',
+    category: 'iot-terrace-farming',
+    rawUserPrompt: 'smart irrigation rule based on soil moisture sensor readings and rain forecast to avoid overwatering',
+    context: 'ESP32 IoT soil moisture sensor controlling terrace irrigation valve with OpenWeatherMap forecast.',
+    targetStack: 'MQTT Telemetry + Weather API Rule Engine',
+    whyItFailedBefore: 'AI wrote an unconditional threshold trigger that watered plants even during torrential rain.',
+    keyUpgrades: [
+      'Weather forecast precipitation suppression (>60% rain probability delay)',
+      'Exact potting soil ratio formulas for urban terrace containers',
+      'MQTT QoS 1 message persistence for Wi-Fi reconnection recovery'
+    ]
   }
 ];
