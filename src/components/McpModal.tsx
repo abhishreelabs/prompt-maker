@@ -90,11 +90,11 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
             <div>
               <div className="flex items-center space-x-2">
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">Model Context Protocol (MCP) Server</h3>
-                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
+                <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
                   Ready for AI Agents
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
                 Let Cursor, Claude, Windsurf, or Antigravity agents enhance your prompts before writing code.
               </p>
             </div>
@@ -126,13 +126,13 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
 
         {/* Code Content */}
         <div className="p-5 space-y-4">
-          <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center justify-between text-xs sm:text-sm">
             <span className="text-slate-900 dark:text-slate-300 font-semibold">{current.title}</span>
-            <span className="text-slate-500 dark:text-slate-500 font-mono text-[11px]">{current.filename}</span>
+            <span className="text-slate-500 dark:text-slate-400 font-mono text-xs">{current.filename}</span>
           </div>
 
           <div className="relative">
-            <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-200 overflow-x-auto">
+            <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed">
               {current.content}
             </pre>
             <button
@@ -154,12 +154,12 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Tools exposed summary */}
-          <div className="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-4 border border-slate-200 dark:border-slate-800/80 space-y-2.5 text-xs">
-            <div className="text-slate-900 dark:text-slate-300 font-semibold flex items-center space-x-1.5">
+          <div className="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-4 border border-slate-200 dark:border-slate-800/80 space-y-2.5 text-xs sm:text-sm">
+            <div className="text-slate-900 dark:text-slate-300 font-semibold flex items-center space-x-1.5 text-xs sm:text-sm">
               <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Tools Available to Your AI Agent:</span>
             </div>
-            <ul className="space-y-1.5 text-slate-600 dark:text-slate-400 text-[11px]">
+            <ul className="space-y-1.5 text-slate-700 dark:text-slate-300 text-xs leading-relaxed">
               <li>
                 <strong className="text-slate-900 dark:text-slate-200 font-mono">enhance_developer_prompt:</strong> Rewrites raw tasks into production prompts with personas, resilient locators, and edge cases.
               </li>

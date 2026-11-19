@@ -87,31 +87,31 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
         {/* History List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {filteredHistory.length === 0 ? (
-            <div className="text-center py-16 text-slate-500 text-xs space-y-1">
-              <p>No prompt history found.</p>
-              <p className="text-[11px] text-slate-400">Transformed prompts will be automatically archived here.</p>
+            <div className="text-center py-16 text-slate-500 text-sm space-y-1">
+              <p className="font-semibold">No prompt history found.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Transformed prompts will be automatically archived here.</p>
             </div>
           ) : (
             filteredHistory.map(item => (
               <div
                 key={item.timestamp}
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-2.5"
+                className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-2.5"
               >
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-semibold border border-indigo-500/20 uppercase tracking-wide">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-semibold border border-indigo-500/20 uppercase tracking-wide text-xs">
                     {item.useCase}
                   </span>
-                  <span className="text-slate-500 font-mono">
+                  <span className="text-slate-500 font-mono text-xs">
                     {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
 
-                <div className="text-xs text-slate-800 dark:text-slate-300 font-medium line-clamp-2">
+                <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium line-clamp-2 leading-relaxed">
                   &ldquo;{item.originalPrompt}&rdquo;
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-900 text-xs">
-                  <span className="text-slate-500 text-[11px] font-mono">
+                <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-900 text-xs sm:text-sm">
+                  <span className="text-slate-600 dark:text-slate-400 text-xs font-mono">
                     Score: {item.clarityScoreBefore}% &rarr; {item.clarityScoreAfter}%
                   </span>
                   <div className="flex items-center space-x-1">
@@ -131,10 +131,10 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                         onSelectPrompt(item);
                         onClose();
                       }}
-                      className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-600 dark:bg-indigo-600/20 dark:hover:bg-indigo-600 text-indigo-700 hover:text-white dark:text-indigo-300 font-medium text-[11px] transition-colors cursor-pointer border border-indigo-200 dark:border-indigo-500/30"
+                      className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-600 dark:bg-indigo-600/20 dark:hover:bg-indigo-600 text-indigo-700 hover:text-white dark:text-indigo-300 font-semibold text-xs transition-colors cursor-pointer border border-indigo-200 dark:border-indigo-500/30"
                     >
                       <span>Load</span>
-                      <ArrowUpRight className="w-3 h-3" />
+                      <ArrowUpRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>

@@ -371,50 +371,51 @@ export function App() {
         )}
 
         {/* Showcase: Learned from Your Real Workspace Sessions */}
-        <div className="craft-chassis rounded-2xl p-6 space-y-4 shadow-xl border border-slate-200 dark:border-white/[0.08]">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-white/[0.08]">
-            <div className="flex items-center space-x-2.5">
-              <FolderGit2 className="w-5 h-5 text-amber-500" />
+        <div className="craft-chassis rounded-2xl p-6 sm:p-7 space-y-5 shadow-xl border border-slate-200 dark:border-white/[0.08]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-white/[0.08]">
+            <div className="flex items-center space-x-3">
+              <FolderGit2 className="w-6 h-6 text-amber-500 shrink-0" />
               <div>
-                <h3 className="font-outfit text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                <h3 className="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                   Discovered From Your Real Projects & Developer Sessions
                 </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 font-sans">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans mt-0.5">
                   Extracted from actual sessions in WhisperRoom, Hospital Management, Sentinel, Terrace Farming, and Interview Portal.
                 </p>
               </div>
             </div>
             <button
               onClick={() => setIsLearnedOpen(true)}
-              className="text-xs font-outfit text-amber-600 dark:text-amber-400 hover:text-amber-500 flex items-center space-x-1 font-semibold self-start sm:self-auto cursor-pointer"
+              className="text-xs sm:text-sm font-outfit text-amber-600 dark:text-amber-400 hover:text-amber-500 flex items-center space-x-1.5 font-bold self-start sm:self-auto cursor-pointer group"
             >
-              <span>View All {LEARNED_USER_PROMPTS.length} Workflows &rarr;</span>
+              <span>View All {LEARNED_USER_PROMPTS.length} Workflows</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {LEARNED_USER_PROMPTS.slice(0, 6).map(item => (
               <div
                 key={item.id}
                 onClick={() => handleSelectLearnedPrompt(item)}
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.06] hover:border-amber-500/50 hover:bg-white dark:hover:bg-black/60 transition-all cursor-pointer space-y-2 group"
+                className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.06] hover:border-amber-500/60 hover:bg-white dark:hover:bg-black/60 transition-all cursor-pointer space-y-3 group shadow-xs"
               >
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-semibold text-amber-700 dark:text-amber-300 font-mono">
+                <div className="flex items-center justify-between gap-2 text-xs">
+                  <span className="font-bold text-amber-700 dark:text-amber-300 font-mono tracking-tight truncate">
                     {item.project}
                   </span>
-                  <span className="text-slate-500 text-[10px] uppercase font-bold font-mono">
+                  <span className="text-slate-700 dark:text-slate-300 text-[11px] uppercase font-bold font-mono px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 shrink-0">
                     {item.category}
                   </span>
                 </div>
-                <div className="text-xs text-slate-800 dark:text-slate-200 font-mono line-clamp-2">
+                <div className="text-xs sm:text-sm text-slate-900 dark:text-slate-100 font-mono line-clamp-2 leading-relaxed">
                   &ldquo;{item.rawUserPrompt}&rdquo;
                 </div>
-                <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200 dark:border-white/[0.06] text-slate-500 dark:text-slate-400">
-                  <span className="truncate max-w-[180px] font-mono">{item.targetStack}</span>
-                  <span className="text-amber-600 dark:text-amber-400 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center space-x-0.5">
+                <div className="flex items-center justify-between text-xs sm:text-sm pt-2.5 border-t border-slate-200 dark:border-white/[0.06] text-slate-600 dark:text-slate-400 gap-2">
+                  <span className="truncate max-w-[200px] font-mono">{item.targetStack}</span>
+                  <span className="text-amber-600 dark:text-amber-400 font-bold group-hover:translate-x-1 transition-transform flex items-center space-x-1 shrink-0">
                     <span>Enhance</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>
@@ -423,14 +424,21 @@ export function App() {
         </div>
 
         {/* Developer Use Case Directory / Cheat-sheet */}
-        <div className="craft-chassis rounded-2xl p-6 space-y-4 border border-slate-200 dark:border-white/[0.08]">
-          <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-amber-500" />
-            <h3 className="font-outfit text-sm font-bold text-slate-900 dark:text-slate-200 uppercase tracking-wider">
-              All Supported Engineering Domains ({USE_CASES.length})
-            </h3>
+        <div className="craft-chassis rounded-2xl p-6 sm:p-7 space-y-5 border border-slate-200 dark:border-white/[0.08]">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/[0.08]">
+            <div className="flex items-center space-x-3">
+              <Terminal className="w-6 h-6 text-amber-500 shrink-0" />
+              <div>
+                <h3 className="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+                  All Supported Engineering Domains ({USE_CASES.length})
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans mt-0.5">
+                  Click any engineering domain to load tested frameworks, sample bad prompts, and automated safeguards.
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {USE_CASES.map(uc => (
               <div
                 key={uc.id}
@@ -442,21 +450,22 @@ export function App() {
                   }
                   window.scrollTo({ top: 120, behavior: 'smooth' });
                 }}
-                className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer shadow-xs space-y-2.5 ${
                   uc.id === useCase
-                    ? 'bg-amber-50 dark:bg-amber-500/15 border-amber-500/60 text-slate-900 dark:text-white shadow-sm'
-                    : 'bg-slate-50 dark:bg-black/30 border-slate-200 dark:border-white/[0.06] text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20 hover:text-slate-900 dark:hover:text-slate-200'
+                    ? 'bg-amber-50 dark:bg-amber-500/15 border-amber-500/70 text-slate-900 dark:text-white shadow-md ring-1 ring-amber-500/40'
+                    : 'bg-slate-50 dark:bg-black/30 border-slate-200 dark:border-white/[0.06] text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white dark:hover:bg-black/50'
                 }`}
               >
-                <div className="flex items-center justify-between text-xs font-semibold mb-1">
-                  <span className="text-slate-900 dark:text-slate-200 font-semibold">{uc.name}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                <div className="flex items-center justify-between text-sm sm:text-base font-bold font-outfit mb-1">
+                  <span className="text-slate-900 dark:text-slate-100">{uc.name}</span>
+                  <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                 </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed font-sans">
                   {uc.description}
                 </p>
-                <div className="mt-2 text-[10px] text-amber-700 dark:text-amber-400 font-mono">
-                  Default: {uc.defaultFramework}
+                <div className="mt-2.5 pt-2 border-t border-slate-200/80 dark:border-white/[0.08] text-xs font-mono text-amber-700 dark:text-amber-400 flex items-center space-x-1.5 font-medium">
+                  <span className="text-slate-500 dark:text-slate-400 text-xs">Default:</span>
+                  <span className="truncate">{uc.defaultFramework}</span>
                 </div>
               </div>
             ))}
@@ -465,17 +474,17 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800/80 py-6 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div>
-            <span className="font-semibold text-slate-700 dark:text-slate-400">Prompt Maker</span> &mdash; The Developer&apos;s Meta-Prompt Assistant
+      <footer className="border-t border-slate-200 dark:border-slate-800/80 py-7 text-center text-sm text-slate-600 dark:text-slate-400 font-sans">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-xs sm:text-sm">
+            <span className="font-bold text-slate-800 dark:text-slate-200">Prompt Maker</span> &mdash; The Developer&apos;s Meta-Prompt Assistant
           </div>
-          <div className="flex items-center space-x-4 text-[11px]">
-            <span>Press <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-300 rounded font-mono">⌘ + Enter</kbd> to transform</span>
+          <div className="flex items-center space-x-4 text-xs sm:text-sm">
+            <span>Press <kbd className="px-2 py-1 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-200 rounded font-mono text-xs font-bold shadow-xs">⌘ + Enter</kbd> to compile</span>
             <span>•</span>
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="text-indigo-600 dark:text-indigo-400 hover:underline"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold cursor-pointer"
             >
               Configure API Keys
             </button>

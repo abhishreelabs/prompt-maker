@@ -133,33 +133,33 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
                 </div>
 
                 {/* Raw Prompt */}
-                <div className="bg-white dark:bg-slate-900/90 rounded-lg p-3 border border-slate-200 dark:border-slate-800/80">
-                  <div className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 mb-1 flex items-center space-x-1">
+                <div className="bg-white dark:bg-slate-900/90 rounded-lg p-3.5 border border-slate-200 dark:border-slate-800/80">
+                  <div className="text-xs uppercase font-bold text-amber-600 dark:text-amber-400 mb-1 flex items-center space-x-1">
                     <span>What You Asked In Session:</span>
                   </div>
-                  <p className="text-xs font-mono text-slate-900 dark:text-slate-200 leading-relaxed">
+                  <p className="text-xs sm:text-sm font-mono text-slate-900 dark:text-slate-100 leading-relaxed">
                     &ldquo;{item.rawUserPrompt}&rdquo;
                   </p>
                 </div>
 
                 {/* Context & Why AI failed */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
-                  <div className="bg-rose-50 dark:bg-rose-950/10 border border-rose-200 dark:border-rose-500/20 rounded-lg p-3 space-y-1">
-                    <div className="flex items-center space-x-1.5 text-rose-700 dark:text-rose-400 font-semibold text-[11px]">
-                      <ShieldAlert className="w-3.5 h-3.5" />
+                  <div className="bg-rose-50 dark:bg-rose-950/10 border border-rose-200 dark:border-rose-500/20 rounded-lg p-3.5 space-y-1.5">
+                    <div className="flex items-center space-x-1.5 text-rose-700 dark:text-rose-400 font-bold text-xs sm:text-sm">
+                      <ShieldAlert className="w-4 h-4 shrink-0" />
                       <span>Why Raw Prompt Failed Before:</span>
                     </div>
-                    <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+                    <p className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
                       {item.whyItFailedBefore}
                     </p>
                   </div>
 
-                  <div className="bg-emerald-50 dark:bg-emerald-950/10 border border-emerald-200 dark:border-emerald-500/20 rounded-lg p-3 space-y-1.5">
-                    <div className="flex items-center space-x-1.5 text-emerald-700 dark:text-emerald-400 font-semibold text-[11px]">
-                      <CheckCircle className="w-3.5 h-3.5" />
+                  <div className="bg-emerald-50 dark:bg-emerald-950/10 border border-emerald-200 dark:border-emerald-500/20 rounded-lg p-3.5 space-y-1.5">
+                    <div className="flex items-center space-x-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm">
+                      <CheckCircle className="w-4 h-4 shrink-0" />
                       <span>What Prompt Maker Upgrades:</span>
                     </div>
-                    <ul className="space-y-1 text-[11px] text-slate-700 dark:text-slate-300">
+                    <ul className="space-y-1 text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                       {item.keyUpgrades.slice(0, 3).map((up, i) => (
                         <li key={i} className="flex items-start space-x-1.5">
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold">•</span>

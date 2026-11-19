@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="font-outfit font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
                 Prompt Maker
               </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/[0.08]">
+              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/[0.08]">
                 v0.1.0
               </span>
             </div>
@@ -128,17 +128,17 @@ export const Header: React.FC<HeaderProps> = ({
             {engineUsed === 'offline' ? (
               <>
                 <Cpu className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-emerald-700 dark:text-emerald-400 font-mono text-[11px] hidden sm:inline">Offline (0$)</span>
+                <span className="text-emerald-700 dark:text-emerald-400 font-mono text-xs font-semibold hidden sm:inline">Offline (0$)</span>
               </>
             ) : engineUsed === 'gemini' ? (
               <>
                 <Zap className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 animate-pulse" />
-                <span className="text-amber-700 dark:text-amber-400 font-mono text-[11px] hidden sm:inline">Gemini AI</span>
+                <span className="text-amber-700 dark:text-amber-400 font-mono text-xs font-semibold hidden sm:inline">Gemini AI</span>
               </>
             ) : (
               <>
                 <Zap className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" />
-                <span className="text-blue-700 dark:text-blue-400 font-mono text-[11px] hidden sm:inline">OpenAI</span>
+                <span className="text-blue-700 dark:text-blue-400 font-mono text-xs font-semibold hidden sm:inline">OpenAI</span>
               </>
             )}
           </div>
@@ -151,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <History className="w-3.5 h-3.5" />
             {historyCount > 0 && (
-              <span className="text-[10px] font-mono px-1 rounded bg-amber-500 text-black font-bold">
+              <span className="text-xs font-mono px-1.5 py-0.2 rounded bg-amber-500 text-black font-bold">
                 {historyCount}
               </span>
             )}

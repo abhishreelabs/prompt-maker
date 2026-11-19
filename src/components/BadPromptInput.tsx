@@ -146,7 +146,7 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
             <span>draft.prompt</span>
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-1" />
           </div>
-          <span className="text-[11px] font-mono text-slate-500 hidden sm:inline">
+          <span className="text-xs font-mono text-slate-500 hidden sm:inline">
             Stage 1: Raw Input
           </span>
         </div>
@@ -302,7 +302,7 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
         {showConfig && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/[0.06] text-xs animate-in fade-in duration-150">
             <div>
-              <label className="block text-slate-600 dark:text-slate-400 font-mono text-[11px] mb-1">
+              <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
                 Target Framework:
               </label>
               <input
@@ -315,7 +315,7 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
             </div>
 
             <div>
-              <label className="block text-slate-600 dark:text-slate-400 font-mono text-[11px] mb-1">
+              <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
                 Model Dialect:
               </label>
               <select
@@ -332,7 +332,7 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
             </div>
 
             <div>
-              <label className="block text-slate-600 dark:text-slate-400 font-mono text-[11px] mb-1">
+              <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
                 Rigor Tone:
               </label>
               <select
