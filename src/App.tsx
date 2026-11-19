@@ -21,7 +21,12 @@ const STORAGE_KEY_SETTINGS = 'prompt_maker_settings_v1';
 export function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const initialView = (urlParams.get('view') as 'studio' | 'pipeline' | 'audit') || 'studio';
+  const initialTheme = (urlParams.get('theme') as 'dark' | 'light') ||
+    (typeof window !== 'undefined' ? (localStorage.getItem('prompt_maker_theme') as 'dark' | 'light') : null) ||
+    'dark';
+
   const [activeView, setActiveView] = useState<'studio' | 'pipeline' | 'audit'>(initialView);
+  const [theme, setTheme] = useState<'dark' | 'light'>(initialTheme);
   const [rawPrompt, setRawPrompt] = useState('test the login form with email and password and check if error shows up when invalid');
   const [useCase, setUseCase] = useState<UseCaseId>('ui-testing');
   const [framework, setFramework] = useState('Playwright (TypeScript)');
@@ -35,6 +40,26 @@ export function App() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isLearnedOpen, setIsLearnedOpen] = useState(false);
   const [isMcpOpen, setIsMcpOpen] = useState(false);
+
+  // Sync theme with documentElement
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+    try {
+      localStorage.setItem('prompt_maker_theme', theme);
+    } catch {
+      // Fallback
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(t => (t === 'dark' ? 'light' : 'dark'));
+  };
 
   // Settings state from localStorage
   const [settings, setSettings] = useState<SettingsState>(() => {
@@ -186,11 +211,13 @@ export function App() {
       : 'offline';
 
   return (
-    <div className="min-h-screen bg-[#090a0f] text-slate-100 flex flex-col font-sans bg-blueprint-grid">
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#090a0f] text-slate-100' : 'bg-[#f8f9fa] text-slate-900'} flex flex-col font-sans bg-blueprint-grid transition-colors duration-200`}>
       {/* Navigation Header */}
       <Header
         activeView={activeView}
         setActiveView={setActiveView}
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenHistory={() => setIsHistoryOpen(true)}
         onOpenLearned={() => setIsLearnedOpen(true)}
@@ -201,38 +228,89 @@ export function App() {
 
       {/* Main Body */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* Banner */}
-        <div className="relative overflow-hidden rounded-2xl craft-chassis p-5 sm:p-6 border border-white/[0.08] shadow-2xl">
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1.5 max-w-2xl">
-              <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold font-mono">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+        {/* Banner with Glowing Fluid Wave Ribbon */}
+        <div className="relative overflow-hidden rounded-2xl craft-chassis p-6 sm:p-7 border border-slate-200 dark:border-white/[0.08] shadow-2xl bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-cyan-50/70 dark:from-[#0c0f1a] dark:via-[#0e1222] dark:to-[#0a0c16]">
+          {/* Fluid Wave Ribbon Background SVG */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+            <svg
+              className="absolute right-0 top-0 bottom-0 h-full w-[65%] min-w-[380px] opacity-90 dark:opacity-80"
+              viewBox="0 0 650 200"
+              preserveAspectRatio="none"
+              fill="none"
+            >
+              <defs>
+                <linearGradient id="auroraRibbon1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.45" />
+                  <stop offset="40%" stopColor="#3b82f6" stopOpacity="0.55" />
+                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.35" />
+                </linearGradient>
+                <linearGradient id="auroraRibbon2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.65" />
+                  <stop offset="60%" stopColor="#6366f1" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0.2" />
+                </linearGradient>
+                <radialGradient id="auroraCenter" cx="70%" cy="50%" r="55%">
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.3" />
+                  <stop offset="50%" stopColor="#818cf8" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#auroraCenter)" />
+              <path
+                d="M120,200 C240,160 260,60 420,40 C520,25 580,80 650,60 L650,200 Z"
+                fill="url(#auroraRibbon1)"
+              />
+              <path
+                d="M200,200 C300,140 380,95 490,75 C570,60 610,105 650,85 L650,200 Z"
+                fill="url(#auroraRibbon2)"
+              />
+              <path
+                d="M150,200 Q320,80 500,60 T650,25"
+                stroke="url(#auroraRibbon2)"
+                strokeWidth="3"
+                fill="none"
+                opacity="0.8"
+              />
+              <path
+                d="M240,200 Q390,110 570,55 T650,45"
+                stroke="url(#auroraRibbon1)"
+                strokeWidth="2"
+                fill="none"
+                opacity="0.6"
+              />
+            </svg>
+          </div>
+
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-outfit font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                 <span>Compiler Deck &bull; Architecture Hardener</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-outfit font-extrabold tracking-tight text-slate-900 dark:text-white">
                 Don&apos;t Let Vague Prompts Generate Broken Code.
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-sans max-w-xl">
                 Transform rough developer drafts into bulletproof AI prompts with accessible locators, auto-wait assertions, boundary tests, and explicit output schemas.
               </p>
             </div>
 
-            {/* Quick stats pills */}
+            {/* Quick stats pills matching Image 1 & 2 */}
             <div className="flex flex-wrap md:flex-col gap-2 shrink-0">
               <button
                 type="button"
                 onClick={() => setIsLearnedOpen(true)}
-                className="flex items-center space-x-2 text-xs bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg border border-amber-500/30 text-amber-300 transition-colors cursor-pointer font-mono"
+                className="flex items-center space-x-2.5 text-xs font-outfit font-semibold bg-white/90 dark:bg-black/60 hover:bg-white dark:hover:bg-black/80 px-3.5 py-2 rounded-xl border border-amber-500/30 text-amber-700 dark:text-amber-300 transition-all shadow-xs cursor-pointer"
               >
-                <FolderGit2 className="w-4 h-4 text-amber-400" />
+                <FolderGit2 className="w-4 h-4 text-amber-500" />
                 <span>Learned from 11 Repos</span>
               </button>
-              <div className="flex items-center space-x-2 text-xs bg-black/40 px-3 py-1.5 rounded-lg border border-white/[0.08] text-slate-300 font-mono">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <div className="flex items-center space-x-2.5 text-xs font-outfit font-semibold bg-white/90 dark:bg-black/60 px-3.5 py-2 rounded-xl border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 shadow-xs">
+                <ShieldCheck className="w-4 h-4 text-emerald-500" />
                 <span>16 Domain Presets</span>
               </div>
-              <div className="flex items-center space-x-2 text-xs bg-black/40 px-3 py-1.5 rounded-lg border border-white/[0.08] text-slate-300 font-mono">
-                <Zap className="w-4 h-4 text-amber-400" />
+              <div className="flex items-center space-x-2.5 text-xs font-outfit font-semibold bg-white/90 dark:bg-black/60 px-3.5 py-2 rounded-xl border border-purple-500/30 text-purple-700 dark:text-purple-300 shadow-xs">
+                <Zap className="w-4 h-4 text-purple-500" />
                 <span>Zero-Cost Offline First</span>
               </div>
             </div>
@@ -293,22 +371,22 @@ export function App() {
         )}
 
         {/* Showcase: Learned from Your Real Workspace Sessions */}
-        <div className="craft-chassis rounded-2xl p-6 space-y-4 shadow-xl border border-white/[0.08]">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/[0.08]">
+        <div className="craft-chassis rounded-2xl p-6 space-y-4 shadow-xl border border-slate-200 dark:border-white/[0.08]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-white/[0.08]">
             <div className="flex items-center space-x-2.5">
-              <FolderGit2 className="w-5 h-5 text-amber-400" />
+              <FolderGit2 className="w-5 h-5 text-amber-500" />
               <div>
-                <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
+                <h3 className="font-outfit text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                   Discovered From Your Real Projects & Developer Sessions
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-sans">
                   Extracted from actual sessions in WhisperRoom, Hospital Management, Sentinel, Terrace Farming, and Interview Portal.
                 </p>
               </div>
             </div>
             <button
               onClick={() => setIsLearnedOpen(true)}
-              className="text-xs text-amber-400 hover:text-amber-300 flex items-center space-x-1 font-semibold self-start sm:self-auto cursor-pointer"
+              className="text-xs font-outfit text-amber-600 dark:text-amber-400 hover:text-amber-500 flex items-center space-x-1 font-semibold self-start sm:self-auto cursor-pointer"
             >
               <span>View All {LEARNED_USER_PROMPTS.length} Workflows &rarr;</span>
             </button>
@@ -319,22 +397,22 @@ export function App() {
               <div
                 key={item.id}
                 onClick={() => handleSelectLearnedPrompt(item)}
-                className="p-3.5 rounded-xl bg-black/40 border border-white/[0.06] hover:border-amber-500/50 hover:bg-black/60 transition-all cursor-pointer space-y-2 group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.06] hover:border-amber-500/50 hover:bg-white dark:hover:bg-black/60 transition-all cursor-pointer space-y-2 group"
               >
                 <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-semibold text-amber-300 font-mono">
+                  <span className="font-semibold text-amber-700 dark:text-amber-300 font-mono">
                     {item.project}
                   </span>
                   <span className="text-slate-500 text-[10px] uppercase font-bold font-mono">
                     {item.category}
                   </span>
                 </div>
-                <div className="text-xs text-slate-200 font-mono line-clamp-2">
+                <div className="text-xs text-slate-800 dark:text-slate-200 font-mono line-clamp-2">
                   &ldquo;{item.rawUserPrompt}&rdquo;
                 </div>
-                <div className="flex items-center justify-between text-[11px] pt-1 border-t border-white/[0.06] text-slate-400">
+                <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200 dark:border-white/[0.06] text-slate-500 dark:text-slate-400">
                   <span className="truncate max-w-[180px] font-mono">{item.targetStack}</span>
-                  <span className="text-amber-400 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center space-x-0.5">
+                  <span className="text-amber-600 dark:text-amber-400 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center space-x-0.5">
                     <span>Enhance</span>
                     <ArrowRight className="w-3 h-3" />
                   </span>
@@ -345,10 +423,10 @@ export function App() {
         </div>
 
         {/* Developer Use Case Directory / Cheat-sheet */}
-        <div className="craft-chassis rounded-2xl p-6 space-y-4 border border-white/[0.08]">
+        <div className="craft-chassis rounded-2xl p-6 space-y-4 border border-slate-200 dark:border-white/[0.08]">
           <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-amber-400" />
-            <h3 className="font-display text-sm font-bold text-slate-200 uppercase tracking-wider">
+            <Terminal className="w-4 h-4 text-amber-500" />
+            <h3 className="font-outfit text-sm font-bold text-slate-900 dark:text-slate-200 uppercase tracking-wider">
               All Supported Engineering Domains ({USE_CASES.length})
             </h3>
           </div>
@@ -366,18 +444,18 @@ export function App() {
                 }}
                 className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                   uc.id === useCase
-                    ? 'bg-amber-500/15 border-amber-500/50 text-white'
-                    : 'bg-black/30 border-white/[0.06] text-slate-400 hover:border-white/20 hover:text-slate-200'
+                    ? 'bg-amber-50 dark:bg-amber-500/15 border-amber-500/60 text-slate-900 dark:text-white shadow-sm'
+                    : 'bg-slate-50 dark:bg-black/30 border-slate-200 dark:border-white/[0.06] text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
                 <div className="flex items-center justify-between text-xs font-semibold mb-1">
-                  <span className="text-slate-200">{uc.name}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                  <span className="text-slate-900 dark:text-slate-200 font-semibold">{uc.name}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                 </div>
-                <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
                   {uc.description}
                 </p>
-                <div className="mt-2 text-[10px] text-amber-400 font-mono">
+                <div className="mt-2 text-[10px] text-amber-700 dark:text-amber-400 font-mono">
                   Default: {uc.defaultFramework}
                 </div>
               </div>
@@ -387,17 +465,17 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-200 dark:border-slate-800/80 py-6 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>
-            <span className="font-semibold text-slate-400">Prompt Maker</span> &mdash; The Developer&apos;s Meta-Prompt Assistant
+            <span className="font-semibold text-slate-700 dark:text-slate-400">Prompt Maker</span> &mdash; The Developer&apos;s Meta-Prompt Assistant
           </div>
           <div className="flex items-center space-x-4 text-[11px]">
-            <span>Press <kbd className="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded font-mono">⌘ + Enter</kbd> to transform</span>
+            <span>Press <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-300 rounded font-mono">⌘ + Enter</kbd> to transform</span>
             <span>•</span>
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="text-indigo-400 hover:underline"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline"
             >
               Configure API Keys
             </button>

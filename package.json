@@ -4,13 +4,16 @@
   "description": "AI prompt creator, optimizer, and management platform",
   "type": "module",
   "bin": {
+    "prompt-maker": "./bin/prompt-maker.js",
     "prompt-maker-mcp": "./bin/prompt-maker-mcp.js"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:mcp": "esbuild src/mcp/server.ts --bundle --platform=node --format=esm --target=node20 --banner:js=\"#!/usr/bin/env node\" --outfile=bin/prompt-maker-mcp.js && chmod +x bin/prompt-maker-mcp.js",
+    "build:mcp": "esbuild src/mcp/bin.ts --bundle --platform=node --format=esm --target=node20 --banner:js=\"#!/usr/bin/env node\" --outfile=bin/prompt-maker-mcp.js && chmod +x bin/prompt-maker-mcp.js",
+    "build:cli": "esbuild src/cli.ts --bundle --platform=node --format=esm --target=node20 --banner:js=\"#!/usr/bin/env node\" --outfile=bin/prompt-maker.js && chmod +x bin/prompt-maker.js",
+    "build:all": "npm run build && npm run build:mcp && npm run build:cli",
     "mcp": "node bin/prompt-maker-mcp.js",
     "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },

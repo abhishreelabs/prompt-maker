@@ -51,53 +51,53 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
+        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/40">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <FolderGit2 className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-base text-white">Learned From Your Real Projects & Sessions</h3>
-                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">Learned From Your Real Projects & Sessions</h3>
+                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   {LEARNED_USER_PROMPTS.length} Real Workflows
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600 dark:text-slate-400">
                 Extracted directly from your workspace projects (WhisperRoom, HMS, Sentinel, Terrace Farming, Interview Portal).
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Filter bar */}
-        <div className="p-4 border-b border-slate-800 bg-slate-950/20 flex flex-col sm:flex-row items-center gap-3">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-950/20 flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search learned prompts, stacks, or keywords..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full pl-9 pr-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
 
           <div className="flex items-center space-x-1.5 w-full sm:w-auto shrink-0 overflow-x-auto text-xs">
-            <Filter className="w-3.5 h-3.5 text-slate-500" />
+            <Filter className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
             <select
               value={selectedProject}
               onChange={e => setSelectedProject(e.target.value)}
-              className="px-2.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="px-2.5 py-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
               <option value="all">All Repositories</option>
               {projects.filter(p => p !== 'all').map(p => (
@@ -117,16 +117,16 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
             filtered.map(item => (
               <div
                 key={item.id}
-                className="bg-slate-950/80 rounded-xl border border-slate-800/90 hover:border-indigo-500/50 transition-all p-4.5 space-y-3 group"
+                className="bg-slate-50 dark:bg-slate-950/80 rounded-xl border border-slate-200 dark:border-slate-800/90 hover:border-indigo-400 dark:hover:border-indigo-500/50 transition-all p-4.5 space-y-3 group"
               >
                 {/* Meta Header */}
                 <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                   <div className="flex items-center space-x-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-mono font-semibold border border-indigo-500/20 text-[11px]">
+                    <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-mono font-semibold border border-indigo-500/20 text-[11px]">
                       {item.project}
                     </span>
-                    <span className="text-slate-400 font-mono text-[11px]">
-                      Stack: <strong className="text-slate-200">{item.targetStack}</strong>
+                    <span className="text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+                      Stack: <strong className="text-slate-900 dark:text-slate-200">{item.targetStack}</strong>
                     </span>
                   </div>
 
@@ -144,36 +144,36 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
                 </div>
 
                 {/* Raw Prompt */}
-                <div className="bg-slate-900/90 rounded-lg p-3 border border-slate-800/80">
-                  <div className="text-[10px] uppercase font-bold text-amber-400 mb-1 flex items-center space-x-1">
+                <div className="bg-white dark:bg-slate-900/90 rounded-lg p-3 border border-slate-200 dark:border-slate-800/80">
+                  <div className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 mb-1 flex items-center space-x-1">
                     <span>What You Asked In Session:</span>
                   </div>
-                  <p className="text-xs font-mono text-slate-200 leading-relaxed">
+                  <p className="text-xs font-mono text-slate-900 dark:text-slate-200 leading-relaxed">
                     &ldquo;{item.rawUserPrompt}&rdquo;
                   </p>
                 </div>
 
                 {/* Context & Why AI failed */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
-                  <div className="bg-rose-950/10 border border-rose-500/20 rounded-lg p-3 space-y-1">
-                    <div className="flex items-center space-x-1.5 text-rose-400 font-semibold text-[11px]">
+                  <div className="bg-rose-50 dark:bg-rose-950/10 border border-rose-200 dark:border-rose-500/20 rounded-lg p-3 space-y-1">
+                    <div className="flex items-center space-x-1.5 text-rose-700 dark:text-rose-400 font-semibold text-[11px]">
                       <ShieldAlert className="w-3.5 h-3.5" />
                       <span>Why Raw Prompt Failed Before:</span>
                     </div>
-                    <p className="text-slate-400 text-[11px] leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
                       {item.whyItFailedBefore}
                     </p>
                   </div>
 
-                  <div className="bg-emerald-950/10 border border-emerald-500/20 rounded-lg p-3 space-y-1.5">
-                    <div className="flex items-center space-x-1.5 text-emerald-400 font-semibold text-[11px]">
+                  <div className="bg-emerald-50 dark:bg-emerald-950/10 border border-emerald-200 dark:border-emerald-500/20 rounded-lg p-3 space-y-1.5">
+                    <div className="flex items-center space-x-1.5 text-emerald-700 dark:text-emerald-400 font-semibold text-[11px]">
                       <CheckCircle className="w-3.5 h-3.5" />
                       <span>What Prompt Maker Upgrades:</span>
                     </div>
-                    <ul className="space-y-1 text-[11px] text-slate-300">
+                    <ul className="space-y-1 text-[11px] text-slate-700 dark:text-slate-300">
                       {item.keyUpgrades.slice(0, 3).map((up, i) => (
                         <li key={i} className="flex items-start space-x-1.5">
-                          <span className="text-emerald-400 font-bold">•</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">•</span>
                           <span>{up}</span>
                         </li>
                       ))}

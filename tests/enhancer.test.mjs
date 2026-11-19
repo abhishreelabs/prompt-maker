@@ -27,11 +27,13 @@ test('enhancePromptOffline injects accessible locators and deterministic waits f
     framework: 'Playwright (TypeScript)'
   });
 
-  assert.ok(result.clarityScoreAfter >= 90, 'Score after should be 90+');
+  assert.ok(result.clarityScoreAfter >= 95, 'Score after should be 95+');
   assert.ok(result.enhancedPrompt.includes('<system>'), 'Claude model should use XML tags');
   assert.ok(result.enhancedPrompt.includes('getByRole'), 'Should enforce getByRole accessible locators');
   assert.ok(result.enhancedPrompt.includes('waitForTimeout'), 'Should forbid hardcoded timeouts');
   assert.ok(result.enhancedPrompt.includes('edge_cases_and_resilience'), 'Should include edge cases section');
+  assert.ok(result.enhancedPrompt.includes('ZERO-STUB DIRECTIVE'), 'Should enforce Zero-Stub guarantee');
+  assert.ok(result.enhancedPrompt.includes('ANTI-HALLUCINATION GUARD'), 'Should enforce Anti-Hallucination guard');
 });
 
 test('Target models apply correct format wrapping', () => {
@@ -52,6 +54,35 @@ test('Target models apply correct format wrapping', () => {
     tone: 'crisp'
   });
   assert.ok(cursorResult.enhancedPrompt.includes('## Anti-Patterns:'), 'Cursor should have concise rules format');
+});
+
+test('Dynamic safeguards trigger on auth keywords (timing attacks, rate-limiting lockout)', () => {
+  const result = enhancePromptOffline({
+    rawPrompt: 'make a login modal with jwt token authentication and password field',
+    useCase: 'feature-implementation',
+    targetModel: 'claude',
+    tone: 'production',
+    framework: 'Next.js + TypeScript'
+  });
+
+  assert.ok(result.enhancedPrompt.includes('crypto.timingSafeEqual'), 'Should inject timing-safe comparison');
+  assert.ok(result.enhancedPrompt.includes('429 lockout'), 'Should inject rate-limiting lockout');
+  assert.ok(result.enhancedPrompt.includes('Toggle password visibility'), 'Should inject password toggle a11y');
+  assert.ok(result.improvements.some(i => i.includes('timing-safe')), 'Should record improvement');
+});
+
+test('Dynamic safeguards trigger on payments keywords (idempotency, integer currency)', () => {
+  const result = enhancePromptOffline({
+    rawPrompt: 'create stripe checkout subscription billing api endpoint',
+    useCase: 'api-design',
+    targetModel: 'gpt4o',
+    tone: 'production',
+    framework: 'TypeScript / OpenAPI'
+  });
+
+  assert.ok(result.enhancedPrompt.includes('Idempotency-Key'), 'Should inject Idempotency-Key requirement');
+  assert.ok(result.enhancedPrompt.includes('stripe-signature'), 'Should inject webhook signature verification');
+  assert.ok(result.enhancedPrompt.includes('integer minor units'), 'Should inject currency integer precision requirement');
 });
 
 test('enhancePromptOffline handles real workspace devops-infra (Better Stack DNS & Keep-Alive)', () => {
@@ -81,4 +112,3 @@ test('enhancePromptOffline handles real workspace security-privacy (WhisperRoom 
   assert.ok(result.enhancedPrompt.includes('crypto.timingSafeEqual'), 'Should inject timing-safe crypto comparisons');
   assert.ok(result.enhancedPrompt.includes('auto-burn'), 'Should enforce auto-burn synchronization');
 });
-

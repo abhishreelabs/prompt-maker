@@ -1,8 +1,9 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     letter-spacing: -0.011em;
   }
   
@@ -10,60 +11,70 @@
     font-family: 'JetBrains Mono', monospace;
   }
 
-  .font-display {
-    font-family: 'Space Grotesk', sans-serif;
+  .font-display, .font-outfit, h1, h2, h3, h4 {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
-/* Background grid blueprint */
+/* Blueprint Grid - Light vs Dark */
 .bg-blueprint-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.dark .bg-blueprint-grid {
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
-.bg-dot-matrix {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 20px 20px;
+/* High-craft chassis styling - Light (Paper / Swiss) vs Dark (Obsidian) */
+.craft-chassis {
+  background: #ffffff;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 8px 24px -4px rgba(0, 0, 0, 0.05);
 }
 
-/* High-craft chassis styling (Figma / Linear aesthetic) */
-.craft-chassis {
-  background: rgba(13, 15, 22, 0.85);
-  backdrop-filter: blur(16px);
+.dark .craft-chassis {
+  background: rgba(13, 16, 25, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 12px 36px -8px rgba(0, 0, 0, 0.6);
 }
 
+/* Inner input area */
 .craft-inner-input {
-  background: rgba(6, 7, 11, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-.craft-glow-amber {
-  box-shadow: 0 0 24px -4px rgba(245, 158, 11, 0.25);
-}
-
-.craft-glow-cyan {
-  box-shadow: 0 0 24px -4px rgba(6, 182, 212, 0.25);
+.dark .craft-inner-input {
+  background: rgba(7, 9, 15, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6);
 }
 
 /* Tactile button */
 .tactile-btn {
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 2px 6px rgba(0, 0, 0, 0.4);
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.12);
 }
 .tactile-btn:active {
   transform: translateY(1px);
   box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.5),
-    0 1px 2px rgba(0, 0, 0, 0.2);
+    inset 0 1px 2px rgba(0, 0, 0, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 /* Custom scrollbars */
@@ -72,12 +83,21 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+}
+.dark ::-webkit-scrollbar-track {
   background: rgba(9, 10, 15, 0.8);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 9999px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
 }

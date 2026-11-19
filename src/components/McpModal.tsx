@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Bot, Copy, Check, Terminal, ExternalLink, ShieldCheck } from 'lucide-react';
+import { X, Bot, Copy, Check, ShieldCheck } from 'lucide-react';
 
 interface McpModalProps {
   isOpen: boolean;
@@ -79,36 +79,36 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
   const current = configs[activeTab];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
+        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/40">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
               <Bot className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-base text-white">Model Context Protocol (MCP) Server</h3>
-                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">Model Context Protocol (MCP) Server</h3>
+                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
                   Ready for AI Agents
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600 dark:text-slate-400">
                 Let Cursor, Claude, Windsurf, or Antigravity agents enhance your prompts before writing code.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab selection */}
-        <div className="p-4 border-b border-slate-800 bg-slate-950/30 flex items-center space-x-2 text-xs">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-950/30 flex items-center space-x-2 text-xs">
           {(['cursor', 'claude', 'windsurf', 'cli'] as const).map(tab => (
             <button
               key={tab}
@@ -116,7 +116,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
               className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer ${
                 activeTab === tab
                   ? 'bg-indigo-600 text-white shadow-md'
-                  : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800'
+                  : 'bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800'
               }`}
             >
               {tab.toUpperCase()}
@@ -127,8 +127,8 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
         {/* Code Content */}
         <div className="p-5 space-y-4">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-300 font-semibold">{current.title}</span>
-            <span className="text-slate-500 font-mono text-[11px]">{current.filename}</span>
+            <span className="text-slate-900 dark:text-slate-300 font-semibold">{current.title}</span>
+            <span className="text-slate-500 dark:text-slate-500 font-mono text-[11px]">{current.filename}</span>
           </div>
 
           <div className="relative">
@@ -137,7 +137,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
             </pre>
             <button
               onClick={() => handleCopy(activeTab, current.content)}
-              className="absolute top-2.5 right-2.5 flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors shadow-sm"
+              className="absolute top-2.5 right-2.5 flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors shadow-sm cursor-pointer"
             >
               {copiedTab === activeTab ? (
                 <>
@@ -154,34 +154,34 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Tools exposed summary */}
-          <div className="bg-slate-950/60 rounded-xl p-4 border border-slate-800/80 space-y-2.5 text-xs">
-            <div className="text-slate-300 font-semibold flex items-center space-x-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+          <div className="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-4 border border-slate-200 dark:border-slate-800/80 space-y-2.5 text-xs">
+            <div className="text-slate-900 dark:text-slate-300 font-semibold flex items-center space-x-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Tools Available to Your AI Agent:</span>
             </div>
-            <ul className="space-y-1.5 text-slate-400 text-[11px]">
+            <ul className="space-y-1.5 text-slate-600 dark:text-slate-400 text-[11px]">
               <li>
-                <strong className="text-slate-200 font-mono">enhance_developer_prompt:</strong> Rewrites raw tasks into production prompts with personas, resilient locators, and edge cases.
+                <strong className="text-slate-900 dark:text-slate-200 font-mono">enhance_developer_prompt:</strong> Rewrites raw tasks into production prompts with personas, resilient locators, and edge cases.
               </li>
               <li>
-                <strong className="text-slate-200 font-mono">analyze_developer_prompt:</strong> Returns a gap analysis of missing test assertions, brittle selectors, and clarity score.
+                <strong className="text-slate-900 dark:text-slate-200 font-mono">analyze_developer_prompt:</strong> Returns a gap analysis of missing test assertions, brittle selectors, and clarity score.
               </li>
               <li>
-                <strong className="text-slate-200 font-mono">get_learned_workflows:</strong> Fetches exact blueprints from your 11 projects (WhisperRoom, HMS, Sentinel, etc.).
+                <strong className="text-slate-900 dark:text-slate-200 font-mono">get_learned_workflows:</strong> Fetches exact blueprints from your 11 projects (WhisperRoom, HMS, Sentinel, etc.).
               </li>
               <li>
-                <strong className="text-slate-200 font-mono">list_supported_use_cases:</strong> Lists all 16 supported engineering domains and default frameworks.
+                <strong className="text-slate-900 dark:text-slate-200 font-mono">list_supported_use_cases:</strong> Lists all 16 supported engineering domains and default frameworks.
               </li>
             </ul>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/40 flex items-center justify-between text-xs text-slate-500">
-          <span>Binary: <code className="font-mono text-slate-400">{binaryPath}</code></span>
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 flex items-center justify-between text-xs text-slate-500">
+          <span className="truncate max-w-[400px]">Binary: <code className="font-mono text-slate-700 dark:text-slate-400">{binaryPath}</code></span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition-colors"
+            className="px-4 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors cursor-pointer"
           >
             Close
           </button>

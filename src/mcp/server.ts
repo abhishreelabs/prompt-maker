@@ -224,9 +224,3 @@ export async function runStdioServer() {
   await server.connect(transport);
   console.error('Prompt Maker MCP Server running on stdio');
 }
-
-// Auto-start when executed as a CLI / MCP process
-runStdioServer().catch(err => {
-  console.error('Fatal Prompt Maker MCP server error:', err);
-  process.exit(1);
-});

@@ -10,6 +10,192 @@ interface EnhanceParams {
   framework?: string;
 }
 
+interface DynamicSafeguard {
+  matcher: RegExp;
+  categoryName: string;
+  instructions: string[];
+  edgeCases: string[];
+  constraints?: string[];
+  improvementText: string;
+}
+
+function getVerificationCommands(framework: string, useCase: UseCaseId): string[] {
+  const fw = framework.toLowerCase();
+  if (useCase === 'ui-testing' || fw.includes('playwright')) {
+    return [
+      '# 1. Run Playwright UI inspector with time-travel debugger:',
+      'npx playwright test --ui',
+      '# 2. Run headed test against specific file:',
+      'npx playwright test tests/e2e/login.spec.ts --headed --project=chromium',
+      '# 3. Run accessibility audit assertions (axe-core):',
+      'npx playwright test tests/e2e/a11y.spec.ts'
+    ];
+  }
+  if (fw.includes('cypress')) {
+    return [
+      '# 1. Run Cypress tests headless in Chrome:',
+      'npx cypress run --spec "cypress/e2e/**/*.cy.ts" --browser chrome',
+      '# 2. Open Cypress interactive runner:',
+      'npx cypress open'
+    ];
+  }
+  if (useCase === 'unit-testing' || fw.includes('vitest') || fw.includes('jest')) {
+    return [
+      '# 1. Run unit test suite with coverage report:',
+      'npm test -- --coverage --runInBand',
+      '# 2. Run tests in watch mode for fast TDD iteration:',
+      'npx vitest run --reporter=verbose'
+    ];
+  }
+  if (fw.includes('python') || fw.includes('pytest') || fw.includes('fastapi') || fw.includes('django')) {
+    return [
+      '# 1. Run pytest with code coverage & verbose failure trace:',
+      'pytest -v --cov=src --cov-report=term-missing',
+      '# 2. Run type checking with mypy:',
+      'mypy src/ --strict'
+    ];
+  }
+  if (useCase === 'devops-docker' || fw.includes('docker')) {
+    return [
+      '# 1. Build hardened multi-stage Docker image:',
+      'docker build --no-cache -t app:latest .',
+      '# 2. Inspect image layer sizes & security vulnerabilities:',
+      'docker history app:latest',
+      '# 3. Run container locally with healthcheck polling:',
+      'docker run --rm -d -p 3000:3000 --name test-app app:latest && docker inspect --format="{{json .State.Health}}" test-app'
+    ];
+  }
+  if (useCase === 'devops-infra' || fw.includes('cloudflare') || fw.includes('dns')) {
+    return [
+      '# 1. Trace authoritative DNS resolution path:',
+      'dig +trace api.yourdomain.com',
+      '# 2. Check HTTP status, SSL certificate, and response headers:',
+      'curl -Iv https://api.yourdomain.com/health',
+      '# 3. Verify DNS CNAME record propagation globally:',
+      'nslookup -type=cname api.yourdomain.com 1.1.1.1'
+    ];
+  }
+  if (useCase === 'db-optimization' || fw.includes('postgres') || fw.includes('sql')) {
+    return [
+      '# 1. Run EXPLAIN ANALYZE on query with buffer cache stats:',
+      'EXPLAIN (ANALYZE, BUFFERS, VERBOSE, SETTINGS) SELECT ...',
+      '# 2. Check index hit ratios and sequential scan counts:',
+      'SELECT relname, seq_scan, idx_scan FROM pg_stat_user_tables;'
+    ];
+  }
+  // Default TypeScript / JavaScript commands
+  return [
+    '# 1. Run TypeScript type check in strict mode:',
+    'npx tsc --noEmit',
+    '# 2. Run linter and formatting check:',
+    'npm run lint',
+    '# 3. Execute test suite:',
+    'npm test'
+  ];
+}
+
+const DYNAMIC_SAFEGUARDS: DynamicSafeguard[] = [
+  {
+    matcher: /\b(auth|login|signin|signup|register|jwt|token|password|session|oauth|credentials|cookie)\b/i,
+    categoryName: 'Authentication & Session Security',
+    instructions: [
+      'Enforce cryptographic timing-safe comparisons (`crypto.timingSafeEqual`) for passwords/tokens to eliminate timing attack side-channels.',
+      'Implement brute-force lockout / rate-limiting (e.g. 5 failed attempts per IP/account triggers HTTP 429 lockout with Retry-After header).',
+      'Enforce accessible password inputs: include an accessible password visibility toggle button (`aria-label="Toggle password visibility"`).'
+    ],
+    edgeCases: [
+      'Security: SQL/NoSQL injection payloads in credential inputs (e.g. `\' OR \'1\'=\'1\'`).',
+      'Security: Complete session termination & cookie destruction (`Max-Age=0`, `HttpOnly`, `SameSite=Strict`, `Secure`) upon logout.',
+      'Security: Tampered or expired JWT tokens returning standardized HTTP 401 Unauthorized.'
+    ],
+    improvementText: 'Injected timing-safe comparisons, rate-limiting lockout & credential sanitization'
+  },
+  {
+    matcher: /\b(payment|stripe|billing|checkout|invoice|subscription|refund|credit card|charge)\b/i,
+    categoryName: 'Payment & Financial Integrity',
+    instructions: [
+      'Mandate idempotency: inject `Idempotency-Key` headers on all charge and refund mutations to prevent duplicate debiting on network retries.',
+      'Always represent currency amounts as integer minor units (e.g. cents in USD or paise in INR) to prevent IEEE 754 floating-point rounding errors.',
+      'Validate raw webhook cryptographic signatures (`stripe-signature`) using raw unparsed request body before deserializing.'
+    ],
+    edgeCases: [
+      'Financial: Card decline scenarios (insufficient funds, expired card, zip code mismatch, fraud score rejection).',
+      'Financial: 3D Secure / SCA step-up customer authentication redirect and callback flow.',
+      'Financial: Webhook delivery failure, delayed delivery, or out-of-order replay handling.'
+    ],
+    improvementText: 'Injected idempotency keys, integer-cents currency safety & raw webhook signature verification'
+  },
+  {
+    matcher: /\b(table|pagination|paginate|grid|sort|filter|infinite scroll|search bar|list)\b/i,
+    categoryName: 'Data Grid & Pagination Resilience',
+    instructions: [
+      'Debounce search/filter inputs (300ms) and use `AbortController` cancellation to discard superseded in-flight requests.',
+      'Guarantee stable sorting: always specify a deterministic secondary sort key (e.g. primary key ID) to prevent jittery row reordering.',
+      'Implement virtualized rendering (`react-window` or `@tanstack/react-virtual`) when rendering datasets with > 500 items to maintain 60 FPS.'
+    ],
+    edgeCases: [
+      'UI Edge Case: Zero results / empty state with accessible illustration and clear reset-filters action.',
+      'UI Edge Case: Boundary pagination navigation (page 0, negative pages, page > totalPages, rapid next/previous clicks).'
+    ],
+    improvementText: 'Injected debounced search cancellation, stable secondary sorting & empty-state recovery'
+  },
+  {
+    matcher: /\b(modal|dialog|drawer|sheet|popup|popover|toast|alert dialog)\b/i,
+    categoryName: 'Accessible Modal & Dialog Interactions',
+    instructions: [
+      'Enforce accessible dialog standards (WCAG 2.1 AA): trap keyboard focus within modal while open, lock background scroll (`overflow: hidden`), and restore focus to trigger button upon dismissal.',
+      'Bind Escape key listener for immediate dismissal and backdrop click handler.'
+    ],
+    edgeCases: [
+      'A11y Edge Case: Rapid Escape key or backdrop double-clicks during entrance/exit transitions.',
+      'A11y Edge Case: Nested dialogs or stacked toast alerts correctly maintaining z-index hierarchy and focus order.'
+    ],
+    improvementText: 'Injected keyboard focus trapping, background scroll locking & Escape key dismissal'
+  },
+  {
+    matcher: /\b(docker|dockerfile|container|k8s|kubernetes|helm|pod|image build)\b/i,
+    categoryName: 'Hardened Containerization',
+    instructions: [
+      'Use multi-stage Docker builds to separate compilation tools from minimal production runtimes (e.g. `alpine` or `distroless`).',
+      'Security hardening: run container under a dedicated unprivileged user (`USER node` or `USER 10001:10001`), never as root.',
+      'Implement native container `HEALTHCHECK` and handle `SIGTERM` / `SIGINT` signals for graceful socket draining.'
+    ],
+    edgeCases: [
+      'DevOps Edge Case: Zombie process accumulation or dropped connections due to missing init/PID 1 signal forwarding.',
+      'DevOps Edge Case: `.dockerignore` leakage of local `.env` files, `.git` metadata, or `node_modules` into image layers.'
+    ],
+    improvementText: 'Enforced multi-stage rootless container hardening and healthcheck directives'
+  },
+  {
+    matcher: /\b(database|postgres|postgresql|mysql|sql|prisma|query|index|explain|deadlock)\b/i,
+    categoryName: 'Database Execution & Optimization',
+    instructions: [
+      'Profile queries using `EXPLAIN (ANALYZE, BUFFERS)` to verify index scans and eliminate sequential scans on large tables.',
+      'Eliminate N+1 queries using batch loading, DataLoader, or explicit join strategies.',
+      'Configure connection pool limits with exponential backoff retry for deadlock and transient connection dropouts.'
+    ],
+    edgeCases: [
+      'Database Edge Case: Concurrent transaction deadlocks under serializable isolation level.',
+      'Database Edge Case: Parameterized queries eliminating all SQL injection vectors.'
+    ],
+    improvementText: 'Injected EXPLAIN execution plan profiling, deadlock retries & N+1 elimination'
+  },
+  {
+    matcher: /\b(api|endpoint|rest|route|crud|controller|http|graphql)\b/i,
+    categoryName: 'API Contract & Resilient Semantics',
+    instructions: [
+      'Enforce strict bidirectional schema validation (Zod/Pydantic) for request parameters, query strings, headers, and response payloads.',
+      'Adhere to HTTP status semantics: 201 Created with `Location` header, 204 No Content for DELETE, 400 with structured validation issues, 404 for missing resources.',
+      'Format all error responses according to RFC 7807 (Problem Details for HTTP APIs).'
+    ],
+    edgeCases: [
+      'API Edge Case: Malformed JSON or oversized payload (HTTP 413 Payload Too Large).',
+      'API Edge Case: Concurrent modification race conditions (implement ETag / `If-Match` optimistic concurrency control).'
+    ],
+    improvementText: 'Injected RFC 7807 problem details, strict schema validation & optimistic concurrency control'
+  }
+];
+
 export function enhancePromptOffline({
   rawPrompt,
   useCase,
@@ -20,7 +206,7 @@ export function enhancePromptOffline({
   const analysis = analyzeBadPrompt(rawPrompt, useCase);
   const trimmed = rawPrompt.trim();
 
-  // Role Mapping based on useCase & tone
+  // Role Mapping based on useCase
   const roles: Record<UseCaseId, string> = {
     'ui-testing': 'Principal QA Automation Architect specializing in flaky-free E2E web testing and Web Accessibility (WCAG 2.1 AA)',
     'unit-testing': 'Senior Software Engineer specializing in Test-Driven Development (TDD), mocking boundaries, and high code coverage',
@@ -40,7 +226,7 @@ export function enhancePromptOffline({
     'general-developer': 'Senior Software Architect and Systems Design Specialist'
   };
 
-  const role = roles[useCase];
+  const role = roles[useCase] || roles['general-developer'];
 
   // Derive specialized objective
   const objective = `Transform the following developer requirement into an exhaustive, production-grade implementation:\n"${trimmed}"\n\nEnsure complete type safety, defensive validation, testability, and adherence to modern standards using ${framework}.`;
@@ -149,6 +335,27 @@ export function enhancePromptOffline({
       improvements.push('Added Before/After architectural breakdown');
       break;
 
+    case 'feature-implementation':
+      instructions = [
+        `Architect the feature using modular, decoupled components in ${framework}.`,
+        'Define strict TypeScript types/interfaces and validation schemas for all domain entities.',
+        'Implement clear separation of concerns (Presentation Layer, Business Logic Layer, Data Access Layer).',
+        'Implement all necessary UX states: loading (skeleton screens), error states, and empty states.',
+        'Provide clean integration points and state management hooks.'
+      ];
+      edgeCases = [
+        'Async race conditions: rapid user clicks or actions while previous operations are pending.',
+        'Network interruption and offline state graceful degradation.',
+        'User permission / authorization boundaries (role-based access control).'
+      ];
+      constraints = [
+        'Never write business logic inside UI presentation components.',
+        'Guarantee zero runtime errors on undefined or missing optional fields.'
+      ];
+      improvements.push('Injected modular domain architecture and state handling (loading/error/empty)');
+      improvements.push('Enforced strict type boundaries and separation of concerns');
+      break;
+
     case 'api-design':
       instructions = [
         'Design a clean, RESTful (or GraphQL) schema adhering to standard HTTP semantics and status codes.',
@@ -168,6 +375,64 @@ export function enhancePromptOffline({
       improvements.push('Added RFC 7807 standardized error formatting');
       improvements.push('Included idempotency and replay-attack defenses');
       improvements.push('Defined strict schema validation contracts');
+      break;
+
+    case 'code-review':
+      instructions = [
+        'Conduct an adversarial security and architectural code review targeting OWASP Top 10 vulnerabilities.',
+        'Identify race conditions, memory leaks, unhandled promise rejections, and algorithmic bottlenecks.',
+        'Evaluate type safety, defensive validation, and error-handling resilience.',
+        'Provide prioritized recommendations: Critical (immediate exploit), High (logic flaw), Medium (performance/maintainability), Low (style).',
+        'Provide exact refactored code diffs showing the corrected implementation.'
+      ];
+      edgeCases = [
+        'Malicious input payloads (XSS, SQLi, Prototype Pollution, Path Traversal).',
+        'Concurrency deadlocks and stale closure captures in asynchronous loops.'
+      ];
+      constraints = [
+        'Every flagged vulnerability must be accompanied by a concrete exploit scenario and the exact remediation diff.'
+      ];
+      improvements.push('Injected OWASP Top 10 adversarial vulnerability review framework');
+      improvements.push('Categorized findings with severity levels and remediation diffs');
+      break;
+
+    case 'db-optimization':
+      instructions = [
+        `Analyze query performance, execution plans, and table statistics for ${framework}.`,
+        'Profile index utilization: suggest composite, partial, or covering indexes aligned with WHERE and ORDER BY clauses.',
+        'Eradicate N+1 queries using eager joins, batch queries, or DataLoader patterns.',
+        'Provide safe, zero-downtime database migration scripts with rollback safeguards.'
+      ];
+      edgeCases = [
+        'Large table locks during index creation (use CREATE INDEX CONCURRENTLY in PostgreSQL).',
+        'Slow queries under concurrent peak write workloads.',
+        'Connection pool starvation during long-running analytical queries.'
+      ];
+      constraints = [
+        'Never suggest schema modifications that lock production tables without zero-downtime strategies.'
+      ];
+      improvements.push('Injected EXPLAIN execution plan analysis and concurrent indexing strategies');
+      improvements.push('Eradicated N+1 query patterns and pool starvation risks');
+      break;
+
+    case 'devops-docker':
+      instructions = [
+        `Author a production-hardened, multi-stage Dockerfile optimized for ${framework}.`,
+        'Separate build tools and development dependencies from minimal production base image.',
+        'Execute as an unprivileged non-root user (e.g. USER node or USER 10001).',
+        'Optimize layer caching by copying dependency manifests before source files.',
+        'Include native HEALTHCHECK and configure signal handling for graceful shutdown.'
+      ];
+      edgeCases = [
+        'SIGTERM signal ignored by node process running as PID 1 without an init system (use dumb-init or tini).',
+        'Sensitive secrets leaked into image layers via build arguments.'
+      ];
+      constraints = [
+        'Never run containers as root.',
+        'Ensure .dockerignore excludes node_modules, .env files, and git history.'
+      ];
+      improvements.push('Enforced multi-stage rootless container hardening');
+      improvements.push('Added graceful PID 1 signal termination and layer caching optimizations');
       break;
 
     case 'devops-infra':
@@ -199,7 +464,7 @@ export function enhancePromptOffline({
         'Architect auto-burn photo & text countdown synchronization between client canvas and server-authoritative purge signal.'
       ];
       edgeCases = [
-        'Host doorbell knock bypass: unauthorized socket connection attempting direct room room join without host approval.',
+        'Host doorbell knock bypass: unauthorized socket connection attempting direct room join without host approval.',
         'XSS payload injection inside markdown/raw message content.',
         'Memory leaks in room Map holding onto client ArrayBuffers after room destruction.'
       ];
@@ -313,6 +578,33 @@ export function enhancePromptOffline({
       improvements.push('Added defensive input handling');
   }
 
+  // Dynamic Keyword & Safeguard Injections
+  for (const safeguard of DYNAMIC_SAFEGUARDS) {
+    if (safeguard.matcher.test(trimmed)) {
+      // Append instructions and edge cases if not already present
+      for (const inst of safeguard.instructions) {
+        if (!instructions.includes(inst)) {
+          instructions.push(inst);
+        }
+      }
+      for (const ec of safeguard.edgeCases) {
+        if (!edgeCases.includes(ec)) {
+          edgeCases.push(ec);
+        }
+      }
+      if (safeguard.constraints) {
+        for (const c of safeguard.constraints) {
+          if (!constraints.includes(c)) {
+            constraints.push(c);
+          }
+        }
+      }
+      if (!improvements.includes(safeguard.improvementText)) {
+        improvements.push(safeguard.improvementText);
+      }
+    }
+  }
+
   // Adjust for Tone
   if (tone === 'crisp') {
     constraints.push('Be concise: avoid conversational introductions or conclusions. Deliver the technical solution directly.');
@@ -326,12 +618,23 @@ export function enhancePromptOffline({
     improvements.push('Injected adversarial QA edge-cases to stress-test system boundaries');
   }
 
+  // Universal Production Constraints (Zero-Stub & Anti-Hallucination Guarantees)
+  constraints.push('ZERO-STUB DIRECTIVE: Emit complete, production-ready, unbroken code. NEVER output comments like "// TODO: implement logic", "// Add remaining routes here", "/* handle other cases */", or "...rest of code". Every function, test, and type definition must be fully written.');
+  constraints.push('ANTI-HALLUCINATION GUARD: Use only verified, stable library packages, methods, and types. Do not invent non-existent helper methods, deprecated flags, or synthetic dependencies.');
+  constraints.push('DEFENSIVE PROGRAMMING: All external boundaries (user inputs, network responses, file system reads, environment variables) must be defensively validated before property access.');
+  improvements.push('Enforced Zero-Stub guarantee and anti-hallucination guardrails');
+
+  // Concrete verification commands tailored to framework & useCase
+  const verificationCmds = getVerificationCommands(framework, useCase);
+
   // Output format specification
   const outputFormat = `Provide the output in the following format:
-1. **Architectural Overview & Key Decisions** (brief summary)
-2. **Complete, Syntactically Valid Code Blocks** (fully typed, fully runnable, self-contained with all imports and mocks)
-3. **Execution Instructions & Verification Commands** (e.g. CLI commands to run the test or execute the code)
-4. **Edge Cases Covered Checklist** (brief verification list matching the above scenarios)`;
+1. **Architectural Overview & Key Decisions** (brief summary of patterns and trade-offs)
+2. **Complete, Syntactically Valid Code Blocks** (fully typed, fully runnable, self-contained with all imports, mocks, and fixtures)
+3. **Execution Instructions & Verification Commands**:
+${verificationCmds.map(cmd => `   ${cmd}`).join('\n')}
+4. **Resilience & Edge Cases Verification Checklist** (itemized confirmation matching the required edge cases)
+5. **Anti-Regression Safeguards** (specific checks preventing future regressions)`;
 
   // Wrap using Model Preset
   const modelPreset = MODEL_PRESETS[targetModel] || MODEL_PRESETS.gpt4o;
@@ -353,7 +656,7 @@ export function enhancePromptOffline({
     tone,
     framework,
     clarityScoreBefore: analysis.clarityScore,
-    clarityScoreAfter: 96,
+    clarityScoreAfter: 98,
     improvements,
     detectedVariables: analysis.detectedVariables,
     timestamp: Date.now(),

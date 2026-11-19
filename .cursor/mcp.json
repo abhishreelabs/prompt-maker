@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "prompt-maker-mcp"
+    }
+  }
+}

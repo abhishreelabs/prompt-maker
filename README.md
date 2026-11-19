@@ -1,8 +1,9 @@
 # Prompt Maker 🚀
 
-> **Turn rough developer drafts into elite, production-grade AI prompts.**
+> **Turn rough developer drafts into elite, production-grade AI prompts.**  
+> Available as an **Interactive Web Studio**, **Standalone Terminal CLI**, **MCP Server**, and **Antigravity AI Agent Skill**.
 
-Prompt Maker is built for software engineers who know what they want to build or test, but don't want to spend time manually drafting multi-page meta-prompts with roles, boundary conditions, edge cases, deterministic locators, and output schemas.
+Prompt Maker is built for software engineers who know what they want to build or test, but don't want to spend time manually drafting multi-page meta-prompts with roles, boundary conditions, edge cases, deterministic locators, zero-stub guarantees, and output schemas.
 
 ---
 
@@ -11,113 +12,155 @@ When developers ask AI:
 > *"test the login form with email and password"*
 
 AI models often generate:
-- ❌ Brittle selectors (`div:nth-child(2) > input`) that break on any DOM update
-- ❌ Arbitrary `sleep(3000)` timeouts causing flaky CI/CD runs
-- ❌ Missing negative paths (blank inputs, malformed regex, server 500s)
-- ❌ Missing accessibility assertions (ARIA attributes, keyboard navigation)
-- ❌ Incomplete code with comments like `// implement your logic here`
+- ❌ **Brittle selectors** (`div:nth-child(2) > input`) that break on any DOM update
+- ❌ **Arbitrary `sleep(3000)` timeouts** causing flaky CI/CD runs
+- ❌ **Missing negative paths** (blank inputs, malformed regex, server 500s)
+- ❌ **Missing accessibility assertions** (ARIA attributes, keyboard navigation)
+- ❌ **Incomplete code** with placeholder comments like `// implement your logic here`
 
 ## The Solution
-Prompt Maker transforms your draft into an **ad-ready, flake-free prompt** that forces AI models to write bulletproof code:
+Prompt Maker transforms your draft into an **exhaustive, flake-free specification** (raising clarity from ~25/100 to **98/100**):
 - ✅ **Domain Role & Persona Injection** (e.g. Principal QA Automation Architect)
-- ✅ **Resilient Locator Strategies** (Accessible `getByRole`, `getByLabel` over CSS)
+- ✅ **Resilient Accessible Locators** (`getByRole`, `getByLabel` over brittle CSS/XPath)
 - ✅ **Flake-free Auto-wait Assertions** (Zero arbitrary sleeps)
-- ✅ **Negative & Edge-Case Matrix** (Network stubs, 500 errors, latency, mobile viewports)
-- ✅ **Strict Deliverables & Schema** (Self-contained, runnable TypeScript code)
+- ✅ **Dynamic Keyword Safeguards** (Timing-safe crypto for auth, idempotency keys for Stripe, focus traps for modals, multi-stage non-root for Docker)
+- ✅ **Strict Zero-Stub Guarantee** (Banning `// TODO` or `...rest of code`)
+- ✅ **Anti-Hallucination Guardrail** (Verified libraries and APIs only)
+- ✅ **Executable Terminal Verification Protocol** (Ready-to-run CLI commands like `npx playwright test --ui`)
 
 ---
 
-## 🛠️ Features
+## 🛠️ Four Ways to Use Prompt Maker
 
-- ⚡ **Split-Screen Studio**: Live before-and-after view of your prompt.
-- 🧠 **Dual-Engine Architecture**:
-  - **Offline Smart Engine (Zero Cost)**: Instant rule-based prompt enhancement with built-in engineering frameworks. Requires zero API keys and zero internet access.
-  - **AI-Powered Engine (Gemini 2.5 & OpenAI)**: Optional meta-prompt synthesis using Google Gemini 2.5 Flash or OpenAI.
-- 🎯 **10+ Developer Engineering Presets**:
-  - UI & E2E Testing (Playwright, Cypress, Selenium)
-  - Unit & Integration Testing (Jest, Vitest, PyTest)
-  - Bug Reproduction & Root Cause Analysis
-  - Refactoring & Optimization (SOLID, clean architecture)
-  - Feature Implementation Specifications
-  - REST & GraphQL API Design (Zod, RFC 7807)
-  - Code Review & Security Audit (OWASP Top 10)
-  - Database & SQL Query Optimization
-  - DevOps, Docker & CI/CD Pipelines
-  - General Developer Engineering
-- 🤖 **Target Model Presets**:
-  - **Claude 3.7 / 3.5 Sonnet**: Structured with Anthropic-recommended XML tags (`<system>`, `<objective>`, `<instructions>`, `<edge_cases>`).
-  - **GPT-4o / o3-mini**: Clean markdown hierarchy with bold directives.
-  - **Google Gemini 2.5 Pro / Flash**: Grounding directives and system instructions.
-  - **Cursor / Copilot / Windsurf**: Crisp `.cursorrules` style with zero conversational filler.
-- 🔍 **Prompt Engineering Audit Card**: Visual breakdown of vulnerabilities detected in your draft and the architectural safeguards injected.
-- 📋 **1-Click Copy & Export**: Copy to clipboard with celebratory feedback, export as `.cursorrules`, or download as `.md`.
-- 🤖 **Model Context Protocol (MCP) Server**: Exposes tools (`enhance_developer_prompt`, `analyze_developer_prompt`, `get_learned_workflows`, `list_supported_use_cases`) so AI agents in Cursor, Claude Desktop, Windsurf, and CLI can enhance prompts autonomously.
-- 💾 **Local History & Privacy**: Automatically archives previous prompt transformations in your browser's `localStorage`. API keys never leave your browser.
+### 1. 🖥️ Standalone Terminal CLI (`prompt-maker`)
+Linked globally on your system. Run from anywhere in your terminal:
 
----
-
-## 🤖 Model Context Protocol (MCP) Integration
-
-Any AI coding agent working in your project can call Prompt Maker as an MCP tool!
-
-### 1. Cursor IDE Setup
-Add the following to `.cursor/mcp.json` in any of your repositories:
-
-```json
-{
-  "mcpServers": {
-    "prompt-maker": {
-      "command": "node",
-      "args": ["/Users/abhisheksahu/repos/prompt-maker/bin/prompt-maker-mcp.js"]
-    }
-  }
-}
-```
-
-### 2. Claude Desktop Setup
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "prompt-maker": {
-      "command": "node",
-      "args": ["/Users/abhisheksahu/repos/prompt-maker/bin/prompt-maker-mcp.js"]
-    }
-  }
-}
-```
-
-### 3. Tools Exposed to AI Agents:
-- `enhance_developer_prompt`: Automatically rewrites raw tasks into production prompts with personas, resilient locators, auto-waits, and output schemas.
-- `analyze_developer_prompt`: Diagnoses missing test assertions, brittle selectors, and gives a clarity score.
-- `get_learned_workflows`: Retrieves the exact workflows learned from your 11 projects (`WhisperRoom`, `Hospital Management`, `Sentinel`, `Terrace Farming`, etc.).
-- `list_supported_use_cases`: Lists all 16 engineering domain categories.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v18+)
-- npm or pnpm
-
-### Quick Start
 ```bash
-# Navigate to the repository
-cd /Users/abhisheksahu/repos/prompt-maker
+# Enhance a prompt and print formatted output directly:
+prompt-maker "test login form with email & password" --use-case ui-testing
 
+# Pipe directly into your clipboard:
+prompt-maker "create stripe checkout webhook endpoint" --use-case api-design --quiet | pbcopy
+
+# Machine-readable JSON output (ideal for scripts and agents):
+prompt-maker "dockerize nextjs app with non-root user" --use-case devops-docker --json
+
+# Audit a prompt and diagnose missing safeguards & clarity defects:
+prompt-maker analyze "my sql query is slow" --use-case db-optimization
+
+# Explore learned real-world workflows from active workspace repositories:
+prompt-maker learned --project WhisperRoom
+
+# Start the MCP stdio server:
+prompt-maker mcp
+```
+
+#### CLI Options:
+| Option | Description |
+| :--- | :--- |
+| `-u, --use-case <id>` | `ui-testing`, `unit-testing`, `bug-fixing`, `code-refactoring`, `feature-implementation`, `api-design`, `code-review`, `db-optimization`, `devops-docker`, `devops-infra`, `security-privacy`, `secrets-observability`, `healthcare-doctor`, `image-generation`, `concurrency-scaling`, `general-developer` |
+| `-f, --framework <name>` | Target framework (e.g. `Playwright (TypeScript)`, `Next.js 16`, `FastAPI`, `Cloudflare DNS`) |
+| `-m, --model <model>` | Target model wrapper: `claude` (Anthropic XML tags), `gpt4o` (Markdown), `gemini` (Grounding), `cursor` (Concise rules) |
+| `-t, --tone <tone>` | `production`, `crisp`, `step-by-step`, `qa-adversarial` |
+| `-j, --json` | Output machine-readable JSON object |
+| `-q, --quiet` | Output only the enhanced prompt without metadata banners |
+
+---
+
+### 2. ⚡ Antigravity AI Agent Skill (`SKILL.md`)
+Installed globally in `~/.gemini/antigravity/skills/prompt-maker/SKILL.md`.
+
+Antigravity coding agents automatically activate this skill when asked to write tests, build APIs, fix bugs, or optimize performance. The agent calls `prompt-maker` internally to compile a rock-solid specification before writing code, guaranteeing zero hallucinated packages and zero placeholder stubs.
+
+---
+
+### 3. 🤖 Model Context Protocol (MCP) Server
+Any AI coding assistant supporting MCP can call Prompt Maker as a native tool!
+
+#### Tools Exposed:
+1. `enhance_developer_prompt(raw_prompt, use_case, framework, target_model, tone)`: Returns the hardened, edge-case-proof prompt.
+2. `analyze_developer_prompt(raw_prompt, use_case)`: Audits clarity score and flags missing architectural elements.
+3. `get_learned_workflows(project_filter, category)`: Returns real-world problem statements and safeguards learned from workspace repositories.
+
+#### A. Cursor IDE (`.cursor/mcp.json`)
+```json
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "prompt-maker-mcp"
+    }
+  }
+}
+```
+
+#### B. Claude Desktop (`claude_desktop_config.json`)
+Location: `~/Library/Application Support/Claude/claude_desktop_config.json`
+```json
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "prompt-maker-mcp"
+    }
+  }
+}
+```
+
+#### C. Windsurf IDE (`mcp_config.json`)
+Location: `~/.codeium/windsurf/mcp_config.json`
+```json
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "prompt-maker-mcp"
+    }
+  }
+}
+```
+
+---
+
+### 4. 🌐 Interactive Web Studio
+Local interactive web application running on `http://localhost:5173`:
+- **Split-Screen Studio**: Live before-and-after view of your prompt.
+- **Dynamic Variable Detection**: Automatically highlights replaceable tokens (`[email]`, `[password]`).
+- **Audit Card**: Clarity score progression (`32/100` ➔ `98/100`) and missing defect badges.
+- **Visual Compilation Pipeline**: 4-stage pipeline (Analyzer ➔ Intent Classifier ➔ Dynamic Safeguard Injection ➔ Model Formatter).
+- **Light & Dark Mode**: Handcrafted themes with Google **Outfit** (headings) and **Inter** (body) typography.
+- **Learned Workflows Drawer**: 11 real-world workflows extracted from active repositories (WhisperRoom, Hospital Management, Sentinel, Terrace Farming).
+
+---
+
+## 🧠 Dynamic Keyword Safeguards
+
+Prompt Maker automatically scans raw prompts and injects targeted production rules:
+
+| Keyword Trigger | Injected Safeguards |
+| :--- | :--- |
+| `login`, `auth`, `password`, `jwt` | Timing-safe comparisons (`crypto.timingSafeEqual`), 5-attempt rate-limiting lockout (HTTP 429), accessible password visibility toggle, session revocation on logout. |
+| `stripe`, `payment`, `billing` | `Idempotency-Key` headers on mutations, integer-cents currency arithmetic, raw unparsed webhook signature verification (`stripe-signature`). |
+| `table`, `pagination`, `filter` | Debounced search input (300ms) with `AbortController` cancellation, deterministic secondary sort key, window virtualization for >500 rows. |
+| `modal`, `dialog`, `drawer` | WCAG 2.1 AA keyboard focus trap, background body scroll lock (`overflow: hidden`), Escape key dismissal, focus restoration to trigger element. |
+| `docker`, `dockerfile`, `container` | Multi-stage Docker build, unprivileged non-root user execution (`USER node`), container `HEALTHCHECK`, PID 1 signal forwarding. |
+| `sql`, `postgres`, `query` | `EXPLAIN (ANALYZE, BUFFERS)` execution plan verification, composite index alignment, N+1 query elimination, connection pool exhaustion handling. |
+| `api`, `endpoint`, `rest` | Strict Zod/Pydantic validation schemas, HTTP status code semantics, RFC 7807 problem details, optimistic locking (`ETag`). |
+
+---
+
+## 🚀 Development & Build
+
+```bash
 # Install dependencies
 npm install
 
-# Start development server
+# Start Vite local development server
 npm run dev
+
+# Run unit & MCP test suite
+npm test
+
+# Build production web bundle + CLI + MCP binaries
+npm run build:all
+
+# Link CLI globally to PATH
+npm link
 ```
-
-Visit `http://localhost:5173` in your browser.
-
-### Scripts
-- `npm run dev` &mdash; Starts Vite local development server
-- `npm run build` &mdash; Builds production bundle
-- `npm run preview` &mdash; Previews production build locally
-- `npm test` &mdash; Runs engine unit tests via Node test runner
