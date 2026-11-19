@@ -1,0 +1,17 @@
+{
+  "name": "prompt-maker",
+  "version": "0.1.0",
+  "description": "AI prompt creator, optimizer, and management platform",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "prompt-engineering",
+    "ai",
+    "prompt-maker"
+  ],
+  "author": "",
+  "license": "ISC"
+}
