@@ -1,11 +1,11 @@
 # Prompt Maker 🚀
 
 > **Turn rough developer drafts into elite, production-grade AI prompts.**  
-> Available as an **Interactive Web Studio** ([prompt-maker-br3.pages.dev](https://prompt-maker-br3.pages.dev)), **Standalone Terminal CLI**, **MCP Server**, and **Antigravity AI Agent Skill**.
+> Available as an **Interactive Web Studio** ([prompt-maker.abhishreelabs.in](https://prompt-maker.abhishreelabs.in)), **Standalone Terminal CLI**, **MCP Server**, and **Antigravity AI Agent Skill**.
 
 Prompt Maker is built for software engineers who know what they want to build or test, but don't want to spend time manually drafting multi-page meta-prompts with roles, boundary conditions, edge cases, deterministic locators, zero-stub guarantees, and output schemas.
 
-[![Live on Cloudflare Pages](https://img.shields.io/badge/Live%20Demo-Cloudflare%20Pages-f38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://prompt-maker-br3.pages.dev)
+[![Live on Cloudflare](https://img.shields.io/badge/Live%20Studio-prompt--maker.abhishreelabs.in-f38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://prompt-maker.abhishreelabs.in)
 [![npm version](https://img.shields.io/npm/v/@s.engineerabhisheksahu/prompt-maker?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@s.engineerabhisheksahu/prompt-maker)
 
 ---
@@ -135,7 +135,7 @@ Location: `~/.codeium/windsurf/mcp_config.json`
 ---
 
 ### 4. 🌐 Interactive Web Studio
-**Live URL**: [https://prompt-maker-br3.pages.dev](https://prompt-maker-br3.pages.dev) (Hosted on Cloudflare Pages)  
+**Live URL**: [https://prompt-maker.abhishreelabs.in](https://prompt-maker.abhishreelabs.in) *(Mirror: [prompt-maker-br3.pages.dev](https://prompt-maker-br3.pages.dev))*  
 Or run locally on `http://localhost:5173`:
 - **Zero Backend Required**: Runs 100% client-side with lightning-fast reactive compilation.
 - **Split-Screen Studio**: Live before-and-after view of your prompt.
