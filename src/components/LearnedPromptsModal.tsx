@@ -9,28 +9,34 @@ import {
   ShieldAlert,
   CheckCircle,
   Search,
-  Filter
+  Filter,
+  Database
 } from 'lucide-react';
 
 interface LearnedPromptsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectPrompt: (item: LearnedPromptItem) => void;
+  blueprints?: LearnedPromptItem[];
+  source?: 'd1' | 'local';
 }
 
 export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
   isOpen,
   onClose,
-  onSelectPrompt
+  onSelectPrompt,
+  blueprints = LEARNED_USER_PROMPTS,
+  source = 'local'
 }) => {
   const [selectedProject, setSelectedProject] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   if (!isOpen) return null;
 
-  const projects = ['all', ...Array.from(new Set(LEARNED_USER_PROMPTS.map(item => item.project)))];
+  const currentBlueprints = blueprints && blueprints.length > 0 ? blueprints : LEARNED_USER_PROMPTS;
+  const projects = ['all', ...Array.from(new Set(currentBlueprints.map(item => item.project)))];
 
-  const filtered = LEARNED_USER_PROMPTS.filter(item => {
+  const filtered = currentBlueprints.filter(item => {
     const matchesProj = selectedProject === 'all' || item.project.includes(selectedProject);
     const matchesQuery =
       item.rawUserPrompt.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,8 +58,14 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
               <div className="flex items-center space-x-2">
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">Curated Production Blueprints</h3>
                 <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                  {LEARNED_USER_PROMPTS.length} Workflows
+                  {currentBlueprints.length} Workflows
                 </span>
+                {source === 'd1' && (
+                  <span className="hidden sm:inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                    <Database className="w-3 h-3 text-cyan-500" />
+                    <span>Cloudflare D1 Live</span>
+                  </span>
+                )}
               </div>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
                 Battle-tested engineering patterns across WebSockets, Healthcare, Cloud SRE, FinOps, and Distributed Systems.

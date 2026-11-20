@@ -1,5 +1,6 @@
 version: 1
 general:
-    domain: https://eu.infisical.com/api
+    domain: https://eu.infisical.com
 secrets-management:
-    project-id: 26cff385-1764-4ff5-a25b-d50a4b377990
+    project-id: 01e21bb7-221b-4ff6-9619-ee3e18b060f3
+    default-environment: prod

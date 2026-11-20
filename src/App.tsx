@@ -13,6 +13,7 @@ import { InsightsModal } from './components/InsightsModal';
 import { enhancePromptOffline } from './engine/offlineEnhancer.ts';
 import { enhancePromptWithAi } from './engine/aiEnhancer.ts';
 import { sendTelemetry } from './engine/telemetry.ts';
+import { fetchBlueprintsFromD1 } from './engine/blueprints.ts';
 import { USE_CASES } from './data/useCases.ts';
 import { LEARNED_USER_PROMPTS } from './data/learnedPrompts.ts';
 import { Sparkles, Terminal, ArrowRight, ShieldCheck, Zap, FolderGit2 } from 'lucide-react';
@@ -45,6 +46,19 @@ export function App() {
   const [isLearnedOpen, setIsLearnedOpen] = useState(false);
   const [isMcpOpen, setIsMcpOpen] = useState(false);
   const [isInsightsOpen, setIsInsightsOpen] = useState(false);
+
+  // Dynamic blueprints loaded from Cloudflare D1 with local fallback
+  const [blueprints, setBlueprints] = useState<LearnedPromptItem[]>(LEARNED_USER_PROMPTS);
+  const [blueprintsSource, setBlueprintsSource] = useState<'d1' | 'local'>('local');
+
+  useEffect(() => {
+    fetchBlueprintsFromD1().then(({ blueprints: fetched, source }) => {
+      if (fetched && fetched.length > 0) {
+        setBlueprints(fetched);
+        setBlueprintsSource(source);
+      }
+    });
+  }, []);
 
   // Sync theme with documentElement
   useEffect(() => {
@@ -450,13 +464,13 @@ export function App() {
               onClick={() => setIsLearnedOpen(true)}
               className="text-xs sm:text-sm font-outfit text-amber-600 dark:text-amber-400 hover:text-amber-500 flex items-center space-x-1.5 font-bold self-start sm:self-auto cursor-pointer group"
             >
-              <span>View All {LEARNED_USER_PROMPTS.length} Workflows</span>
+              <span>View All {blueprints.length} Workflows</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {LEARNED_USER_PROMPTS.slice(0, 6).map(item => (
+            {blueprints.slice(0, 6).map(item => (
               <div
                 key={item.id}
                 onClick={() => handleSelectLearnedPrompt(item)}
@@ -574,6 +588,8 @@ export function App() {
         isOpen={isLearnedOpen}
         onClose={() => setIsLearnedOpen(false)}
         onSelectPrompt={handleSelectLearnedPrompt}
+        blueprints={blueprints}
+        source={blueprintsSource}
       />
 
       <McpModal
