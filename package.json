@@ -19,6 +19,8 @@
     "build:cli": "esbuild src/cli.ts --bundle --platform=node --format=esm --target=node20 --banner:js=\"#!/usr/bin/env node\" --outfile=bin/prompt-maker.js && chmod +x bin/prompt-maker.js",
     "build:all": "npm run build && npm run build:mcp && npm run build:cli",
     "mcp": "node bin/prompt-maker-mcp.js",
+    "deploy:pages": "infisical run --projectId=01e21bb7-221b-4ff6-9619-ee3e18b060f3 --env=prod --domain=https://eu.infisical.com -- bash -c 'npx -y wrangler pages deploy dist --project-name=prompt-maker --commit-dirty=true'",
+    "deploy": "npm run build && npm run deploy:pages",
     "publish:infisical": "infisical run --env=prod -- bash -c 'npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN && npm publish --access public'",
     "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },
