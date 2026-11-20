@@ -4,8 +4,8 @@
   "description": "AI prompt creator, optimizer, and management platform",
   "type": "module",
   "bin": {
-    "prompt-maker": "./bin/prompt-maker.js",
-    "prompt-maker-mcp": "./bin/prompt-maker-mcp.js"
+    "prompt-maker": "bin/prompt-maker.js",
+    "prompt-maker-mcp": "bin/prompt-maker-mcp.js"
   },
   "files": [
     "bin",
