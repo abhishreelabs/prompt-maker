@@ -3262,8 +3262,8 @@ var require_utils = __commonJS({
       }
       return ind;
     }
-    function removeDotSegments(path) {
-      let input2 = path;
+    function removeDotSegments(path2) {
+      let input2 = path2;
       const output2 = [];
       let nextSlash = -1;
       let len = 0;
@@ -3337,11 +3337,11 @@ var require_utils = __commonJS({
       }
       return output2.join("");
     }
-    function removeDotSegmentsRelative(path) {
-      if (path === "" || path[0] === "/") {
-        return removeDotSegments(path);
+    function removeDotSegmentsRelative(path2) {
+      if (path2 === "" || path2[0] === "/") {
+        return removeDotSegments(path2);
       }
-      const segments = path.split("/");
+      const segments = path2.split("/");
       const last = segments.length - 1;
       const output2 = [];
       let trailingDirectory = false;
@@ -3704,8 +3704,8 @@ var require_schemes = __commonJS({
       }
       if (wsComponent.resourceName) {
         const queryIndex = wsComponent.resourceName.indexOf("?");
-        const path = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
-        wsComponent.path = path && path !== "/" ? path : void 0;
+        const path2 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
+        wsComponent.path = path2 && path2 !== "/" ? path2 : void 0;
         wsComponent.query = queryIndex === -1 ? void 0 : wsComponent.resourceName.slice(queryIndex + 1);
         wsComponent.resourceName = void 0;
       }
@@ -7242,12 +7242,12 @@ var require_dist = __commonJS({
         throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats(ajv, list, fs, exportName) {
+    function addFormats(ajv, list, fs2, exportName) {
       var _a3;
       var _b;
       (_a3 = (_b = ajv.opts.code).formats) !== null && _a3 !== void 0 ? _a3 : _b.formats = (0, codegen_1._)`require("ajv-formats/dist/formats").${exportName}`;
       for (const f of list)
-        ajv.addFormat(f, fs[f]);
+        ajv.addFormat(f, fs2[f]);
     }
     module.exports = exports = formatsPlugin;
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -7629,8 +7629,8 @@ function getErrorMap() {
 
 // node_modules/zod/v3/helpers/parseUtil.js
 var makeIssue = (params) => {
-  const { data, path, errorMaps, issueData } = params;
-  const fullPath = [...path, ...issueData.path || []];
+  const { data, path: path2, errorMaps, issueData } = params;
+  const fullPath = [...path2, ...issueData.path || []];
   const fullIssue = {
     ...issueData,
     path: fullPath
@@ -7745,11 +7745,11 @@ var errorUtil;
 
 // node_modules/zod/v3/types.js
 var ParseInputLazyPath = class {
-  constructor(parent, value, path, key) {
+  constructor(parent, value, path2, key) {
     this._cachedPath = [];
     this.parent = parent;
     this.data = value;
-    this._path = path;
+    this._path = path2;
     this._key = key;
   }
   get path() {
@@ -11704,10 +11704,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path) {
-  if (!path)
+function getElementAtPath(obj, path2) {
+  if (!path2)
     return obj;
-  return path.reduce((acc, key) => acc?.[key], obj);
+  return path2.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -12047,11 +12047,11 @@ function explicitlyAborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path, issues) {
+function prefixIssues(path2, issues) {
   return issues.map((iss) => {
     var _a3;
     (_a3 = iss).path ?? (_a3.path = []);
-    iss.path.unshift(path);
+    iss.path.unshift(path2);
     return iss;
   });
 }
@@ -12513,16 +12513,16 @@ function flattenError(error62, mapper = (issue2) => issue2.message) {
 }
 function formatError(error62, mapper = (issue2) => issue2.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error63, path = []) => {
+  const processError = (error63, path2 = []) => {
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path2, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path2, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path2, ...issue2.path]);
       } else {
-        const fullpath = [...path, ...issue2.path];
+        const fullpath = [...path2, ...issue2.path];
         if (fullpath.length === 0) {
           fieldErrors._errors.push(mapper(issue2));
         } else {
@@ -12561,17 +12561,17 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
 }
 function treeifyError(error62, mapper = (issue2) => issue2.message) {
   const result = { errors: [] };
-  const processError = (error63, path = []) => {
+  const processError = (error63, path2 = []) => {
     var _a3;
     for (const issue2 of error63.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path2, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path2, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path2, ...issue2.path]);
       } else {
-        const fullpath = [...path, ...issue2.path];
+        const fullpath = [...path2, ...issue2.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue2));
           continue;
@@ -12610,8 +12610,8 @@ function treeifyError(error62, mapper = (issue2) => issue2.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path) {
+  const path2 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path2) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -28162,11 +28162,11 @@ function normalizeObjectSchema(schema) {
   }
   return void 0;
 }
-function getDotPath(path) {
-  if (path.length === 0) {
+function getDotPath(path2) {
+  if (path2.length === 0) {
     return "object root";
   }
-  return path.reduce((acc, seg, index) => {
+  return path2.reduce((acc, seg, index) => {
     if (index === 0) {
       return String(seg);
     }
@@ -30393,13 +30393,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path = ref.slice(1).split("/").filter(Boolean);
-  if (path.length === 0) {
+  const path2 = ref.slice(1).split("/").filter(Boolean);
+  if (path2.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path[0] === defsKey) {
-    const key = path[1] === void 0 ? void 0 : decodeJSONPointerSegment(path[1]);
+  if (path2[0] === defsKey) {
+    const key = path2[1] === void 0 ? void 0 : decodeJSONPointerSegment(path2[1]);
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -36955,6 +36955,43 @@ function inferUseCase(text) {
   return "general-developer";
 }
 
+// src/engine/forecastGenerator.ts
+function generateExecutionForecast(params) {
+  const { framework, verificationCmds, projectContext } = params;
+  const stackLabel = projectContext || framework || "Current Tech Stack";
+  const pitfalls = [
+    'Emits lazy stubs (e.g. "// TODO: implement logic here", "// add remaining routes")',
+    "Guesses architecture without validating against actual project conventions",
+    "Omits boundary and negative tests, leading to silent runtime crashes on edge cases",
+    "No automated test verification commands run to guarantee regression safety"
+  ];
+  const actionPlan = [
+    `Context Alignment: Inspects and aligns with target architecture (${stackLabel})`,
+    "Zero-Stub Code Generation: Writes 100% complete, runnable implementation with zero placeholders",
+    "Defensive Boundary Enforcement: Wraps inputs and external I/O with schema validation & error handlers",
+    "Automated Verification: Executes test & build commands to ensure zero regressions"
+  ];
+  const enforcedGuarantees = [
+    "Zero-Stub Directive: Banned from emitting partial code or TODO comments",
+    "Anti-Hallucination Guard: Restricted to stable, verified package APIs",
+    "Type Safety Contract: Enforces strict typing and schema validation across all boundaries",
+    "Verification Assertions: Requires terminal verification commands to pass cleanly"
+  ];
+  return {
+    withoutHardening: {
+      behavior: "Agent acts as a conversational chatbot, guessing intent and skipping structural constraints.",
+      likelyPitfalls: pitfalls,
+      expectedOutcome: "High risk of broken code, missing imports, lazy stubs, and failed manual integration."
+    },
+    withHardening: {
+      agentActionPlan: actionPlan,
+      enforcedGuarantees,
+      verificationCommands: verificationCmds,
+      expectedOutcome: "Production-ready, directly mergeable code that satisfies typechecks and automated tests on the first run."
+    }
+  };
+}
+
 // src/engine/offlineEnhancer.ts
 function getVerificationCommands(framework, useCase) {
   const fw = framework.toLowerCase();
@@ -37215,7 +37252,8 @@ function enhancePromptOffline({
   useCase,
   targetModel,
   tone,
-  framework = "TypeScript"
+  framework = "TypeScript",
+  projectContext
 }) {
   const analysis = analyzeBadPrompt(rawPrompt, useCase);
   const trimmed = rawPrompt.trim();
@@ -37252,10 +37290,15 @@ function enhancePromptOffline({
 "${trimmed}"
 
 Ensure complete type safety, defensive validation, testability, and adherence to modern standards using ${framework}.`;
-  const context = `Target Framework: ${framework}
+  let context = `Target Framework: ${framework}
 Design Pattern: Modern idiomatic patterns with zero deprecated APIs or anti-patterns.
 Target Audience: Senior Engineering Team.
 Clarity & Completeness: Self-contained, runnable, and defensively programmed.`;
+  if (projectContext) {
+    context += `
+Target Workspace / Project Context: ${projectContext}
+Adherence: Strictly conform to existing files, directory layout, dependencies, and code style in this project.`;
+  }
   let instructions = [];
   let edgeCases = [];
   let constraints = [];
@@ -37832,6 +37875,14 @@ ${verificationCmds.map((cmd) => `   ${cmd}`).join("\n")}
     constraints,
     outputFormat
   });
+  const executionForecast = generateExecutionForecast({
+    rawPrompt,
+    useCase,
+    framework,
+    improvements,
+    verificationCmds,
+    projectContext
+  });
   return {
     originalPrompt: rawPrompt,
     enhancedPrompt,
@@ -37839,6 +37890,8 @@ ${verificationCmds.map((cmd) => `   ${cmd}`).join("\n")}
     targetModel,
     tone,
     framework,
+    projectContext,
+    executionForecast,
     clarityScoreBefore: analysis.clarityScore,
     clarityScoreAfter: 98,
     improvements,
@@ -37846,6 +37899,69 @@ ${verificationCmds.map((cmd) => `   ${cmd}`).join("\n")}
     timestamp: Date.now(),
     engineUsed: "offline-smart-template"
   };
+}
+
+// src/engine/workspaceDetector.ts
+import fs from "node:fs";
+import path from "node:path";
+function detectLocalWorkspace(startDir = process.cwd()) {
+  try {
+    let currentDir = path.resolve(startDir);
+    let packageJsonPath = null;
+    for (let i = 0; i < 3; i++) {
+      const candidate = path.join(currentDir, "package.json");
+      if (fs.existsSync(candidate)) {
+        packageJsonPath = candidate;
+        break;
+      }
+      const parent = path.dirname(currentDir);
+      if (parent === currentDir) break;
+      currentDir = parent;
+    }
+    if (!packageJsonPath) {
+      return null;
+    }
+    const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+    const allDeps = {
+      ...pkg.dependencies || {},
+      ...pkg.devDependencies || {}
+    };
+    const depNames = Object.keys(allDeps);
+    const stackParts = [];
+    if (allDeps["next"]) stackParts.push(`Next.js ${allDeps["next"].replace(/[^0-9.]/g, "") || ""}`.trim());
+    else if (allDeps["react"]) stackParts.push(`React ${allDeps["react"].replace(/[^0-9.]/g, "") || ""}`.trim());
+    else if (allDeps["vue"]) stackParts.push("Vue");
+    else if (allDeps["svelte"]) stackParts.push("Svelte");
+    if (allDeps["vite"]) stackParts.push("Vite");
+    if (allDeps["esbuild"]) stackParts.push("esbuild");
+    if (allDeps["typescript"] || fs.existsSync(path.join(currentDir, "tsconfig.json"))) {
+      stackParts.push("TypeScript");
+    }
+    if (allDeps["tailwindcss"] || allDeps["@tailwindcss/vite"]) stackParts.push("Tailwind CSS");
+    if (allDeps["playwright"] || allDeps["@playwright/test"]) stackParts.push("Playwright");
+    else if (allDeps["vitest"]) stackParts.push("Vitest");
+    else if (allDeps["jest"]) stackParts.push("Jest");
+    else if (pkg.scripts?.test && pkg.scripts.test.includes("--test")) stackParts.push("Node Test Runner");
+    if (allDeps["@modelcontextprotocol/sdk"]) stackParts.push("MCP SDK");
+    if (allDeps["express"]) stackParts.push("Express");
+    if (allDeps["fastapi"]) stackParts.push("FastAPI");
+    const techStack = stackParts.join(" + ") || "Node.js";
+    const testCommand = pkg.scripts?.test ? "npm test" : void 0;
+    const buildCommand = pkg.scripts?.build ? "npm run build" : void 0;
+    const devCommand = pkg.scripts?.dev ? "npm run dev" : void 0;
+    const summary = `${pkg.name || path.basename(currentDir)} (${techStack})`;
+    return {
+      name: pkg.name || path.basename(currentDir),
+      techStack,
+      testCommand,
+      buildCommand,
+      devCommand,
+      keyDependencies: depNames.slice(0, 10),
+      summary
+    };
+  } catch {
+    return null;
+  }
 }
 
 // src/data/useCases.ts
@@ -38929,13 +39045,16 @@ function createPromptMakerServer() {
     async ({ raw_prompt, use_case, framework, target_model = "claude", tone = "production" }) => {
       const effectiveUseCase = use_case || inferUseCase(raw_prompt);
       const selectedUseCase = USE_CASES.find((u) => u.id === effectiveUseCase);
-      const effectiveFramework = framework || selectedUseCase?.defaultFramework || "TypeScript";
+      const localWorkspace = detectLocalWorkspace();
+      const effectiveFramework = framework || (effectiveUseCase === "general-developer" && localWorkspace ? localWorkspace.techStack : selectedUseCase?.defaultFramework || "TypeScript");
+      const effectiveProjectContext = localWorkspace ? localWorkspace.summary : void 0;
       const result = enhancePromptOffline({
         rawPrompt: raw_prompt,
         useCase: effectiveUseCase,
         targetModel: target_model,
         tone,
-        framework: effectiveFramework
+        framework: effectiveFramework,
+        projectContext: effectiveProjectContext
       });
       return {
         content: [
@@ -38950,6 +39069,8 @@ function createPromptMakerServer() {
                 use_case: result.useCase,
                 target_model: result.targetModel,
                 framework: result.framework,
+                project_context: result.projectContext,
+                execution_forecast: result.executionForecast,
                 detected_variables: result.detectedVariables
               },
               null,

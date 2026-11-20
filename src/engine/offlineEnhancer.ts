@@ -1,6 +1,7 @@
 import type { PromptTone, TargetModel, UseCaseId, PromptTransformationResult } from '../types/index.ts';
 import { MODEL_PRESETS } from '../data/models.ts';
 import { analyzeBadPrompt } from './promptAnalyzer.ts';
+import { generateExecutionForecast } from './forecastGenerator.ts';
 
 interface EnhanceParams {
   rawPrompt: string;
@@ -8,6 +9,7 @@ interface EnhanceParams {
   targetModel: TargetModel;
   tone: PromptTone;
   framework?: string;
+  projectContext?: string;
 }
 
 interface DynamicSafeguard {
@@ -281,7 +283,8 @@ export function enhancePromptOffline({
   useCase,
   targetModel,
   tone,
-  framework = 'TypeScript'
+  framework = 'TypeScript',
+  projectContext
 }: EnhanceParams): PromptTransformationResult {
   const analysis = analyzeBadPrompt(rawPrompt, useCase);
   const trimmed = rawPrompt.trim();
@@ -322,7 +325,10 @@ export function enhancePromptOffline({
   const objective = `Transform the following developer requirement into an exhaustive, production-grade implementation:\n"${trimmed}"\n\nEnsure complete type safety, defensive validation, testability, and adherence to modern standards using ${framework}.`;
 
   // Context & assumptions
-  const context = `Target Framework: ${framework}\nDesign Pattern: Modern idiomatic patterns with zero deprecated APIs or anti-patterns.\nTarget Audience: Senior Engineering Team.\nClarity & Completeness: Self-contained, runnable, and defensively programmed.`;
+  let context = `Target Framework: ${framework}\nDesign Pattern: Modern idiomatic patterns with zero deprecated APIs or anti-patterns.\nTarget Audience: Senior Engineering Team.\nClarity & Completeness: Self-contained, runnable, and defensively programmed.`;
+  if (projectContext) {
+    context += `\nTarget Workspace / Project Context: ${projectContext}\nAdherence: Strictly conform to existing files, directory layout, dependencies, and code style in this project.`;
+  }
 
   // Specific instructions based on use case
   let instructions: string[] = [];
@@ -941,6 +947,15 @@ ${verificationCmds.map(cmd => `   ${cmd}`).join('\n')}
     outputFormat
   });
 
+  const executionForecast = generateExecutionForecast({
+    rawPrompt,
+    useCase,
+    framework,
+    improvements,
+    verificationCmds,
+    projectContext
+  });
+
   return {
     originalPrompt: rawPrompt,
     enhancedPrompt,
@@ -948,6 +963,8 @@ ${verificationCmds.map(cmd => `   ${cmd}`).join('\n')}
     targetModel,
     tone,
     framework,
+    projectContext,
+    executionForecast,
     clarityScoreBefore: analysis.clarityScore,
     clarityScoreAfter: 98,
     improvements,

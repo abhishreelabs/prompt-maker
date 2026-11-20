@@ -42,6 +42,8 @@ interface BadPromptInputProps {
   setTargetModel: (val: TargetModel) => void;
   tone: PromptTone;
   setTone: (val: PromptTone) => void;
+  projectContext?: string;
+  setProjectContext?: (val: string) => void;
   onTransform: () => void;
   isTransforming: boolean;
   onOpenLearned?: () => void;
@@ -77,6 +79,8 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
   setTargetModel,
   tone,
   setTone,
+  projectContext = '',
+  setProjectContext,
   onTransform,
   isTransforming,
   onOpenLearned
@@ -300,52 +304,75 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
 
         {/* Collapsible Config Row */}
         {showConfig && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/[0.06] text-xs animate-in fade-in duration-150">
-            <div>
-              <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
-                Target Framework:
-              </label>
-              <input
-                type="text"
-                value={framework}
-                onChange={e => setFramework(e.target.value)}
-                placeholder="e.g. Playwright, Next.js"
-                className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none font-mono"
-              />
+          <div className="space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/[0.06] text-xs animate-in fade-in duration-150">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
+                  Target Framework:
+                </label>
+                <input
+                  type="text"
+                  value={framework}
+                  onChange={e => setFramework(e.target.value)}
+                  placeholder="e.g. Playwright, Next.js"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
+                  Model Dialect:
+                </label>
+                <select
+                  value={targetModel}
+                  onChange={e => setTargetModel(e.target.value as TargetModel)}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none cursor-pointer"
+                >
+                  {Object.values(MODEL_PRESETS).map(m => (
+                    <option key={m.id} value={m.id}>
+                      {m.name} ({m.badge})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
+                  Rigor Tone:
+                </label>
+                <select
+                  value={tone}
+                  onChange={e => setTone(e.target.value as PromptTone)}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none cursor-pointer"
+                >
+                  <option value="production">🛡️ Production-Grade (Exhaustive)</option>
+                  <option value="crisp">⚡ Crisp & Direct</option>
+                  <option value="step-by-step">🪜 Step-by-Step Architecture</option>
+                  <option value="qa-adversarial">🔥 QA Adversarial</option>
+                </select>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
-                Model Dialect:
-              </label>
-              <select
-                value={targetModel}
-                onChange={e => setTargetModel(e.target.value as TargetModel)}
-                className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none cursor-pointer"
-              >
-                {Object.values(MODEL_PRESETS).map(m => (
-                  <option key={m.id} value={m.id}>
-                    {m.name} ({m.badge})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold mb-1.5">
-                Rigor Tone:
-              </label>
-              <select
-                value={tone}
-                onChange={e => setTone(e.target.value as PromptTone)}
-                className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none cursor-pointer"
-              >
-                <option value="production">🛡️ Production-Grade (Exhaustive)</option>
-                <option value="crisp">⚡ Crisp & Direct</option>
-                <option value="step-by-step">🪜 Step-by-Step Architecture</option>
-                <option value="qa-adversarial">🔥 QA Adversarial</option>
-              </select>
-            </div>
+            {/* Target Project Workspace Context (Tailors instructions to this specific repository) */}
+            {setProjectContext && (
+              <div className="pt-2 border-t border-slate-200 dark:border-white/[0.06]">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold">
+                    Target Project Context (Workspace Tech Stack & Architecture):
+                  </label>
+                  <span className="text-[11px] text-amber-600 dark:text-amber-400 font-mono">
+                    Forces AI to align with your exact project files
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={projectContext}
+                  onChange={e => setProjectContext(e.target.value)}
+                  placeholder="e.g. Prompt Maker (React 19 + TypeScript + Vite + Tailwind CSS)"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none font-mono"
+                />
+              </div>
+            )}
           </div>
         )}
 

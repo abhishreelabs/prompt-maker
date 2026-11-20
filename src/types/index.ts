@@ -58,6 +58,20 @@ export interface LearnedPromptItem {
   keyUpgrades: string[];
 }
 
+export interface ExecutionForecast {
+  withoutHardening: {
+    behavior: string;
+    likelyPitfalls: string[];
+    expectedOutcome: string;
+  };
+  withHardening: {
+    agentActionPlan: string[];
+    enforcedGuarantees: string[];
+    verificationCommands: string[];
+    expectedOutcome: string;
+  };
+}
+
 export interface PromptTransformationResult {
   originalPrompt: string;
   enhancedPrompt: string;
@@ -65,6 +79,8 @@ export interface PromptTransformationResult {
   targetModel: TargetModel;
   tone: PromptTone;
   framework?: string;
+  projectContext?: string;
+  executionForecast?: ExecutionForecast;
   clarityScoreBefore: number; // 0-100
   clarityScoreAfter: number; // 0-100
   improvements: string[];

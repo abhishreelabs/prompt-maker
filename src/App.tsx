@@ -32,6 +32,7 @@ export function App() {
   const [framework, setFramework] = useState('Playwright (TypeScript)');
   const [targetModel, setTargetModel] = useState<TargetModel>('claude');
   const [tone, setTone] = useState<PromptTone>('production');
+  const [projectContext, setProjectContext] = useState<string>('Prompt Maker (React 19 + TypeScript + Vite + Tailwind CSS)');
 
   const [result, setResult] = useState<PromptTransformationResult | null>(null);
   const [isTransforming, setIsTransforming] = useState(false);
@@ -128,7 +129,8 @@ export function App() {
         useCase,
         targetModel,
         tone,
-        framework
+        framework,
+        projectContext
       });
       setResult(initial);
     }
@@ -164,7 +166,8 @@ export function App() {
           useCase,
           targetModel,
           tone,
-          framework
+          framework,
+          projectContext
         });
       }
 
@@ -196,7 +199,8 @@ export function App() {
       useCase: item.category,
       targetModel,
       tone,
-      framework: item.targetStack
+      framework: item.targetStack,
+      projectContext: item.project
     });
     setResult(enhanced);
     saveToHistory(enhanced);
@@ -334,6 +338,8 @@ export function App() {
                 setTargetModel={setTargetModel}
                 tone={tone}
                 setTone={setTone}
+                projectContext={projectContext}
+                setProjectContext={setProjectContext}
                 onTransform={handleTransform}
                 isTransforming={isTransforming}
                 onOpenLearned={() => setIsLearnedOpen(true)}

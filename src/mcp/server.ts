@@ -3,6 +3,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { enhancePromptOffline } from '../engine/offlineEnhancer.ts';
 import { analyzeBadPrompt, inferUseCase } from '../engine/promptAnalyzer.ts';
+import { detectLocalWorkspace } from '../engine/workspaceDetector.ts';
 import { USE_CASES } from '../data/useCases.ts';
 import { LEARNED_USER_PROMPTS } from '../data/learnedPrompts.ts';
 import type { UseCaseId, TargetModel, PromptTone } from '../types/index.ts';
@@ -53,16 +54,19 @@ export function createPromptMakerServer() {
     },
     async ({ raw_prompt, use_case, framework, target_model = 'claude', tone = 'production' }) => {
       const effectiveUseCase = (use_case as UseCaseId) || inferUseCase(raw_prompt);
-      // Auto-detect framework if not provided
+      // Auto-detect framework & workspace context if not provided
       const selectedUseCase = USE_CASES.find(u => u.id === effectiveUseCase);
-      const effectiveFramework = framework || selectedUseCase?.defaultFramework || 'TypeScript';
+      const localWorkspace = detectLocalWorkspace();
+      const effectiveFramework = framework || (effectiveUseCase === 'general-developer' && localWorkspace ? localWorkspace.techStack : selectedUseCase?.defaultFramework || 'TypeScript');
+      const effectiveProjectContext = localWorkspace ? localWorkspace.summary : undefined;
 
       const result = enhancePromptOffline({
         rawPrompt: raw_prompt,
         useCase: effectiveUseCase,
         targetModel: target_model as TargetModel,
         tone: tone as PromptTone,
-        framework: effectiveFramework
+        framework: effectiveFramework,
+        projectContext: effectiveProjectContext
       });
 
       return {
@@ -78,6 +82,8 @@ export function createPromptMakerServer() {
                 use_case: result.useCase,
                 target_model: result.targetModel,
                 framework: result.framework,
+                project_context: result.projectContext,
+                execution_forecast: result.executionForecast,
                 detected_variables: result.detectedVariables
               },
               null,

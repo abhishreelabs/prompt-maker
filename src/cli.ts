@@ -3,6 +3,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { enhancePromptOffline } from './engine/offlineEnhancer.ts';
 import { analyzeBadPrompt, inferUseCase } from './engine/promptAnalyzer.ts';
+import { detectLocalWorkspace } from './engine/workspaceDetector.ts';
 import { USE_CASES } from './data/useCases.ts';
 import { LEARNED_USER_PROMPTS } from './data/learnedPrompts.ts';
 import { runStdioServer } from './mcp/server.ts';
@@ -344,10 +345,12 @@ async function main() {
     process.exit(1);
   }
 
-  // Determine effective use case
+  // Determine effective use case & local workspace
   const useCase = (parsed.useCase as UseCaseId) || inferUseCase(parsed.promptText);
   const selectedDef = USE_CASES.find(u => u.id === useCase);
-  const framework = parsed.framework || selectedDef?.defaultFramework || 'TypeScript';
+  const localWorkspace = detectLocalWorkspace();
+  const effectiveProjectContext = localWorkspace ? localWorkspace.summary : undefined;
+  const framework = parsed.framework || (useCase === 'general-developer' && localWorkspace ? localWorkspace.techStack : selectedDef?.defaultFramework || 'TypeScript');
   const targetModel = (parsed.model as TargetModel) || 'claude';
   const tone = (parsed.tone as PromptTone) || 'production';
 
@@ -356,7 +359,8 @@ async function main() {
     useCase,
     targetModel,
     tone,
-    framework
+    framework,
+    projectContext: effectiveProjectContext
   });
 
   if (parsed.json) {
@@ -366,13 +370,26 @@ async function main() {
 
   if (!parsed.quiet) {
     printBanner();
-    console.error(`\x1b[90mUse Case:\x1b[0m    \x1b[36m${result.useCase}\x1b[0m (\x1b[33m${result.framework}\x1b[0m)`);
-    console.error(`\x1b[90mTarget Model:\x1b[0m \x1b[35m${result.targetModel}\x1b[0m | \x1b[90mTone:\x1b[0m \x1b[32m${result.tone}\x1b[0m`);
-    console.error(`\x1b[90mClarity Score:\x1b[0m \x1b[31m${result.clarityScoreBefore}/100\x1b[0m ➔ \x1b[32m${result.clarityScoreAfter}/100 (+${result.clarityScoreAfter - result.clarityScoreBefore}pts)\x1b[0m`);
-    console.error(`\x1b[90mKey Enhancements:\x1b[0m`);
-    for (const imp of result.improvements.slice(0, 4)) {
-      console.error(`  ✨ ${imp}`);
+    if (result.projectContext) {
+      console.error(`\x1b[90mWorkspace:\x1b[0m     \x1b[32m${result.projectContext}\x1b[0m \x1b[90m(Auto-Detected)\x1b[0m`);
     }
+    console.error(`\x1b[90mUse Case:\x1b[0m      \x1b[36m${result.useCase}\x1b[0m (\x1b[33m${result.framework}\x1b[0m)`);
+    console.error(`\x1b[90mTarget Model:\x1b[0m  \x1b[35m${result.targetModel}\x1b[0m | \x1b[90mTone:\x1b[0m \x1b[32m${result.tone}\x1b[0m`);
+    console.error(`\x1b[90mClarity Score:\x1b[0m \x1b[31m${result.clarityScoreBefore}/100\x1b[0m ➔ \x1b[32m${result.clarityScoreAfter}/100 (+${result.clarityScoreAfter - result.clarityScoreBefore}pts)\x1b[0m`);
+
+    if (result.executionForecast) {
+      console.error(`\n\x1b[1m\x1b[33m⚡ AGENT EXECUTION FORECAST (What Will Happen to Your Codebase):\x1b[0m`);
+      console.error(`  \x1b[31m🛑 Without Prompt Maker:\x1b[0m`);
+      for (const p of result.executionForecast.withoutHardening.likelyPitfalls.slice(0, 3)) {
+        console.error(`    ❌ ${p}`);
+      }
+      console.error(`  \x1b[32m🚀 With Prompt Maker:\x1b[0m`);
+      for (const a of result.executionForecast.withHardening.agentActionPlan) {
+        console.error(`    ✅ ${a}`);
+      }
+      console.error(`  \x1b[36m🛡️ Enforced Guarantees:\x1b[0m ${result.executionForecast.withHardening.enforcedGuarantees.slice(0, 2).join(' • ')}`);
+    }
+
     console.error(`\n\x1b[32m──────────────────── COMPILED PROMPT ────────────────────\x1b[0m\n`);
   }
 
