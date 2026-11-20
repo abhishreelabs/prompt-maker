@@ -110,14 +110,14 @@ export const Header: React.FC<HeaderProps> = ({
             <span>MCP</span>
           </button>
 
-          {/* Learned Workflows */}
+          {/* Curated Blueprints */}
           <button
             onClick={onOpenLearned}
             className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border border-amber-500/30 bg-amber-50 dark:bg-amber-950/20 hover:bg-amber-100 dark:hover:bg-amber-950/40 text-amber-800 dark:text-amber-300 transition-colors text-xs font-outfit font-semibold cursor-pointer"
-            title="Browse real prompts learned from your 11 projects"
+            title="Browse curated production blueprints across 14 engineering domains"
           >
             <FolderGit2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            <span>11 Repos</span>
+            <span>Blueprints</span>
           </button>
 
           {/* Engine status badge */}

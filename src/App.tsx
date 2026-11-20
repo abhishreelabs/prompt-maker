@@ -32,7 +32,7 @@ export function App() {
   const [framework, setFramework] = useState('Playwright (TypeScript)');
   const [targetModel, setTargetModel] = useState<TargetModel>('claude');
   const [tone, setTone] = useState<PromptTone>('production');
-  const [projectContext, setProjectContext] = useState<string>('Prompt Maker (React 19 + TypeScript + Vite + Tailwind CSS)');
+  const [projectContext, setProjectContext] = useState<string>('');
 
   const [result, setResult] = useState<PromptTransformationResult | null>(null);
   const [isTransforming, setIsTransforming] = useState(false);
@@ -307,7 +307,7 @@ export function App() {
                 className="flex items-center space-x-2.5 text-xs font-outfit font-semibold bg-white/90 dark:bg-black/60 hover:bg-white dark:hover:bg-black/80 px-3.5 py-2 rounded-xl border border-amber-500/30 text-amber-700 dark:text-amber-300 transition-all shadow-xs cursor-pointer"
               >
                 <FolderGit2 className="w-4 h-4 text-amber-500" />
-                <span>Learned from 11 Repos</span>
+                <span>14 Curated Blueprints</span>
               </button>
               <div className="flex items-center space-x-2.5 text-xs font-outfit font-semibold bg-white/90 dark:bg-black/60 px-3.5 py-2 rounded-xl border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 shadow-xs">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
@@ -376,17 +376,17 @@ export function App() {
           </div>
         )}
 
-        {/* Showcase: Learned from Your Real Workspace Sessions */}
+        {/* Showcase: Curated Production Blueprints */}
         <div className="craft-chassis rounded-2xl p-6 sm:p-7 space-y-5 shadow-xl border border-slate-200 dark:border-white/[0.08]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-white/[0.08]">
             <div className="flex items-center space-x-3">
               <FolderGit2 className="w-6 h-6 text-amber-500 shrink-0" />
               <div>
                 <h3 className="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                  Discovered From Your Real Projects & Developer Sessions
+                  Curated Production Blueprints &amp; Real-World Scenarios
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans mt-0.5">
-                  Extracted from real developer sessions across WebSockets, Healthcare, Cloud SRE, Document AI, and Video Streaming.
+                  Battle-tested engineering patterns across WebSockets, Healthcare, Cloud SRE, FinOps, and Distributed Systems.
                 </p>
               </div>
             </div>

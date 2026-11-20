@@ -180,7 +180,7 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
                 className="text-xs font-outfit text-amber-600 dark:text-amber-400 hover:text-amber-500 flex items-center space-x-1 font-semibold transition-colors cursor-pointer"
               >
                 <FolderGit2 className="w-3.5 h-3.5" />
-                <span>Learned From Repos &rarr;</span>
+                <span>Curated Blueprints &rarr;</span>
               </button>
             )}
           </div>
@@ -368,7 +368,7 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
                   type="text"
                   value={projectContext}
                   onChange={e => setProjectContext(e.target.value)}
-                  placeholder="e.g. Prompt Maker (React 19 + TypeScript + Vite + Tailwind CSS)"
+                  placeholder="e.g. Next.js 16 + TypeScript + Tailwind CSS + PostgreSQL"
                   className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-black/50 border border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-200 text-xs focus:border-amber-500 focus:outline-none font-mono"
                 />
               </div>

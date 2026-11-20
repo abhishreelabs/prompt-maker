@@ -50,13 +50,13 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">Real-World Developer Workflows</h3>
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">Curated Production Blueprints</h3>
                 <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   {LEARNED_USER_PROMPTS.length} Workflows
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-                Extracted from real developer sessions across WebSockets, Healthcare, Cloud SRE, Document AI, and Video Streaming.
+                Battle-tested engineering patterns across WebSockets, Healthcare, Cloud SRE, FinOps, and Distributed Systems.
               </p>
             </div>
           </div>
@@ -88,7 +88,7 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
               onChange={e => setSelectedProject(e.target.value)}
               className="px-2.5 py-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 text-xs focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
-              <option value="all">All Repositories</option>
+              <option value="all">All Domains</option>
               {projects.filter(p => p !== 'all').map(p => (
                 <option key={p} value={p}>{p}</option>
               ))}

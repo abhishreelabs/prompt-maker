@@ -604,7 +604,7 @@ export function enhancePromptOffline({
       edgeCases = [
         'Patient reports high-acuity red flag symptoms (chest pain, shortness of breath); trigger immediate emergency prompt redirect.',
         'Concurrent users attempting to book the exact same doctor consultation slot at the same second.',
-        'White-label tenant branding leakage (e.g. wrong hospital name or logo appearing on patient receipt).'
+        'White-label tenant branding leakage (e.g. wrong client logo or brand name appearing in multi-tenant portal).'
       ];
       constraints = [
         'Medical liability safety: Must always output explicit medical advice disclaimers and recommend consulting a licensed physician.',

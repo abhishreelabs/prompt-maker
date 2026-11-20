@@ -253,28 +253,24 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'devops-infra',
     name: 'Cloudflare, Render & DNS Ops',
     icon: 'Cloud',
-    description: 'Learned from Cloud SRE & Network Monitor: Diagnose DNS lookup failures, CNAME routing, Better Stack uptime, and Render deployments.',
+    description: 'Diagnose DNS lookup failures, CNAME routing, Better Stack uptime probes, and cloud deployments.',
     defaultFramework: 'Cloudflare DNS + Render API',
     suggestedFrameworks: ['Cloudflare DNS + Render API', 'Better Stack Uptime', 'Upstash Redis Keep-Alive', 'CNAME / SSL Mapping'],
-    associatedProject: 'Cloud SRE & Network Monitor',
     sampleBadPrompts: [
       {
         title: 'Better Stack DNS error',
-        prompt: 'chekc better stack we are getting dns lookup failure',
-        suggestedStack: 'Cloudflare DNS + Better Stack Heartbeat Script',
-        sourceProject: 'Cloud SRE Monitor'
+        prompt: 'diagnose dns lookup failure and configure heartbeat uptime probes with cloudflare proxy awareness',
+        suggestedStack: 'Cloudflare DNS + Better Stack Heartbeat Script'
       },
       {
         title: 'Upstash Redis Inactivity Sleep',
-        prompt: 'upstack redis goes down due to inactivityu can we setup in betterstack or uptiem which we had',
-        suggestedStack: 'Cloudflare Worker Cron + Better Stack',
-        sourceProject: 'Realtime Messaging'
+        prompt: 'configure automated lightweight keep-alive heartbeat worker to prevent free-tier cloud cache from sleeping during low traffic',
+        suggestedStack: 'Cloudflare Worker Cron + Better Stack'
       },
       {
         title: 'Zero-Cost Deployment',
-        prompt: 'whichver cost me nothing we cannot keep in ram correct? what to deploy and test it',
-        suggestedStack: 'Render Free Tier + Cloudflare DNS',
-        sourceProject: 'Realtime Messaging'
+        prompt: 'deploy ephemeral websocket application on zero-cost cloud tier with in-memory TTL purge',
+        suggestedStack: 'Render Free Tier + Cloudflare DNS'
       }
     ],
     keyChecklist: [
@@ -288,22 +284,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'security-privacy',
     name: 'Security, Privacy & Zero-Trace',
     icon: 'Lock',
-    description: 'Learned from Realtime Sockets & WebRTC: Code-level vulnerability audits, RAM-only ephemeral storage, and auto-burn countdowns.',
+    description: 'Code-level vulnerability audits, RAM-only ephemeral storage, timing-safe crypto, and auto-burn countdowns.',
     defaultFramework: 'OWASP / Socket.io / WebRTC',
     suggestedFrameworks: ['OWASP Top 10', 'Socket.io Auth', 'Memory Zeroing', 'End-to-End Encryption (E2EE)'],
-    associatedProject: 'Realtime Sockets & WebRTC Platform',
     sampleBadPrompts: [
       {
         title: 'Full Security & Privacy Audit',
-        prompt: 'Lets find all security and vunerability and privacy issues. Les e an expert and ffind them',
-        suggestedStack: 'OWASP WebSockets & Node Audit',
-        sourceProject: 'Realtime Messaging'
+        prompt: 'perform comprehensive security and privacy audit on websocket rooms and webrtc peer signaling',
+        suggestedStack: 'OWASP WebSockets & Node Audit'
       },
       {
         title: 'View Once & Auto-Burn Media',
-        prompt: 'how many users we can add in single chat... what about privacy if somebdy share image what happened to them they should burn',
-        suggestedStack: 'Client Decryption + In-Memory Wipe',
-        sourceProject: 'Realtime Messaging'
+        prompt: 'implement zero-trace ephemeral chat where shared images and messages auto-burn after 10 seconds',
+        suggestedStack: 'Client Decryption + In-Memory Wipe'
       }
     ],
     keyChecklist: [
@@ -317,22 +310,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'secrets-observability',
     name: 'Infisical Secrets & Sentry Tracing',
     icon: 'Key',
-    description: 'Learned from Secrets Vault & Autonomous SRE: Automated secret synchronization via Infisical and production error tracking with Sentry.',
+    description: 'Automated secret synchronization via Infisical and production error tracking with Sentry.',
     defaultFramework: 'Infisical CLI + Sentry Next.js',
     suggestedFrameworks: ['Infisical CLI', 'Sentry Next.js SDK', 'Render API Tokens', 'GitHub Action Secrets'],
-    associatedProject: 'Secrets Management & SRE Monitor',
     sampleBadPrompts: [
       {
-        title: 'Sync Infisical Keys to Render',
-        prompt: 'do u know the infiscal ? if ye sthen we have enterprise secrets vault in that we have render key you can use it to setup render',
-        suggestedStack: 'Infisical CLI + Render API',
-        sourceProject: 'Enterprise Web Studio'
+        title: 'Sync Secrets to Cloud Hosting',
+        prompt: 'sync production api keys and database secrets from secret vault to cloud hosting services via cli',
+        suggestedStack: 'Infisical CLI + Render API'
       },
       {
         title: 'Integrate Sentry Error Tracking',
-        prompt: 'is there anything we cna add for this Sentry or any service which can be good for Sentry i hav eadded sentry_token in infiscal',
-        suggestedStack: 'Sentry Next.js SDK + Infisical',
-        sourceProject: 'Realtime Messaging'
+        prompt: 'configure production sentry error tracking with sourcemap uploads, pii scrubbing, and automated ci secret injection',
+        suggestedStack: 'Sentry Next.js SDK + Infisical'
       }
     ],
     keyChecklist: [
@@ -346,22 +336,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'healthcare-doctor',
     name: 'Virtual Doctor & Health Triage',
     icon: 'Stethoscope',
-    description: 'Learned from Clinical Healthcare & Virtual Doctor: Patient symptom triage, appointment booking chatbots, and hospital white-labeling.',
+    description: 'Patient symptom triage, appointment booking conversational state machines, and multi-tenant clinical portals.',
     defaultFramework: 'Django REST + Next.js + Triage API',
     suggestedFrameworks: ['Django REST Framework', 'Next.js 16', 'Symptom Triage Chatbot', 'HIPAA Privacy Guard'],
-    associatedProject: 'Clinical Portal / Virtual Doctor Core',
     sampleBadPrompts: [
       {
         title: 'Chatbot Appointment Booking Flow',
-        prompt: 'can you test now the virtual doctior on landing page. can we book appointment from landing page chatbot for doing the booking',
-        suggestedStack: 'Playwright E2E + Triage API',
-        sourceProject: 'Virtual Doctor'
+        prompt: 'test the conversational patient triage widget on landing page and verify appointment slot booking flow',
+        suggestedStack: 'Playwright E2E + Triage API'
       },
       {
-        title: 'Fix White-Labeling Branding Leak',
-        prompt: 'change it as city hospital is not our name that was client name why client hospital website is coming ?',
-        suggestedStack: 'Multi-Tenant Config / Supabase',
-        sourceProject: 'Clinical Healthcare Portal'
+        title: 'Fix Multi-Tenant White-Labeling Leak',
+        prompt: 'ensure multi-tenant client portal dynamically loads the correct brand logo, theme, and domain metadata without leaking other client names',
+        suggestedStack: 'Multi-Tenant Config / Supabase'
       }
     ],
     keyChecklist: [
@@ -375,20 +362,18 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'image-generation',
     name: 'AI Infographics & Image Prompts',
     icon: 'Palette',
-    description: 'Learned from Terrace Farming & AI Social Automation: Generate rich bilingual infographic visual prompts with precise composition.',
+    description: 'Generate rich bilingual infographic visual prompts with precise composition, soil formulas, and negative constraints.',
     defaultFramework: 'Bilingual Prompt Generator (Imagen / Midjourney)',
     suggestedFrameworks: ['Midjourney v6', 'Google Imagen 3', 'Bilingual English/Hindi Matrix', 'Creative Director Brief'],
-    associatedProject: 'Terrace Farming / AI Social Automation',
     sampleBadPrompts: [
       {
-        title: '30-Day Terrace Farming Infographic',
-        prompt: 'create all 30 ready-to-run prompts matching the authentic 14-section Muli/Palak/Methi reference for terrace farming',
-        suggestedStack: 'Terrace Farming Infographic Spec',
-        sourceProject: 'Terrace Farming'
+        title: '30-Day Agriculture Infographic',
+        prompt: 'generate high-detail photorealistic prompt specifications for urban terrace agriculture with soil formulas and crop timelines',
+        suggestedStack: 'Agriculture Infographic Spec'
       }
     ],
     keyChecklist: [
-      'Bilingual content layout (authentic Hindi steps + English imagery)',
+      'Bilingual content layout (authentic localized steps + English imagery)',
       'Exact potting soil ratio formulas (vermicompost, cocopeat, sand)',
       'Negative constraints (no distorted text, no cartoonish look, authentic lighting)',
       'Aspect ratio specifications (4:5 social media or 16:9 banner)'
@@ -398,16 +383,14 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'concurrency-scaling',
     name: 'Concurrency & Session Scaling',
     icon: 'Zap',
-    description: 'Learned from Realtime Sockets & Live Audio: Real-time WebSockets, handling N concurrent rooms/users, and Redis clustering.',
+    description: 'Real-time WebSockets, handling N concurrent rooms/users, sticky sessions, and Redis clustering.',
     defaultFramework: 'Socket.io Cluster + Redis Adapter',
     suggestedFrameworks: ['Socket.io Redis Adapter', 'Node.js Cluster', 'Sticky Session Load Balancing', 'Memory Profiling'],
-    associatedProject: 'Realtime Socket Cluster',
     sampleBadPrompts: [
       {
         title: 'Handle N Users & Sessions',
         prompt: 'how we are going to deal with n number of session and how we can deal with n user in a session?',
-        suggestedStack: 'Socket.io Redis Adapter + Node Cluster',
-        sourceProject: 'Realtime Messaging'
+        suggestedStack: 'Socket.io Redis Adapter + Node Cluster'
       }
     ],
     keyChecklist: [
@@ -419,24 +402,21 @@ export const USE_CASES: UseCaseDefinition[] = [
   },
   {
     id: 'webrtc-video',
-    name: 'WebRTC Video & Live Interview QA',
+    name: 'WebRTC Video & Live Calling QA',
     icon: 'Video',
-    description: 'Learned from Live Coding & Interview Suite: Real-time peer-to-peer video/audio calling, ICE candidate STUN/TURN negotiation, and screen sharing.',
+    description: 'Real-time peer-to-peer video/audio calling, ICE candidate STUN/TURN negotiation, and screen sharing.',
     defaultFramework: 'WebRTC + Socket.io + MediaStream',
     suggestedFrameworks: ['WebRTC (Simple-Peer)', 'Socket.io Signaling', 'STUN/TURN (Coturn)', 'Canvas Stream Recording'],
-    associatedProject: 'Live Coding & Interview Platform',
     sampleBadPrompts: [
       {
-        title: 'Video Freezing in Interview',
+        title: 'Video Freezing in Live Call',
         prompt: 'candidate video is freezing during live technical interview fix audio video desync',
-        suggestedStack: 'WebRTC PeerConnection + Socket.io',
-        sourceProject: 'Live Coding & Interview Suite'
+        suggestedStack: 'WebRTC PeerConnection + Socket.io'
       },
       {
         title: 'Screen Sharing with Tab Audio',
         prompt: 'add screen sharing toggle to webrtc video call with tab audio capture and fallback',
-        suggestedStack: 'MediaStream API + WebRTC',
-        sourceProject: 'Live Coding & Interview Suite'
+        suggestedStack: 'MediaStream API + WebRTC'
       }
     ],
     keyChecklist: [
@@ -450,22 +430,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'pdf-document-ai',
     name: 'PDF Extraction & Exam Analytics',
     icon: 'FileText',
-    description: 'Learned from EdTech Assessment & Document AI: Parsing scanned question papers, OCR deskewing, LaTeX equation extraction, and rubric grading.',
+    description: 'Parsing scanned question papers, OCR deskewing, LaTeX equation extraction, and rubric grading.',
     defaultFramework: 'Python / pdfplumber / Tesseract OCR',
     suggestedFrameworks: ['pdfplumber / PyPDF2', 'Tesseract OCR + OpenCV', 'FastAPI + Pydantic', 'KaTeX / LaTeX Parser'],
-    associatedProject: 'EdTech Assessment & Document AI',
     sampleBadPrompts: [
       {
         title: 'Extract MCQ Questions from Scanned PDF',
         prompt: 'extract questions and mcq options from scanned question paper pdf into json with answer keys',
-        suggestedStack: 'Python / pdfplumber / Pydantic',
-        sourceProject: 'EdTech Assessment & Document AI'
+        suggestedStack: 'Python / pdfplumber / Pydantic'
       },
       {
         title: 'Handwritten Answer Sheet Evaluation',
         prompt: 'evaluate student handwritten answer sheet against rubric and output marks breakdown and feedback',
-        suggestedStack: 'OCR + Vision LLM Evaluation',
-        sourceProject: 'EdTech Assessment & Document AI'
+        suggestedStack: 'OCR + Vision LLM Evaluation'
       }
     ],
     keyChecklist: [
@@ -479,22 +456,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'social-automation',
     name: 'Social Media Automation & Bot APIs',
     icon: 'Share2',
-    description: 'Learned from Social Media Automation Suite: Scheduled social publishing, OAuth 2.0 PKCE token refresh, rate-limit backoff, and chunked uploads.',
+    description: 'Scheduled social publishing, OAuth 2.0 PKCE token refresh, rate-limit backoff, and chunked uploads.',
     defaultFramework: 'Node.js + Twitter API v2 + LinkedIn REST',
     suggestedFrameworks: ['Twitter API v2', 'LinkedIn REST API', 'BullMQ Redis Queue', 'OAuth 2.0 PKCE'],
-    associatedProject: 'Social Automation & Publisher Suite',
     sampleBadPrompts: [
       {
         title: 'LinkedIn Scheduled Post with Image',
         prompt: 'schedule linkedin post with image and handle oauth token refresh automatically in background',
-        suggestedStack: 'LinkedIn REST API + BullMQ',
-        sourceProject: 'Social Automation Suite'
+        suggestedStack: 'LinkedIn REST API + BullMQ'
       },
       {
         title: 'Twitter Thread Publisher with Rate Limits',
         prompt: 'bot to publish twitter thread with rate limit backoff and error retry when api is throttled',
-        suggestedStack: 'Twitter API v2 (Node.js)',
-        sourceProject: 'Social Automation Suite'
+        suggestedStack: 'Twitter API v2 (Node.js)'
       }
     ],
     keyChecklist: [
@@ -508,22 +482,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'iot-terrace-farming',
     name: 'Smart Agriculture & IoT Telemetry',
     icon: 'Sprout',
-    description: 'Learned from Smart Agriculture IoT Assistant: Soil moisture telemetry, potting soil ratios, weather-aware irrigation, and crop disease diagnosis.',
+    description: 'Soil moisture telemetry, potting soil ratios, weather-aware irrigation, and crop disease diagnosis.',
     defaultFramework: 'ESP32 / MQTT / Next.js / Weather API',
     suggestedFrameworks: ['MQTT Client / Mosquitto', 'OpenWeatherMap API', 'Soil Moisture Calibration', 'Plant Disease Classifier'],
-    associatedProject: 'Smart Agriculture IoT Assistant',
     sampleBadPrompts: [
       {
         title: 'Weather-Aware Smart Irrigation',
         prompt: 'smart irrigation rule based on soil moisture sensor readings and rain forecast to avoid overwatering',
-        suggestedStack: 'MQTT Telemetry + Weather API Rule Engine',
-        sourceProject: 'Smart Agriculture IoT'
+        suggestedStack: 'MQTT Telemetry + Weather API Rule Engine'
       },
       {
         title: 'Crop Disease Image Diagnosis',
         prompt: 'plant leaf disease image diagnosis with organic treatment and fertilizer recommendation',
-        suggestedStack: 'Mobile Vision + Agronomy Expert Prompt',
-        sourceProject: 'Smart Agriculture IoT'
+        suggestedStack: 'Mobile Vision + Agronomy Expert Prompt'
       }
     ],
     keyChecklist: [
@@ -537,22 +508,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'multi-tenant-branding',
     name: 'Multi-Tenant White-Labeling & Routing',
     icon: 'Layers',
-    description: 'Learned from Multi-Tenant Enterprise SaaS: Dynamic subdomain/custom domain host routing, tenant CSS theming, and database data isolation.',
+    description: 'Dynamic subdomain/custom domain host routing, tenant CSS theming, and database data isolation.',
     defaultFramework: 'Next.js Middleware + Prisma / PostgreSQL RLS',
     suggestedFrameworks: ['Next.js Edge Middleware', 'PostgreSQL Row Level Security', 'CSS Variables Theming', 'Subdomain Multi-tenancy'],
-    associatedProject: 'Multi-Tenant Enterprise SaaS',
     sampleBadPrompts: [
       {
-        title: 'Custom Domain Clinic Branding',
-        prompt: 'configure custom domain routing so clinic1.com and clinic2.com show their own hospital logo and theme',
-        suggestedStack: 'Next.js Middleware + Dynamic Theme Provider',
-        sourceProject: 'Enterprise Healthcare SaaS'
+        title: 'Custom Domain Client Branding',
+        prompt: 'configure custom domain routing so tenant1.example.com and tenant2.example.com dynamically render their respective branding assets',
+        suggestedStack: 'Next.js Middleware + Dynamic Theme Provider'
       },
       {
         title: 'Cross-Tenant Data Leak Prevention',
-        prompt: 'ensure tenant A doctors cannot see tenant B patient records in database queries or search APIs',
-        suggestedStack: 'PostgreSQL Row Level Security (RLS) + Prisma',
-        sourceProject: 'Clinical Healthcare Portal'
+        prompt: 'ensure tenant A users cannot access tenant B records in database queries or search APIs',
+        suggestedStack: 'PostgreSQL Row Level Security (RLS) + Prisma'
       }
     ],
     keyChecklist: [
@@ -566,22 +534,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'state-cache-invalidation',
     name: 'Real-Time State Sync & Cache Tuning',
     icon: 'RefreshCw',
-    description: 'Learned from Clinical Healthcare Portal: Diagnosing stale React Query caches, optimistic update rollbacks, and write-after-read lag.',
+    description: 'Diagnosing stale React Query caches, optimistic update rollbacks, and write-after-read replication lag.',
     defaultFramework: 'React Query (TanStack Query) + WebSocket',
     suggestedFrameworks: ['TanStack Query v5', 'SWR', 'Zustand Store Invalidation', 'Optimistic UI Updates'],
-    associatedProject: 'Clinical Healthcare Portal',
     sampleBadPrompts: [
       {
-        title: 'Patient Added Not Showing in List',
-        prompt: 'why patient record John Doe which i added why its not coming. does it has to be reloaded ?',
-        suggestedStack: 'TanStack Query (React Query) Cache Invalidation',
-        sourceProject: 'Clinical Healthcare Portal'
+        title: 'New Record Added Not Showing in List',
+        prompt: 'why newly created records in the dashboard do not appear in the table without a manual browser refresh',
+        suggestedStack: 'TanStack Query (React Query) Cache Invalidation'
       },
       {
-        title: 'Optimistic Appointment Cancellation',
-        prompt: 'cancel appointment optimistically in ui with instant rollback and toast notification on server error',
-        suggestedStack: 'React Query useMutation onMutate / onError',
-        sourceProject: 'Clinical Healthcare Portal'
+        title: 'Optimistic State Mutation Rollback',
+        prompt: 'cancel booking optimistically in ui with instant rollback and toast notification on server error',
+        suggestedStack: 'React Query useMutation onMutate / onError'
       }
     ],
     keyChecklist: [
@@ -593,24 +558,21 @@ export const USE_CASES: UseCaseDefinition[] = [
   },
   {
     id: 'monorepo-branch-split',
-    name: 'Monorepo & Branch Architecture Separation',
+    name: 'Monorepo & App Boundary Separation',
     icon: 'GitBranch',
-    description: 'Learned from Public Landing vs Staff Portal: Isolating public landing pages from internal staff apps, code sharing, and bundle hygiene.',
+    description: 'Isolating public landing pages from internal staff apps, shared component libraries, and bundle hygiene.',
     defaultFramework: 'Turborepo / pnpm Workspaces / Next.js',
     suggestedFrameworks: ['Turborepo', 'pnpm Workspaces', 'Nx', 'Bundle Analyzer'],
-    associatedProject: 'Public Landing / Staff Portal',
     sampleBadPrompts: [
       {
         title: 'Separate Landing Page from Staff Portal',
-        prompt: 'i dont understand we have created landing-page branch and that suppose to have landing and staff code has to go somewhere else separate it',
-        suggestedStack: 'Turborepo Apps Separation (Landing vs Staff)',
-        sourceProject: 'Clinical Healthcare Portal'
+        prompt: 'separate public landing page from authenticated staff portal into isolated packages with zero shared credentials',
+        suggestedStack: 'Turborepo Apps Separation (Landing vs Staff)'
       },
       {
         title: 'Shared Component Library Hygiene',
         prompt: 'share ui components between landing page and admin dashboard in a clean monorepo without leaking admin code',
-        suggestedStack: 'pnpm Workspace Shared UI Package',
-        sourceProject: 'Public Landing Page'
+        suggestedStack: 'pnpm Workspace Shared UI Package'
       }
     ],
     keyChecklist: [
@@ -624,22 +586,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'mobile-touch-qa',
     name: 'Mobile Touch Target & Viewport QA',
     icon: 'Smartphone',
-    description: 'Learned from Mobile Web & Touch QA: WCAG 2.1 touch target compliance, virtual keyboard viewport squishing, and drawer touch gestures.',
+    description: 'WCAG 2.1 touch target compliance, virtual keyboard viewport squishing, and drawer touch gestures.',
     defaultFramework: 'Playwright Mobile Emulation + WCAG 2.1',
     suggestedFrameworks: ['Playwright (iPhone 14 / Pixel 7)', 'axe-core Touch Audit', 'Visual Viewport API', 'Mobile Gestures Emulation'],
-    associatedProject: 'Mobile Web & Ephemeral App',
     sampleBadPrompts: [
       {
         title: 'Mobile Virtual Keyboard Squish Layout',
         prompt: 'is propelry tested for mobile as it will be used much in mobile what happens when keyboard opens',
-        suggestedStack: 'Playwright Mobile Viewport + Keyboard Simulation',
-        sourceProject: 'Mobile Web App'
+        suggestedStack: 'Playwright Mobile Viewport + Keyboard Simulation'
       },
       {
         title: 'Touch Target & Navigation Bar Audit',
         prompt: 'audit touch target sizes on navigation bar and buttons for mobile compliance so thumbs can tap easily',
-        suggestedStack: 'Playwright + WCAG Touch Target 44px Check',
-        sourceProject: 'Public Landing Page'
+        suggestedStack: 'Playwright + WCAG Touch Target 44px Check'
       }
     ],
     keyChecklist: [
@@ -651,24 +610,21 @@ export const USE_CASES: UseCaseDefinition[] = [
   },
   {
     id: 'local-cloud-emulation',
-    name: 'Local Cloud & Floci/AWS Emulation',
+    name: 'Local Cloud & FinOps Emulation',
     icon: 'Cloud',
-    description: 'Learned from AWS Local Cost Optimization: Running local S3, DynamoDB, and IAM using Floci/LocalStack without incurring cloud charges.',
+    description: 'Running local S3, DynamoDB, and IAM using Floci/LocalStack without incurring cloud charges.',
     defaultFramework: 'Floci / LocalStack / AWS SDK v3',
     suggestedFrameworks: ['Floci Local AWS', 'LocalStack Community', 'Docker Compose', 'AWS SDK v3 Endpoint Overrides'],
-    associatedProject: 'Local Cloud FinOps & Container Suite',
     sampleBadPrompts: [
       {
         title: 'Local AWS S3 & DynamoDB with Floci',
         prompt: 'can we use https://github.com/floci-io/floci for aws for local to avoid paying any cloud bills',
-        suggestedStack: 'Floci Local AWS + Docker Compose',
-        sourceProject: 'Local Cloud FinOps'
+        suggestedStack: 'Floci Local AWS + Docker Compose'
       },
       {
         title: 'AWS SDK Endpoint Overrides for Local Testing',
         prompt: 'configure local aws credentials and endpoint overrides for s3 upload testing in dev without hitting real aws',
-        suggestedStack: 'AWS SDK v3 + Local S3 Bucket Provisioning',
-        sourceProject: 'Local Cloud FinOps'
+        suggestedStack: 'AWS SDK v3 + Local S3 Bucket Provisioning'
       }
     ],
     keyChecklist: [
@@ -682,22 +638,19 @@ export const USE_CASES: UseCaseDefinition[] = [
     id: 'patent-compliance',
     name: 'Patent, IP & Commercial Adoption',
     icon: 'Scale',
-    description: 'Learned from EdTech Assessment & Patent Compliance: Aligning codebase architecture with patent claims/drawings and auditing copyleft open-source licenses.',
+    description: 'Aligning codebase architecture with patent claims and auditing copyleft open-source licenses.',
     defaultFramework: 'Software IP Compliance & License Audit',
     suggestedFrameworks: ['License-Checker CLI', 'Patent Claim Mapping', 'Clean-Room Architecture', 'FOSSA / Snyk License'],
-    associatedProject: 'EdTech Assessment & Patent Compliance',
     sampleBadPrompts: [
       {
-        title: 'Align Code with Patent Description & Drawings',
-        prompt: 'i have pasted Description English-3.pdf Drawings English-4.pdf can you check if our project is alligned with patent adoption and commertial use',
-        suggestedStack: 'Patent Architecture Alignment Matrix',
-        sourceProject: 'Patent & Compliance Engine'
+        title: 'Align Code with Patent Claims & Architecture',
+        prompt: 'audit software architecture against technical patent claims and verify commercial open-source license compliance',
+        suggestedStack: 'Patent Architecture Alignment Matrix'
       },
       {
         title: 'GPL / Copyleft Dependency Audit',
         prompt: 'scan all npm and python packages to make sure zero copyleft gpl licenses are present for commercial software release',
-        suggestedStack: 'License-Checker + Dependency Audit',
-        sourceProject: 'Patent & Compliance Engine'
+        suggestedStack: 'License-Checker + Dependency Audit'
       }
     ],
     keyChecklist: [

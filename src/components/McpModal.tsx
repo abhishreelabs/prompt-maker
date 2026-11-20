@@ -176,7 +176,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 flex items-center justify-between text-xs text-slate-500">
-          <span className="truncate max-w-[400px]">Binary: <code className="font-mono text-slate-700 dark:text-slate-400">{binaryPath}</code></span>
+          <span className="truncate max-w-[400px]">MCP Stdio: <code className="font-mono text-slate-700 dark:text-slate-400">npx @s.engineerabhisheksahu/prompt-maker mcp</code></span>
           <button
             onClick={onClose}
             className="px-4 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors cursor-pointer"
