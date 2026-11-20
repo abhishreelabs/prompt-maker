@@ -1,5 +1,5 @@
 {
-  "name": "prompt-maker",
+  "name": "@s.engineerabhisheksahu/prompt-maker",
   "version": "0.1.0",
   "description": "AI prompt creator, optimizer, and management platform",
   "type": "module",

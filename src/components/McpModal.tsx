@@ -21,7 +21,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
           mcpServers: {
             'prompt-maker': {
               command: 'npx',
-              args: ['-y', 'prompt-maker', 'mcp']
+              args: ['-y', '@s.engineerabhisheksahu/prompt-maker', 'mcp']
             }
           }
         },
@@ -37,7 +37,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
           mcpServers: {
             'prompt-maker': {
               command: 'npx',
-              args: ['-y', 'prompt-maker', 'mcp']
+              args: ['-y', '@s.engineerabhisheksahu/prompt-maker', 'mcp']
             }
           }
         },
@@ -53,7 +53,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
           mcpServers: {
             'prompt-maker': {
               command: 'npx',
-              args: ['-y', 'prompt-maker', 'mcp']
+              args: ['-y', '@s.engineerabhisheksahu/prompt-maker', 'mcp']
             }
           }
         },
@@ -64,7 +64,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
     cli: {
       title: 'Terminal / Background Process',
       filename: 'Command Line',
-      content: 'npx -y prompt-maker mcp'
+      content: 'npx -y @s.engineerabhisheksahu/prompt-maker mcp'
     }
   };
 
