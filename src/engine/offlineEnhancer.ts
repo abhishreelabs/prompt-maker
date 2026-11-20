@@ -2,6 +2,7 @@ import type { PromptTone, TargetModel, UseCaseId, PromptTransformationResult } f
 import { MODEL_PRESETS } from '../data/models.ts';
 import { analyzeBadPrompt } from './promptAnalyzer.ts';
 import { generateExecutionForecast } from './forecastGenerator.ts';
+import { scrubSecrets } from './secretScrubber.ts';
 
 interface EnhanceParams {
   rawPrompt: string;
@@ -286,8 +287,10 @@ export function enhancePromptOffline({
   framework = 'TypeScript',
   projectContext
 }: EnhanceParams): PromptTransformationResult {
-  const analysis = analyzeBadPrompt(rawPrompt, useCase);
-  const trimmed = rawPrompt.trim();
+  const scrubResult = scrubSecrets(rawPrompt);
+  const sanitizedPrompt = scrubResult.cleanText;
+  const analysis = analyzeBadPrompt(sanitizedPrompt, useCase);
+  const trimmed = sanitizedPrompt.trim();
 
   // Role Mapping based on useCase
   const roles: Record<UseCaseId, string> = {
@@ -947,8 +950,12 @@ ${verificationCmds.map(cmd => `   ${cmd}`).join('\n')}
     outputFormat
   });
 
+  if (scrubResult.hasSecrets) {
+    improvements.unshift(`🛡️ Redacted ${scrubResult.totalCount} sensitive credential(s) (${scrubResult.detectedSecrets.map(s => s.type).join(', ')}) to prevent token exposure`);
+  }
+
   const executionForecast = generateExecutionForecast({
-    rawPrompt,
+    rawPrompt: sanitizedPrompt,
     useCase,
     framework,
     improvements,
@@ -965,6 +972,7 @@ ${verificationCmds.map(cmd => `   ${cmd}`).join('\n')}
     framework,
     projectContext,
     executionForecast,
+    scrubbedSecrets: scrubResult.hasSecrets ? scrubResult.detectedSecrets : undefined,
     clarityScoreBefore: analysis.clarityScore,
     clarityScoreAfter: 98,
     improvements,

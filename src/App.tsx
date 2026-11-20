@@ -9,14 +9,17 @@ import { SettingsModal } from './components/SettingsModal';
 import { HistoryDrawer } from './components/HistoryDrawer';
 import { LearnedPromptsModal } from './components/LearnedPromptsModal';
 import { McpModal } from './components/McpModal';
+import { InsightsModal } from './components/InsightsModal';
 import { enhancePromptOffline } from './engine/offlineEnhancer.ts';
 import { enhancePromptWithAi } from './engine/aiEnhancer.ts';
+import { sendTelemetry } from './engine/telemetry.ts';
 import { USE_CASES } from './data/useCases.ts';
 import { LEARNED_USER_PROMPTS } from './data/learnedPrompts.ts';
 import { Sparkles, Terminal, ArrowRight, ShieldCheck, Zap, FolderGit2 } from 'lucide-react';
 
 const STORAGE_KEY_HISTORY = 'prompt_maker_history_v1';
 const STORAGE_KEY_SETTINGS = 'prompt_maker_settings_v1';
+const STORAGE_KEY_SESSION_KEYS = 'prompt_maker_session_keys_v1';
 
 export function App() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -41,6 +44,7 @@ export function App() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isLearnedOpen, setIsLearnedOpen] = useState(false);
   const [isMcpOpen, setIsMcpOpen] = useState(false);
+  const [isInsightsOpen, setIsInsightsOpen] = useState(false);
 
   // Sync theme with documentElement
   useEffect(() => {
@@ -62,20 +66,33 @@ export function App() {
     setTheme(t => (t === 'dark' ? 'light' : 'dark'));
   };
 
-  // Settings state from localStorage
+  // Settings state from sessionStorage / localStorage (Privacy First)
   const [settings, setSettings] = useState<SettingsState>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_SETTINGS);
-      if (saved) return JSON.parse(saved);
+      const parsed = saved ? JSON.parse(saved) : {};
+      let sessionKeys: { geminiApiKey?: string; openaiApiKey?: string } = {};
+      try {
+        const s = sessionStorage.getItem(STORAGE_KEY_SESSION_KEYS);
+        if (s) sessionKeys = JSON.parse(s);
+      } catch {}
+
+      return {
+        geminiApiKey: sessionKeys.geminiApiKey || parsed.geminiApiKey || '',
+        openaiApiKey: sessionKeys.openaiApiKey || parsed.openaiApiKey || '',
+        defaultModel: parsed.defaultModel || 'claude',
+        preferredEngine: parsed.preferredEngine || 'hybrid',
+        keyStorageMode: parsed.keyStorageMode || 'session-only'
+      };
     } catch {
-      // Fallback
+      return {
+        geminiApiKey: '',
+        openaiApiKey: '',
+        defaultModel: 'claude',
+        preferredEngine: 'hybrid',
+        keyStorageMode: 'session-only'
+      };
     }
-    return {
-      geminiApiKey: '',
-      openaiApiKey: '',
-      defaultModel: 'claude',
-      preferredEngine: 'hybrid'
-    };
   });
 
   // History state from localStorage
@@ -89,17 +106,40 @@ export function App() {
     return [];
   });
 
-  // Save settings
+  // Save settings with session-only memory support
   const handleSaveSettings = (newSettings: SettingsState) => {
     setSettings(newSettings);
     try {
-      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(newSettings));
+      if (newSettings.keyStorageMode === 'session-only') {
+        sessionStorage.setItem(
+          STORAGE_KEY_SESSION_KEYS,
+          JSON.stringify({
+            geminiApiKey: newSettings.geminiApiKey,
+            openaiApiKey: newSettings.openaiApiKey
+          })
+        );
+        localStorage.setItem(
+          STORAGE_KEY_SETTINGS,
+          JSON.stringify({
+            defaultModel: newSettings.defaultModel,
+            preferredEngine: newSettings.preferredEngine,
+            keyStorageMode: 'session-only'
+          })
+        );
+      } else {
+        sessionStorage.removeItem(STORAGE_KEY_SESSION_KEYS);
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(newSettings));
+      }
+
+      if (!newSettings.geminiApiKey && !newSettings.openaiApiKey) {
+        sessionStorage.removeItem(STORAGE_KEY_SESSION_KEYS);
+      }
     } catch {
       // Fallback
     }
   };
 
-  // Save history
+  // Save history with automatic token redaction guardrail
   const saveToHistory = (item: PromptTransformationResult) => {
     setHistory(prev => {
       const next = [item, ...prev.filter(p => p.timestamp !== item.timestamp)].slice(0, 50);
@@ -173,6 +213,21 @@ export function App() {
 
       setResult(finalResult);
       saveToHistory(finalResult);
+
+      // Edge learning telemetry (Zero-PII)
+      sendTelemetry({
+        domain: finalResult.useCase,
+        targetFramework: finalResult.framework,
+        targetModel: finalResult.targetModel,
+        clarityBefore: finalResult.analysis.clarityScoreBefore,
+        clarityAfter: finalResult.analysis.clarityScoreAfter,
+        defectsDetected: finalResult.analysis.defectsIdentified.map(d => d.type),
+        invariantsInjected: finalResult.analysis.invariantsInjected,
+        secretsScrubbedCount: finalResult.analysis.secretsScrubbedCount || 0,
+        wordCount: finalResult.enhancedPrompt.split(/\s+/).filter(Boolean).length,
+        userAction: 'compile',
+        generationMode: shouldUseAi ? (settings.geminiApiKey ? 'ai_gemini' : 'ai_openai') : 'offline_heuristic'
+      });
     } catch (err) {
       console.error('Transformation failed:', err);
     } finally {
@@ -226,6 +281,7 @@ export function App() {
         onOpenHistory={() => setIsHistoryOpen(true)}
         onOpenLearned={() => setIsLearnedOpen(true)}
         onOpenMcp={() => setIsMcpOpen(true)}
+        onOpenInsights={() => setIsInsightsOpen(true)}
         historyCount={history.length}
         engineUsed={currentEngine}
       />
@@ -523,6 +579,11 @@ export function App() {
       <McpModal
         isOpen={isMcpOpen}
         onClose={() => setIsMcpOpen(false)}
+      />
+
+      <InsightsModal
+        isOpen={isInsightsOpen}
+        onClose={() => setIsInsightsOpen(false)}
       />
     </div>
   );

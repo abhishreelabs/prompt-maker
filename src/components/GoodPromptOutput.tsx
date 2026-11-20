@@ -15,8 +15,11 @@ import {
   CheckCircle,
   Cpu,
   Layers,
-  FileCheck
+  FileCheck,
+  ThumbsUp,
+  ThumbsDown
 } from 'lucide-react';
+import { sendTelemetry } from '../engine/telemetry.ts';
 
 interface GoodPromptOutputProps {
   result: PromptTransformationResult | null;
@@ -30,12 +33,46 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<'formatted' | 'raw' | 'breakdown' | 'diff'>('formatted');
   const [variableValues, setVariableValues] = useState<Record<string, string>>({});
+  const [feedbackStatus, setFeedbackStatus] = useState<'positive' | 'negative' | null>(null);
+
+  const handleFeedback = (type: 'positive' | 'negative') => {
+    if (!result || feedbackStatus) return;
+    setFeedbackStatus(type);
+    const finalPrompt = getProcessedPrompt();
+    sendTelemetry({
+      domain: result.useCase,
+      targetFramework: result.framework,
+      targetModel: result.targetModel,
+      clarityBefore: result.analysis.clarityScoreBefore,
+      clarityAfter: result.analysis.clarityScoreAfter,
+      defectsDetected: result.analysis.defectsIdentified.map(d => d.type),
+      invariantsInjected: result.analysis.invariantsInjected,
+      secretsScrubbedCount: result.analysis.secretsScrubbedCount || 0,
+      wordCount: finalPrompt.split(/\s+/).filter(Boolean).length,
+      userAction: type === 'positive' ? 'feedback_positive' : 'feedback_negative',
+      generationMode: result.engineUsed === 'offline-smart-template' ? 'offline_heuristic' : 'ai_gemini'
+    });
+  };
 
   const handleCopy = () => {
     if (!result) return;
     const finalPrompt = getProcessedPrompt();
     navigator.clipboard.writeText(finalPrompt);
     setCopied(true);
+
+    sendTelemetry({
+      domain: result.useCase,
+      targetFramework: result.framework,
+      targetModel: result.targetModel,
+      clarityBefore: result.analysis.clarityScoreBefore,
+      clarityAfter: result.analysis.clarityScoreAfter,
+      defectsDetected: result.analysis.defectsIdentified.map(d => d.type),
+      invariantsInjected: result.analysis.invariantsInjected,
+      secretsScrubbedCount: result.analysis.secretsScrubbedCount || 0,
+      wordCount: finalPrompt.split(/\s+/).filter(Boolean).length,
+      userAction: 'copy',
+      generationMode: result.engineUsed === 'offline-smart-template' ? 'offline_heuristic' : 'ai_gemini'
+    });
 
     try {
       confetti({
@@ -54,6 +91,21 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
   const handleDownload = () => {
     if (!result) return;
     const finalPrompt = getProcessedPrompt();
+
+    sendTelemetry({
+      domain: result.useCase,
+      targetFramework: result.framework,
+      targetModel: result.targetModel,
+      clarityBefore: result.analysis.clarityScoreBefore,
+      clarityAfter: result.analysis.clarityScoreAfter,
+      defectsDetected: result.analysis.defectsIdentified.map(d => d.type),
+      invariantsInjected: result.analysis.invariantsInjected,
+      secretsScrubbedCount: result.analysis.secretsScrubbedCount || 0,
+      wordCount: finalPrompt.split(/\s+/).filter(Boolean).length,
+      userAction: 'export',
+      generationMode: result.engineUsed === 'offline-smart-template' ? 'offline_heuristic' : 'ai_gemini'
+    });
+
     const blob = new Blob([finalPrompt], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -68,6 +120,21 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
   const handleCopyAsSystem = () => {
     if (!result) return;
     const finalPrompt = getProcessedPrompt();
+
+    sendTelemetry({
+      domain: result.useCase,
+      targetFramework: result.framework,
+      targetModel: result.targetModel,
+      clarityBefore: result.analysis.clarityScoreBefore,
+      clarityAfter: result.analysis.clarityScoreAfter,
+      defectsDetected: result.analysis.defectsIdentified.map(d => d.type),
+      invariantsInjected: result.analysis.invariantsInjected,
+      secretsScrubbedCount: result.analysis.secretsScrubbedCount || 0,
+      wordCount: finalPrompt.split(/\s+/).filter(Boolean).length,
+      userAction: 'export',
+      generationMode: result.engineUsed === 'offline-smart-template' ? 'offline_heuristic' : 'ai_gemini'
+    });
+
     const systemPromptFormat = `// AI System Instruction / .cursorrules\n${finalPrompt}`;
     navigator.clipboard.writeText(systemPromptFormat);
     setCopied(true);
@@ -325,6 +392,38 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
               <Share2 className="w-4 h-4" />
               <span>Copy .cursorrules</span>
             </button>
+          </div>
+
+          {/* Edge Quality Feedback */}
+          <div className="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-black/30 border border-slate-200 dark:border-white/[0.08] text-xs">
+            <span className="text-slate-500 dark:text-slate-400 font-outfit hidden sm:inline mr-1">
+              Quality Rating:
+            </span>
+            {feedbackStatus ? (
+              <span className="text-emerald-600 dark:text-emerald-400 font-mono font-semibold flex items-center space-x-1">
+                <Check className="w-3.5 h-3.5" />
+                <span>Saved to D1</span>
+              </span>
+            ) : (
+              <div className="flex items-center space-x-1">
+                <button
+                  type="button"
+                  onClick={() => handleFeedback('positive')}
+                  className="p-1 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded transition-colors cursor-pointer"
+                  title="Prompt was effective & solved the problem"
+                >
+                  <ThumbsUp className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFeedback('negative')}
+                  className="p-1 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded transition-colors cursor-pointer"
+                  title="Prompt needs improvement"
+                >
+                  <ThumbsDown className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
 
           <button

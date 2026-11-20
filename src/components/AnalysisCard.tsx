@@ -67,6 +67,16 @@ export const AnalysisCard: React.FC<AnalysisCardProps> = ({ result }) => {
         </div>
       )}
 
+      {/* Secret Redaction Badge */}
+      {result.scrubbedSecrets && result.scrubbedSecrets.length > 0 && (
+        <div className="flex items-center space-x-2.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-500/25 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-mono text-emerald-900 dark:text-emerald-200">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <span>
+            <strong className="font-outfit font-semibold text-emerald-950 dark:text-emerald-100">Security Guardrail:</strong> Redacted {result.scrubbedSecrets.reduce((acc, s) => acc + s.count, 0)} sensitive token(s) ({result.scrubbedSecrets.map(s => s.type).join(', ')}) before compilation. Zero credentials exposed to agents or models.
+          </span>
+        </div>
+      )}
+
       {/* Tab Switcher */}
       <div className="flex items-center space-x-2 p-1 bg-slate-100 dark:bg-white/[0.04] rounded-xl border border-slate-200 dark:border-white/[0.06] w-fit">
         <button

@@ -3,6 +3,7 @@ import type { UseCaseId, TargetModel, PromptTone } from '../types/index.ts';
 import { USE_CASES } from '../data/useCases.ts';
 import { MODEL_PRESETS } from '../data/models.ts';
 import { analyzeBadPrompt } from '../engine/promptAnalyzer.ts';
+import { scrubSecrets } from '../engine/secretScrubber.ts';
 import {
   FileText,
   Lightbulb,
@@ -112,6 +113,7 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
   };
 
   const liveAnalysis = analyzeBadPrompt(rawPrompt, useCase);
+  const liveSecrets = scrubSecrets(rawPrompt);
 
   const handleUseCaseChange = (id: UseCaseId) => {
     setUseCase(id);
@@ -254,6 +256,16 @@ export const BadPromptInput: React.FC<BadPromptInputProps> = ({
             ))}
           </div>
         </div>
+
+        {/* Real-time Token Guardrail Alert */}
+        {liveSecrets.hasSecrets && (
+          <div className="flex items-center space-x-2.5 px-3.5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-mono animate-in fade-in duration-150 shadow-xs">
+            <ShieldCheck className="w-4 h-4 text-amber-500 shrink-0" />
+            <div className="flex-1">
+              <span className="font-bold">🛡️ Pre-Flight Guardrail Active:</span> Detected {liveSecrets.totalCount} sensitive credential(s) ({liveSecrets.detectedSecrets.map(s => s.type).join(', ')}). They will be automatically redacted before processing.
+            </div>
+          </div>
+        )}
 
         {/* Code-Editor Styled Textarea with Line Numbers and Fullscreen */}
         <div className="h-[180px] flex flex-col relative craft-inner-input rounded-xl overflow-hidden border border-slate-200 dark:border-white/[0.06]">

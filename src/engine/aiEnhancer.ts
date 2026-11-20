@@ -1,6 +1,7 @@
 import type { PromptTone, TargetModel, UseCaseId, PromptTransformationResult } from '../types/index.ts';
 import { enhancePromptOffline } from './offlineEnhancer.ts';
 import { analyzeBadPrompt } from './promptAnalyzer.ts';
+import { scrubSecrets } from './secretScrubber.ts';
 
 interface AiEnhanceParams {
   rawPrompt: string;
@@ -43,12 +44,16 @@ export async function enhancePromptWithAi({
   apiKey,
   modelProvider = 'gemini'
 }: AiEnhanceParams): Promise<PromptTransformationResult> {
+  // Always scrub secrets first to guarantee zero credential exposure to LLMs
+  const scrubResult = scrubSecrets(rawPrompt);
+  const sanitizedPrompt = scrubResult.cleanText;
+
   // If no API key is provided, fallback cleanly to offline enhancer
   if (!apiKey || !apiKey.trim()) {
-    return enhancePromptOffline({ rawPrompt, useCase, targetModel, tone, framework });
+    return enhancePromptOffline({ rawPrompt: sanitizedPrompt, useCase, targetModel, tone, framework });
   }
 
-  const analysis = analyzeBadPrompt(rawPrompt, useCase);
+  const analysis = analyzeBadPrompt(sanitizedPrompt, useCase);
 
   try {
     if (modelProvider === 'gemini') {
@@ -63,7 +68,7 @@ export async function enhancePromptWithAi({
                 role: 'user',
                 parts: [
                   {
-                    text: `${META_SYSTEM_PROMPT}\n\nDeveloper Input: "${rawPrompt}"\nUse Case: ${useCase}\nFramework/Stack: ${framework}\nTarget LLM: ${targetModel}\nTone: ${tone}\n\nGenerate the complete enhanced prompt now:`
+                    text: `${META_SYSTEM_PROMPT}\n\nDeveloper Input: "${sanitizedPrompt}"\nUse Case: ${useCase}\nFramework/Stack: ${framework}\nTarget LLM: ${targetModel}\nTone: ${tone}\n\nGenerate the complete enhanced prompt now:`
                   }
                 ]
               }
@@ -88,6 +93,17 @@ export async function enhancePromptWithAi({
         throw new Error('Gemini API returned an empty response.');
       }
 
+      const improvements = [
+        'Meta-Prompt synthesized using Gemini 2.5 Flash',
+        'Autonomous edge-case discovery based on your specific requirements',
+        'Enforced role-based accessibility and zero-flake locators',
+        'Strict output schema and verification steps'
+      ];
+
+      if (scrubResult.hasSecrets) {
+        improvements.unshift(`🛡️ Redacted ${scrubResult.totalCount} sensitive credential(s) before sending to Gemini API`);
+      }
+
       return {
         originalPrompt: rawPrompt,
         enhancedPrompt: generatedText.trim(),
@@ -95,14 +111,10 @@ export async function enhancePromptWithAi({
         targetModel,
         tone,
         framework,
+        scrubbedSecrets: scrubResult.hasSecrets ? scrubResult.detectedSecrets : undefined,
         clarityScoreBefore: analysis.clarityScore,
         clarityScoreAfter: 98,
-        improvements: [
-          'Meta-Prompt synthesized using Gemini 2.5 Flash',
-          'Autonomous edge-case discovery based on your specific requirements',
-          'Enforced role-based accessibility and zero-flake locators',
-          'Strict output schema and verification steps'
-        ],
+        improvements,
         detectedVariables: analysis.detectedVariables,
         timestamp: Date.now(),
         engineUsed: 'gemini-ai'
@@ -121,7 +133,7 @@ export async function enhancePromptWithAi({
             { role: 'system', content: META_SYSTEM_PROMPT },
             {
               role: 'user',
-              content: `Developer Input: "${rawPrompt}"\nUse Case: ${useCase}\nFramework: ${framework}\nTarget LLM: ${targetModel}\nTone: ${tone}\n\nGenerate the complete enhanced prompt:`
+              content: `Developer Input: "${sanitizedPrompt}"\nUse Case: ${useCase}\nFramework: ${framework}\nTarget LLM: ${targetModel}\nTone: ${tone}\n\nGenerate the complete enhanced prompt:`
             }
           ],
           temperature: 0.3
@@ -140,6 +152,16 @@ export async function enhancePromptWithAi({
         throw new Error('OpenAI returned an empty response.');
       }
 
+      const improvements = [
+        'Meta-Prompt synthesized with OpenAI',
+        'Autonomous edge-case and boundary parameterization',
+        'Strict output schema and anti-pattern enforcement'
+      ];
+
+      if (scrubResult.hasSecrets) {
+        improvements.unshift(`🛡️ Redacted ${scrubResult.totalCount} sensitive credential(s) before sending to OpenAI API`);
+      }
+
       return {
         originalPrompt: rawPrompt,
         enhancedPrompt: generatedText.trim(),
@@ -147,13 +169,10 @@ export async function enhancePromptWithAi({
         targetModel,
         tone,
         framework,
+        scrubbedSecrets: scrubResult.hasSecrets ? scrubResult.detectedSecrets : undefined,
         clarityScoreBefore: analysis.clarityScore,
         clarityScoreAfter: 98,
-        improvements: [
-          'Meta-Prompt synthesized with OpenAI',
-          'Autonomous edge-case and boundary parameterization',
-          'Strict output schema and anti-pattern enforcement'
-        ],
+        improvements,
         detectedVariables: analysis.detectedVariables,
         timestamp: Date.now(),
         engineUsed: 'openai-ai'
@@ -161,7 +180,7 @@ export async function enhancePromptWithAi({
     }
   } catch (err: unknown) {
     console.warn('AI enhancement error, falling back to offline template engine:', err);
-    const offlineResult = enhancePromptOffline({ rawPrompt, useCase, targetModel, tone, framework });
+    const offlineResult = enhancePromptOffline({ rawPrompt: sanitizedPrompt, useCase, targetModel, tone, framework });
     const errorMessage = err instanceof Error ? err.message : String(err);
     offlineResult.improvements.push(`Note: AI call failed (${errorMessage}). High-precision offline engine used.`);
     return offlineResult;

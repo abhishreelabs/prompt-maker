@@ -1,0 +1,8 @@
+name = "prompt-maker"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-11-20"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "prompt-maker-db"
+database_id = "8ee5dab0-94d6-4f84-ad26-85e245a13f12"

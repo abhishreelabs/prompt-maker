@@ -1,0 +1,67 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#090A0F"/>
+  
+  <!-- Subtle Blueprint Grid -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.25"/>
+      <stop offset="40%" stop-color="#6366f1" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#090a0f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Logo Pill -->
+  <g transform="translate(100, 110)">
+    <rect width="64" height="64" rx="18" fill="url(#brandGrad)"/>
+    <path d="M32 14L36.5 27.5L50 32L36.5 36.5L32 50L27.5 36.5L14 32L27.5 27.5L32 14Z" fill="white"/>
+    
+    <text x="84" y="38" fill="white" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="28" letter-spacing="-0.5">Prompt Maker</text>
+    <rect x="290" y="16" width="130" height="30" rx="8" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="304" y="36" fill="#38bdf8" font-family="monospace" font-weight="700" font-size="14">by AbhishreeLabs</text>
+  </g>
+
+  <!-- Main Headline -->
+  <text x="100" y="270" fill="white" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="56" letter-spacing="-1.5">
+    Don&apos;t Let Vague Prompts
+  </text>
+  <text x="100" y="340" fill="#f59e0b" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="56" letter-spacing="-1.5">
+    Generate Broken Code.
+  </text>
+
+  <!-- Subtitle -->
+  <text x="100" y="410" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="24">
+    The Developer&apos;s Meta-Prompt Studio &amp; Architecture Hardener
+  </text>
+  <text x="100" y="445" fill="#64748b" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="20">
+    Zero-PII Privacy Contract &bull; Cloudflare D1 Edge Intelligence &bull; Cursor &amp; MCP Integration
+  </text>
+
+  <!-- Badges footer -->
+  <g transform="translate(100, 510)">
+    <!-- Badge 1 -->
+    <rect x="0" y="0" width="220" height="42" rx="12" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.3)"/>
+    <text x="20" y="26" fill="#10b981" font-family="monospace" font-weight="700" font-size="15">🛡️ 100% Zero-PII</text>
+
+    <!-- Badge 2 -->
+    <rect x="240" y="0" width="230" height="42" rx="12" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.3)"/>
+    <text x="260" y="26" fill="#f59e0b" font-family="monospace" font-weight="700" font-size="15">⚡ Cloudflare D1 Edge</text>
+
+    <!-- Badge 3 -->
+    <rect x="490" y="0" width="230" height="42" rx="12" fill="rgba(99,102,241,0.12)" stroke="rgba(99,102,241,0.3)"/>
+    <text x="510" y="26" fill="#818cf8" font-family="monospace" font-weight="700" font-size="15">🤖 MCP Agent Server</text>
+    
+    <!-- Domain pill -->
+    <text x="760" y="27" fill="#64748b" font-family="monospace" font-size="15">prompt-maker.abhishreelabs.in</text>
+  </g>
+</svg>

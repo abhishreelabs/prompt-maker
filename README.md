@@ -6,7 +6,7 @@
 Prompt Maker is built for software engineers who know what they want to build or test, but don't want to spend time manually drafting multi-page meta-prompts with roles, boundary conditions, edge cases, deterministic locators, zero-stub guarantees, and output schemas.
 
 [![Live on Cloudflare](https://img.shields.io/badge/Live%20Studio-prompt--maker.abhishreelabs.in-f38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://prompt-maker.abhishreelabs.in)
-[![npm version](https://img.shields.io/npm/v/@s.engineerabhisheksahu/prompt-maker?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@s.engineerabhisheksahu/prompt-maker)
+[![npm version](https://img.shields.io/npm/v/@abhishreelabs/prompt-maker?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@abhishreelabs/prompt-maker)
 
 ---
 
@@ -94,7 +94,7 @@ Any AI coding assistant supporting MCP can call Prompt Maker as a native tool!
   "mcpServers": {
     "prompt-maker": {
       "command": "npx",
-      "args": ["-y", "@s.engineerabhisheksahu/prompt-maker", "mcp"]
+      "args": ["-y", "@abhishreelabs/prompt-maker", "mcp"]
     }
   }
 }
@@ -107,7 +107,7 @@ Location: `~/Library/Application Support/Claude/claude_desktop_config.json`
   "mcpServers": {
     "prompt-maker": {
       "command": "npx",
-      "args": ["-y", "@s.engineerabhisheksahu/prompt-maker", "mcp"]
+      "args": ["-y", "@abhishreelabs/prompt-maker", "mcp"]
     }
   }
 }
@@ -120,7 +120,7 @@ Location: `~/.codeium/windsurf/mcp_config.json`
   "mcpServers": {
     "prompt-maker": {
       "command": "npx",
-      "args": ["-y", "@s.engineerabhisheksahu/prompt-maker", "mcp"]
+      "args": ["-y", "@abhishreelabs/prompt-maker", "mcp"]
     }
   }
 }

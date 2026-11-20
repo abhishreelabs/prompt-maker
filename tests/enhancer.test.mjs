@@ -112,3 +112,38 @@ test('enhancePromptOffline handles real workspace security-privacy (Zero-Trace R
   assert.ok(result.enhancedPrompt.includes('crypto.timingSafeEqual'), 'Should inject timing-safe crypto comparisons');
   assert.ok(result.enhancedPrompt.includes('auto-burn'), 'Should enforce auto-burn synchronization');
 });
+
+test('secretScrubber detects and redacts tokens, keys, and credentials', async () => {
+  const { scrubSecrets } = await import('../src/engine/secretScrubber.ts');
+
+  const mockOpenAiKey = ['sk-proj', '1234567890abcdef1234567890'].join('-');
+  const mockGhpKey = ['ghp', '123456789012345678901234567890123456'].join('_');
+  const dirtyPrompt = `test api with ${mockOpenAiKey} and ${mockGhpKey} and db postgres://usr:pass999@db.prod.internal:5432/main`;
+  const scrubResult = scrubSecrets(dirtyPrompt);
+
+  assert.equal(scrubResult.hasSecrets, true);
+  assert.equal(scrubResult.totalCount, 3);
+  assert.ok(!scrubResult.cleanText.includes(mockOpenAiKey));
+  assert.ok(!scrubResult.cleanText.includes(mockGhpKey));
+  assert.ok(!scrubResult.cleanText.includes('pass999'));
+  assert.ok(scrubResult.cleanText.includes('[REDACTED_OPENAI_API_KEY]'));
+  assert.ok(scrubResult.cleanText.includes('[REDACTED_GITHUB_TOKEN]'));
+  assert.ok(scrubResult.cleanText.includes('[REDACTED_PASSWORD]'));
+});
+
+test('enhancePromptOffline redacts sensitive credentials and attaches guardrail telemetry', () => {
+  const mockStripeKey = ['sk_live', '123456789012345678901234'].join('_');
+  const dirtyPrompt = `connect to Stripe using ${mockStripeKey} and query database postgres://admin:secretPass@localhost:5432/app`;
+  const result = enhancePromptOffline({
+    rawPrompt: dirtyPrompt,
+    useCase: 'api-design',
+    targetModel: 'claude',
+    tone: 'production',
+    framework: 'TypeScript'
+  });
+
+  assert.ok(result.scrubbedSecrets && result.scrubbedSecrets.length > 0);
+  assert.ok(!result.enhancedPrompt.includes(mockStripeKey));
+  assert.ok(!result.enhancedPrompt.includes('secretPass'));
+  assert.ok(result.improvements.some(i => i.includes('Redacted')));
+});

@@ -26,6 +26,7 @@ out/
 .cache/
 *.tsbuildinfo
 .eslintcache
+.wrangler/
 
 # Logs
 logs/

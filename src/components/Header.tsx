@@ -11,7 +11,8 @@ import {
   GitFork,
   Activity,
   Sun,
-  Moon
+  Moon,
+  Database
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -23,6 +24,7 @@ interface HeaderProps {
   onOpenHistory: () => void;
   onOpenLearned: () => void;
   onOpenMcp: () => void;
+  onOpenInsights: () => void;
   historyCount: number;
   engineUsed: 'offline' | 'gemini' | 'openai';
 }
@@ -36,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenHistory,
   onOpenLearned,
   onOpenMcp,
+  onOpenInsights,
   historyCount,
   engineUsed,
 }) => {
@@ -117,7 +120,18 @@ export const Header: React.FC<HeaderProps> = ({
             title="Browse curated production blueprints across 14 engineering domains"
           >
             <FolderGit2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            <span>Blueprints</span>
+            <span className="hidden sm:inline">Blueprints</span>
+          </button>
+
+          {/* Cloudflare D1 Edge Intelligence */}
+          <button
+            onClick={onOpenInsights}
+            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/20 hover:bg-emerald-100 dark:hover:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 transition-colors text-xs font-outfit font-semibold cursor-pointer"
+            title="Cloudflare D1 Edge Insights (Zero-PII Quality Metrics)"
+          >
+            <Database className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span className="hidden sm:inline">D1 Insights</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
           </button>
 
           {/* Engine status badge */}

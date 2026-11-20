@@ -81,6 +81,7 @@ export interface PromptTransformationResult {
   framework?: string;
   projectContext?: string;
   executionForecast?: ExecutionForecast;
+  scrubbedSecrets?: Array<{ type: string; count: number; placeholder: string }>;
   clarityScoreBefore: number; // 0-100
   clarityScoreAfter: number; // 0-100
   improvements: string[];
@@ -94,5 +95,6 @@ export interface SettingsState {
   openaiApiKey: string;
   defaultModel: TargetModel;
   preferredEngine: 'hybrid' | 'offline-only';
+  keyStorageMode?: 'session-only' | 'local-storage';
 }
 
