@@ -19,6 +19,7 @@
     "build:cli": "esbuild src/cli.ts --bundle --platform=node --format=esm --target=node20 --banner:js=\"#!/usr/bin/env node\" --outfile=bin/prompt-maker.js && chmod +x bin/prompt-maker.js",
     "build:all": "npm run build && npm run build:mcp && npm run build:cli",
     "mcp": "node bin/prompt-maker-mcp.js",
+    "publish:infisical": "infisical run --env=prod -- bash -c 'npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN && npm publish --access public'",
     "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },
   "keywords": [
