@@ -7,12 +7,24 @@ interface McpModalProps {
 }
 
 export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'cursor' | 'claude' | 'windsurf' | 'cli'>('cursor');
+  const [activeTab, setActiveTab] = useState<'cli' | 'cursor' | 'claude' | 'windsurf'>('cli');
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const configs: Record<'cursor' | 'claude' | 'windsurf' | 'cli', { title: string; filename: string; content: string }> = {
+  const configs: Record<'cli' | 'cursor' | 'claude' | 'windsurf', { title: string; filename: string; content: string }> = {
+    cli: {
+      title: 'Terminal CLI (Instant execution via npx or global npm)',
+      filename: 'Terminal / Shell',
+      content: `# 1. Run instantly via npx (zero installation required):
+npx @abhishreelabs/prompt-maker "test login form with email & password" --use-case ui-testing
+
+# 2. Or install globally for fast local command-line usage:
+npm install -g @abhishreelabs/prompt-maker
+
+# 3. Enhance prompts directly from anywhere:
+prompt-maker "create stripe checkout webhook endpoint" --use-case api-design --quiet | pbcopy`
+    },
     cursor: {
       title: 'Cursor IDE (.cursor/mcp.json)',
       filename: '.cursor/mcp.json',
@@ -60,11 +72,6 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
         null,
         2
       )
-    },
-    cli: {
-      title: 'Terminal / Background Process',
-      filename: 'Command Line',
-      content: 'npx -y @abhishreelabs/prompt-maker mcp'
     }
   };
 
@@ -87,13 +94,13 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">Model Context Protocol (MCP) Server</h3>
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">CLI &amp; AI Agent Integration (MCP)</h3>
                 <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
-                  Ready for AI Agents
+                  Ready for Developers &amp; Agents
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-                Let Cursor, Claude, Windsurf, or Antigravity agents enhance your prompts before writing code.
+                Run in your terminal via npx/npm, or connect to Cursor, Windsurf, Claude Desktop, and Antigravity.
               </p>
             </div>
           </div>
@@ -107,7 +114,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
 
         {/* Tab selection */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-950/30 flex items-center space-x-2 text-xs">
-          {(['cursor', 'claude', 'windsurf', 'cli'] as const).map(tab => (
+          {(['cli', 'cursor', 'claude', 'windsurf'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -117,7 +124,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
                   : 'bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800'
               }`}
             >
-              {tab.toUpperCase()}
+              {tab === 'cli' ? 'TERMINAL CLI' : tab.toUpperCase()}
             </button>
           ))}
         </div>
@@ -175,11 +182,22 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 flex items-center justify-between text-xs text-slate-500">
-          <span className="truncate max-w-[400px]">MCP Stdio: <code className="font-mono text-slate-700 dark:text-slate-400">npx @abhishreelabs/prompt-maker mcp</code></span>
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <div className="flex items-center space-x-2">
+            <span className="truncate max-w-[280px]">CLI / MCP: <code className="font-mono text-slate-700 dark:text-slate-400">npx @abhishreelabs/prompt-maker</code></span>
+            <span>&bull;</span>
+            <a
+              href="https://github.com/abhishreelabs/prompt-maker#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-600 dark:text-amber-400 hover:underline font-semibold"
+            >
+              GitHub Docs ↗
+            </a>
+          </div>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-medium transition-colors cursor-pointer self-end sm:self-auto"
           >
             Close
           </button>
