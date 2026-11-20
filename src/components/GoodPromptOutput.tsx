@@ -220,77 +220,77 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
   return (
     <div className="craft-chassis rounded-2xl flex flex-col h-full shadow-2xl overflow-hidden border border-slate-200 dark:border-white/[0.08]">
       {/* Editor Tab Chrome */}
-      <div className="bg-slate-100 dark:bg-[#0c0e15] px-4 py-2.5 border-b border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1.5 px-3 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-xs sm:text-sm font-mono text-emerald-700 dark:text-emerald-300">
-            <FileCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+      <div className="bg-slate-100 dark:bg-[#0c0e15] px-3 sm:px-4 py-2 sm:py-2.5 border-b border-slate-200 dark:border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="flex items-center justify-between sm:justify-start space-x-2">
+          <div className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-xs sm:text-sm font-mono text-emerald-700 dark:text-emerald-300">
+            <FileCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>compiled.prompt.md</span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 ml-1" />
           </div>
-          <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+          <span className="text-[11px] sm:text-xs font-mono font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
             Score: {result.clarityScoreAfter}/100
           </span>
         </div>
 
         {/* View Tabs */}
-        <div className="flex items-center space-x-1 bg-slate-200/80 dark:bg-black/50 p-0.5 rounded-lg border border-slate-300 dark:border-white/[0.08] text-xs">
+        <div className="flex items-center space-x-1 bg-slate-200/80 dark:bg-black/50 p-0.5 rounded-lg border border-slate-300 dark:border-white/[0.08] text-xs overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('formatted')}
-            className={`px-3 py-1.5 rounded-md transition-colors flex items-center space-x-1.5 cursor-pointer font-outfit text-xs sm:text-sm ${
+            className={`flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-md transition-colors flex items-center justify-center space-x-1.5 cursor-pointer font-outfit text-xs whitespace-nowrap ${
               activeTab === 'formatted'
                 ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-xs font-bold'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 font-medium'
             }`}
           >
-            <Eye className="w-3.5 h-3.5" />
+            <Eye className="w-3.5 h-3.5 shrink-0" />
             <span>Preview</span>
           </button>
           <button
             onClick={() => setActiveTab('raw')}
-            className={`px-3 py-1.5 rounded-md transition-colors flex items-center space-x-1.5 cursor-pointer font-outfit text-xs sm:text-sm ${
+            className={`flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-md transition-colors flex items-center justify-center space-x-1.5 cursor-pointer font-outfit text-xs whitespace-nowrap ${
               activeTab === 'raw'
                 ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-xs font-bold'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 font-medium'
             }`}
           >
-            <Code className="w-3.5 h-3.5" />
+            <Code className="w-3.5 h-3.5 shrink-0" />
             <span>Raw</span>
           </button>
           <button
             onClick={() => setActiveTab('breakdown')}
-            className={`px-3 py-1.5 rounded-md transition-colors flex items-center space-x-1.5 cursor-pointer font-outfit text-xs sm:text-sm ${
+            className={`flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-md transition-colors flex items-center justify-center space-x-1.5 cursor-pointer font-outfit text-xs whitespace-nowrap ${
               activeTab === 'breakdown'
                 ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-xs font-bold'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 font-medium'
             }`}
           >
-            <Sliders className="w-3.5 h-3.5" />
+            <Sliders className="w-3.5 h-3.5 shrink-0" />
             <span>Injections</span>
           </button>
           <button
             onClick={() => setActiveTab('diff')}
-            className={`px-3 py-1.5 rounded-md transition-colors flex items-center space-x-1.5 cursor-pointer font-outfit text-xs sm:text-sm ${
+            className={`flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-md transition-colors flex items-center justify-center space-x-1.5 cursor-pointer font-outfit text-xs whitespace-nowrap ${
               activeTab === 'diff'
                 ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-xs font-bold'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 font-medium'
             }`}
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-3.5 h-3.5 shrink-0" />
             <span>Diff</span>
           </button>
         </div>
       </div>
 
-      <div className="p-5 flex-1 flex flex-col space-y-4">
+      <div className="p-3.5 sm:p-5 flex-1 flex flex-col space-y-3.5 sm:space-y-4">
         {/* Sub Status Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm bg-slate-100 dark:bg-black/40 p-3 rounded-xl border border-slate-200 dark:border-white/[0.06]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm bg-slate-100 dark:bg-black/40 p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-white/[0.06]">
           <div className="flex items-center space-x-2">
-            <span className="font-outfit font-bold text-slate-900 dark:text-white text-sm">{targetPreset?.name || result.targetModel}</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/[0.08]">
+            <span className="font-outfit font-bold text-slate-900 dark:text-white text-xs sm:text-sm">{targetPreset?.name || result.targetModel}</span>
+            <span className="text-[10px] sm:text-xs font-mono px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-white/[0.08]">
               {targetPreset?.badge}
             </span>
           </div>
-          <div className="flex items-center space-x-3 text-xs sm:text-sm font-mono text-slate-600 dark:text-slate-400">
+          <div className="flex items-center space-x-2 sm:space-x-3 text-[11px] sm:text-xs font-mono text-slate-600 dark:text-slate-400">
             <span>{wordCount} words</span>
             <span>•</span>
             <span>~{tokenCountEst} tokens</span>
@@ -373,63 +373,12 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
         </div>
 
         {/* Actions Toolbar */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-          <div className="flex items-center space-x-2">
-            <button
-              type="button"
-              onClick={handleDownload}
-              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-black/40 dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-xs sm:text-sm font-outfit font-semibold transition-colors cursor-pointer"
-            >
-              <Download className="w-4 h-4" />
-              <span>Download .md</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleCopyAsSystem}
-              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-black/40 dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-xs sm:text-sm font-outfit font-semibold transition-colors cursor-pointer"
-            >
-              <Share2 className="w-4 h-4" />
-              <span>Copy .cursorrules</span>
-            </button>
-          </div>
-
-          {/* Edge Quality Feedback */}
-          <div className="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-black/30 border border-slate-200 dark:border-white/[0.08] text-xs">
-            <span className="text-slate-500 dark:text-slate-400 font-outfit hidden sm:inline mr-1">
-              Quality Rating:
-            </span>
-            {feedbackStatus ? (
-              <span className="text-emerald-600 dark:text-emerald-400 font-mono font-semibold flex items-center space-x-1">
-                <Check className="w-3.5 h-3.5" />
-                <span>Saved to D1</span>
-              </span>
-            ) : (
-              <div className="flex items-center space-x-1">
-                <button
-                  type="button"
-                  onClick={() => handleFeedback('positive')}
-                  className="p-1 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded transition-colors cursor-pointer"
-                  title="Prompt was effective & solved the problem"
-                >
-                  <ThumbsUp className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleFeedback('negative')}
-                  className="p-1 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded transition-colors cursor-pointer"
-                  title="Prompt needs improvement"
-                >
-                  <ThumbsDown className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
-          </div>
-
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
+          {/* Main Primary Action on Mobile is full-width at top */}
           <button
             type="button"
             onClick={handleCopy}
-            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-outfit font-extrabold transition-all shadow-lg tactile-btn cursor-pointer ${
+            className={`w-full sm:w-auto order-first sm:order-last flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-outfit font-extrabold transition-all shadow-lg tactile-btn cursor-pointer min-h-[42px] ${
               copied
                 ? 'bg-emerald-500 text-black shadow-emerald-500/20'
                 : 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-400/20'
@@ -438,7 +387,7 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
             {copied ? (
               <>
                 <Check className="w-4 h-4" />
-                <span>Copied! 🎉</span>
+                <span>Copied Hardened Prompt! 🎉</span>
               </>
             ) : (
               <>
@@ -447,6 +396,61 @@ export const GoodPromptOutput: React.FC<GoodPromptOutputProps> = ({
               </>
             )}
           </button>
+
+          {/* Secondary Actions Row */}
+          <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
+            <div className="flex items-center space-x-1.5">
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-black/40 dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-xs font-outfit font-semibold transition-colors cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>.md</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyAsSystem}
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-black/40 dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-xs font-outfit font-semibold transition-colors cursor-pointer"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>.cursorrules</span>
+              </button>
+            </div>
+
+            {/* Edge Quality Feedback */}
+            <div className="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-black/30 border border-slate-200 dark:border-white/[0.08] text-xs">
+              <span className="text-slate-500 dark:text-slate-400 font-outfit hidden xs:inline mr-1">
+                Rating:
+              </span>
+              {feedbackStatus ? (
+                <span className="text-emerald-600 dark:text-emerald-400 font-mono font-semibold flex items-center space-x-1 text-[11px]">
+                  <Check className="w-3 h-3" />
+                  <span>Saved</span>
+                </span>
+              ) : (
+                <div className="flex items-center space-x-1">
+                  <button
+                    type="button"
+                    onClick={() => handleFeedback('positive')}
+                    className="p-1 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded transition-colors cursor-pointer"
+                    title="Prompt was effective & solved the problem"
+                  >
+                    <ThumbsUp className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFeedback('negative')}
+                    className="p-1 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded transition-colors cursor-pointer"
+                    title="Prompt needs improvement"
+                  >
+                    <ThumbsDown className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

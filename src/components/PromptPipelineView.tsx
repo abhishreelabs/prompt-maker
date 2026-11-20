@@ -65,30 +65,30 @@ export const PromptPipelineView: React.FC<PromptPipelineViewProps> = ({ result }
   ];
 
   return (
-    <div className="craft-chassis rounded-2xl p-6 sm:p-7 space-y-6 border border-slate-200 dark:border-white/[0.08]">
+    <div className="craft-chassis rounded-2xl p-4 sm:p-7 space-y-5 sm:space-y-6 border border-slate-200 dark:border-white/[0.08]">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-200 dark:border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 sm:pb-5 border-b border-slate-200 dark:border-white/[0.08]">
         <div>
           <div className="flex items-center space-x-2.5">
-            <Sparkles className="w-5 h-5 text-amber-500" />
-            <h3 className="font-outfit font-bold text-lg text-slate-900 dark:text-white tracking-wide">
+            <Sparkles className="w-5 h-5 text-amber-500 shrink-0" />
+            <h3 className="font-outfit font-bold text-base sm:text-lg text-slate-900 dark:text-white tracking-wide">
               Compiler Pipeline Visualizer
             </h3>
-            <span className="text-xs font-outfit px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20 font-semibold">
+            <span className="text-xs font-outfit px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20 font-semibold shrink-0">
               Live Flow
             </span>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 font-sans">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 font-sans leading-relaxed">
             See how your raw one-liner moves through 5 transformation nodes into a bulletproof production prompt.
           </p>
         </div>
 
-        <div className="flex items-center space-x-2 text-sm font-mono text-slate-600 dark:text-slate-400">
-          <span className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/[0.08]">
+        <div className="flex items-center space-x-2 text-xs sm:text-sm font-mono text-slate-600 dark:text-slate-400 self-start sm:self-auto shrink-0">
+          <span className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/[0.08]">
             Input: <span className="text-amber-600 dark:text-amber-400 font-bold">{result.clarityScoreBefore}%</span>
           </span>
-          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-          <span className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/[0.08]">
+          <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+          <span className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/[0.08]">
             Output: <span className="text-emerald-600 dark:text-emerald-400 font-bold">{result.clarityScoreAfter}%</span>
           </span>
         </div>
