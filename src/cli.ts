@@ -88,7 +88,7 @@ export function inferUseCase(text: string): UseCaseId {
   if (t.includes('webrtc') || t.includes('video call') || t.includes('screen share') || t.includes('ice candidate')) {
     return 'webrtc-video';
   }
-  if (t.includes('pdf') || t.includes('ocr') || t.includes('exam') || t.includes('scanned')) {
+  if (t.includes('pdf') || t.includes('ocr') || /\bexams?\b/.test(t) || t.includes('scanned')) {
     return 'pdf-document-ai';
   }
   if (t.includes('social') || t.includes('linkedin') || t.includes('twitter') || t.includes('tweet') || t.includes('schedule post')) {
