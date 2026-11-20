@@ -380,7 +380,7 @@ export function App() {
                   Discovered From Your Real Projects & Developer Sessions
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans mt-0.5">
-                  Extracted from actual sessions in WhisperRoom, Hospital Management, Sentinel, Terrace Farming, and Interview Portal.
+                  Extracted from real developer sessions across WebSockets, Healthcare, Cloud SRE, Document AI, and Video Streaming.
                 </p>
               </div>
             </div>

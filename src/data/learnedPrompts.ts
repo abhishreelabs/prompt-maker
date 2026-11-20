@@ -1,10 +1,10 @@
 import type { LearnedPromptItem } from '../types/index.ts';
 
 export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
-  // 1. Mobile & UI Testing (WhisperRoom & HMS)
+  // 1. Mobile & UI Testing
   {
     id: 'learned-mobile-qa',
-    project: 'WhisperRoom / HMS Landing',
+    project: 'Mobile Web & Ephemeral App',
     category: 'ui-testing',
     rawUserPrompt: 'is propelry tested for mobile as it will be used much in mobile',
     context: 'Next.js 16 + Tailwind responsive web app for ephemeral chat & mobile landing page.',
@@ -20,22 +20,22 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   },
   {
     id: 'learned-card-layout-diff',
-    project: 'Hospital Management System',
+    project: 'Clinical Healthcare Portal',
     category: 'ui-testing',
     rawUserPrompt: 'why card layout if differnet',
-    context: 'Hospital landing page doctor cards rendering inconsistently across desktop and mobile browsers.',
+    context: 'Healthcare landing page doctor cards rendering inconsistently across desktop and mobile browsers.',
     targetStack: 'Playwright + Visual Regression / CSS Audit',
     whyItFailedBefore: 'AI guessed without inspecting CSS flexbox/grid wrapper properties, break-inside properties, and image aspect-ratio discrepancies.',
     keyUpgrades: [
       'CSS Grid vs Flexbox alignment inspection criteria',
       'Visual screenshot regression testing with maxDiffPixels threshold',
-      'Card content overflow and variable length doctor bios',
+      'Card content overflow and variable length bio fields',
       'Multi-device responsive breakpoint verification (sm, md, lg)'
     ]
   },
   {
     id: 'learned-chatbot-appointment',
-    project: 'Virtual Doctor / HMS',
+    project: 'Virtual Doctor Triage',
     category: 'healthcare-doctor',
     rawUserPrompt: 'can you test now the virtual doctior on landing page. can we book appointment from landing page chatbot for doing the booking',
     context: 'Interactive virtual doctor triage widget that guides patient through symptoms and books slot.',
@@ -52,7 +52,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 2. DevOps, Cloudflare, Better Stack & Render
   {
     id: 'learned-betterstack-dns',
-    project: 'Abhishree Sentinel / Labs',
+    project: 'Cloud SRE & DNS Monitor',
     category: 'devops-infra',
     rawUserPrompt: 'chekc better stack we are getting dns lookup failure',
     context: 'Better Stack uptime heartbeat alerts failing due to Cloudflare DNS resolution / TTL.',
@@ -67,7 +67,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   },
   {
     id: 'learned-upstash-redis-inactivity',
-    project: 'WhisperRoom / Sentinel',
+    project: 'Realtime Cache & Keep-Alive',
     category: 'devops-infra',
     rawUserPrompt: 'upstack redis goes down due to inactivityu can we setup in betterstack or uptiem which we had',
     context: 'Free-tier Upstash Redis or Render sleeping after periods of inactivity, dropping chat sessions.',
@@ -82,7 +82,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   },
   {
     id: 'learned-free-tier-deployment',
-    project: 'WhisperRoom',
+    project: 'Ephemeral Messaging (Zero-Trace)',
     category: 'devops-infra',
     rawUserPrompt: 'whichver cost me nothing we cannot keep in ram correct? what to deploy and test it',
     context: 'Deploying real-time WebSockets & ephemeral chat on zero-cost infrastructure.',
@@ -99,7 +99,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 3. Security, Privacy & Ephemeral Chat
   {
     id: 'learned-security-privacy-expert',
-    project: 'WhisperRoom / Interview Portal',
+    project: 'Realtime WebRTC & Socket Platform',
     category: 'security-privacy',
     rawUserPrompt: 'Lets find all security and vunerability and privacy issues. Les e an expert and ffind them',
     context: 'Ephemeral chat with room passcodes, image sharing, and host door knock approval.',
@@ -115,7 +115,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   },
   {
     id: 'learned-zero-trace-burn',
-    project: 'WhisperRoom',
+    project: 'Ephemeral Messaging (Zero-Trace)',
     category: 'security-privacy',
     rawUserPrompt: 'how many users we can add in single chat... what about privacy if somebdy share image what happened to them they should burn',
     context: '10-second auto-burn photo & text countdown, host approval doorway.',
@@ -132,9 +132,9 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 4. Secret Management & Infisical Sync
   {
     id: 'learned-infisical-secrets',
-    project: 'Abhishree Studio / Sentinel',
+    project: 'Production Secret Management',
     category: 'secrets-observability',
-    rawUserPrompt: 'do u know the infiscal ? if ye sthen we have abhishree-sentil or abhishreelabs in that we have render key you can use it to setup render',
+    rawUserPrompt: 'do u know the infiscal ? in infisical we have render key you can use it to setup render',
     context: 'Syncing secrets across dev/prod environments and deploying via Infisical CLI.',
     targetStack: 'Infisical CLI + Render API + Cloudflare Tokens',
     whyItFailedBefore: 'AI assumed hardcoded .env files and leaked instructions for manual copy-pasting rather than programmatic Infisical CLI commands.',
@@ -149,7 +149,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 5. Sentry Observability & Error Tracing
   {
     id: 'learned-sentry-integration',
-    project: 'WhisperRoom / Interview Portal',
+    project: 'Production Observability Suite',
     category: 'secrets-observability',
     rawUserPrompt: 'is there anything we cna add for this Sentry or any service which can be good for Sentry i hav eadded sentry_token in infiscal',
     context: 'End-to-end production error tracking and performance monitoring for Next.js.',
@@ -166,7 +166,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 6. Concurrency & Scaling
   {
     id: 'learned-scale-n-users',
-    project: 'WhisperRoom / Interview Portal',
+    project: 'High-Concurrency Cluster Platform',
     category: 'concurrency-scaling',
     rawUserPrompt: 'how we are going to deal with n number of session and how we can deal with n user in a session?',
     context: 'Real-time WebSocket server handling concurrent chat rooms and live candidate interviews.',
@@ -183,7 +183,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 7. Automated Content & Image Prompt Packs
   {
     id: 'learned-terrace-farming-prompts',
-    project: 'Terrace Farming / Social Automation',
+    project: 'Smart Agriculture Visual Spec',
     category: 'image-generation',
     rawUserPrompt: 'create all 30 ready-to-run prompts matching the authentic 14-section Muli/Palak/Methi reference for terrace farming',
     context: 'Generating hyper-detailed infographic visual prompts for agricultural terrace gardening.',
@@ -200,7 +200,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 8. WebRTC & Live Technical Interviews
   {
     id: 'learned-interview-portal-video',
-    project: 'Interview Portal',
+    project: 'Live Coding & Video Interview Suite',
     category: 'webrtc-video',
     rawUserPrompt: 'candidate video is freezing during live technical interview fix audio video desync',
     context: 'Live candidate coding interview with simultaneous Monaco editor, screen sharing, and WebRTC video.',
@@ -215,8 +215,8 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
 
   // 9. Patent Alignment & IP Auditing
   {
-    id: 'learned-examanalytics-pdf',
-    project: 'ExamAnalytics AI',
+    id: 'learned-document-ai-pdf',
+    project: 'EdTech Assessment & Patent Compliance',
     category: 'patent-compliance',
     rawUserPrompt: 'i have pasted Description English-3.pdf Drawings English-4.pdf can you check if our project is alligned with patent adoption and commertial use',
     context: 'Exam paper analysis and patent criteria evaluation pipeline.',
@@ -232,7 +232,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 10. Local Cloud & FinOps
   {
     id: 'learned-floci-local-aws',
-    project: 'Abhishree Labs / FinOps',
+    project: 'Local Cloud FinOps & AWS Emulation',
     category: 'local-cloud-emulation',
     rawUserPrompt: 'can we use https://github.com/floci-io/floci for aws for local to avoid paying any cloud bills',
     context: 'Local cloud emulation for testing S3 uploads and DynamoDB without incurring AWS expenses.',
@@ -248,9 +248,9 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 11. State Sync & Cache Invalidation
   {
     id: 'learned-patient-cache-sync',
-    project: 'Hospital Management System',
+    project: 'Healthcare Records & State Sync',
     category: 'state-cache-invalidation',
-    rawUserPrompt: 'why pateint Abhishek Sahu which i added why its not coming. does it has to be reloaded ?',
+    rawUserPrompt: 'why patient record which i added why its not coming. does it has to be reloaded ?',
     context: 'Doctor and reception dashboard after adding a new patient.',
     targetStack: 'TanStack Query (React Query) Cache Invalidation',
     whyItFailedBefore: 'AI told user to press F5 instead of fixing React Query mutation cache invalidation and write-after-read replication lag.',
@@ -264,7 +264,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 12. Monorepo & Branch Architecture Separation
   {
     id: 'learned-landing-branch-split',
-    project: 'Hospital Management System / Landing Page',
+    project: 'Monorepo Application Separation',
     category: 'monorepo-branch-split',
     rawUserPrompt: 'i dont understand we have created landing-page branch and that suppose to have landing and staff code has to go somewhere else separate it',
     context: 'Separating customer-facing hospital landing page from internal hospital staff portal.',
@@ -280,7 +280,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 13. Social Media Automation & Rate Limits
   {
     id: 'learned-social-automation',
-    project: 'AI Social Automation',
+    project: 'Social Media Bot Automation',
     category: 'social-automation',
     rawUserPrompt: 'schedule linkedin post with image and handle oauth token refresh automatically in background',
     context: 'Scheduled social publishing with OAuth 2.0 PKCE and media uploads.',
@@ -296,7 +296,7 @@ export const LEARNED_USER_PROMPTS: LearnedPromptItem[] = [
   // 14. IoT Smart Irrigation & Agronomy
   {
     id: 'learned-terrace-farming-iot',
-    project: 'Terrace Farming Smart Assistant',
+    project: 'Smart Agriculture IoT Platform',
     category: 'iot-terrace-farming',
     rawUserPrompt: 'smart irrigation rule based on soil moisture sensor readings and rain forecast to avoid overwatering',
     context: 'ESP32 IoT soil moisture sensor controlling terrace irrigation valve with OpenWeatherMap forecast.',

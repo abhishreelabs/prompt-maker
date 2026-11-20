@@ -99,7 +99,7 @@ test('enhancePromptOffline handles real workspace devops-infra (Better Stack DNS
   assert.ok(result.enhancedPrompt.includes('dig +trace'), 'Should inject terminal verification commands');
 });
 
-test('enhancePromptOffline handles real workspace security-privacy (WhisperRoom Zero-Trace)', () => {
+test('enhancePromptOffline handles real workspace security-privacy (Zero-Trace RAM Storage)', () => {
   const result = enhancePromptOffline({
     rawPrompt: 'Lets find all security and vunerability and privacy issues. Les e an expert and ffind them',
     useCase: 'security-privacy',

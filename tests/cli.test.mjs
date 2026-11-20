@@ -52,14 +52,14 @@ test('CLI learned filters workflows by project with --json output', async () => 
     cliBinary,
     'learned',
     '--project',
-    'WhisperRoom',
+    'Ephemeral',
     '--json'
   ]);
 
   const list = JSON.parse(stdout);
   assert.ok(Array.isArray(list));
   assert.ok(list.length > 0);
-  assert.ok(list.every(item => item.project.toLowerCase().includes('whisperroom')));
+  assert.ok(list.every(item => item.project.toLowerCase().includes('ephemeral')));
 });
 
 test('CLI mine extracts real developer prompts from local sessions with --json output', async () => {

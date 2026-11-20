@@ -49,7 +49,7 @@ function printHelp() {
   \x1b[36m-t, --tone\x1b[0m <tone>        Tone: production, crisp, step-by-step, qa-adversarial (default: production)
   \x1b[36m-j, --json\x1b[0m               Output machine-readable JSON (ideal for AI agent pipelines and tools)
   \x1b[36m-q, --quiet\x1b[0m              Output enhanced prompt content only (suppress metadata banners)
-  \x1b[36m-p, --project\x1b[0m <name>     Filter learned workflows by project (WhisperRoom, Hospital, Sentinel, Terrace)
+  \x1b[36m-p, --project\x1b[0m <name>     Filter learned workflows by project (Messaging, Healthcare, Cloud, Video)
   \x1b[36m-c, --category\x1b[0m <cat>     Filter learned workflows by category
 
 \x1b[1mEXAMPLES:\x1b[0m

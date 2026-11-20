@@ -12,7 +12,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const binaryPath = '/Users/abhisheksahu/repos/prompt-maker/bin/prompt-maker-mcp.js';
+  const binaryPath = '/path/to/prompt-maker/bin/prompt-maker-mcp.js';
 
   const configs: Record<'cursor' | 'claude' | 'windsurf' | 'cli', { title: string; filename: string; content: string }> = {
     cursor: {
@@ -167,10 +167,10 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
                 <strong className="text-slate-900 dark:text-slate-200 font-mono">analyze_developer_prompt:</strong> Returns a gap analysis of missing test assertions, brittle selectors, and clarity score.
               </li>
               <li>
-                <strong className="text-slate-900 dark:text-slate-200 font-mono">get_learned_workflows:</strong> Fetches exact blueprints from your 11 projects (WhisperRoom, HMS, Sentinel, etc.).
+                <strong className="text-slate-900 dark:text-slate-200 font-mono">get_learned_workflows:</strong> Fetches exact blueprints from real developer workflows (Realtime Messaging, Healthcare, DevOps, Document AI, etc.).
               </li>
               <li>
-                <strong className="text-slate-900 dark:text-slate-200 font-mono">list_supported_use_cases:</strong> Lists all 16 supported engineering domains and default frameworks.
+                <strong className="text-slate-900 dark:text-slate-200 font-mono">list_supported_use_cases:</strong> Lists all 26 supported engineering domains and default frameworks.
               </li>
             </ul>
           </div>

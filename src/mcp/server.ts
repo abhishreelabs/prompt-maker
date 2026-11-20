@@ -152,9 +152,9 @@ export function createPromptMakerServer() {
   // Tool 3: get_learned_workflows
   server.tool(
     'get_learned_workflows',
-    'Retrieves real-world developer workflows extracted from active repositories (WhisperRoom, Hospital Management, Abhishree Sentinel, Terrace Farming, Interview Portal) with exact problem context and safeguards.',
+    'Retrieves real-world developer workflows extracted from production environments (Realtime Messaging, Healthcare Systems, Cloud SRE, Document AI, IoT) with exact problem context and safeguards.',
     {
-      project_filter: z.string().optional().describe('Optional filter by project name (e.g. "WhisperRoom", "Hospital", "Sentinel", "Terrace")'),
+      project_filter: z.string().optional().describe('Optional filter by project or domain name (e.g. "Messaging", "Healthcare", "Cloud", "Video")'),
       category: z.string().optional().describe('Optional filter by category (e.g. "ui-testing", "devops-infra", "security-privacy")')
     },
     async ({ project_filter, category }) => {

@@ -49,7 +49,7 @@ prompt-maker "dockerize nextjs app with non-root user" --use-case devops-docker 
 prompt-maker analyze "my sql query is slow" --use-case db-optimization
 
 # Explore learned real-world workflows from active workspace repositories:
-prompt-maker learned --project WhisperRoom
+prompt-maker learned --project Ephemeral
 
 # Mine all real developer prompts from local agent sessions across 26 domains:
 prompt-maker mine
@@ -129,7 +129,7 @@ Local interactive web application running on `http://localhost:5173`:
 - **Audit Card**: Clarity score progression (`32/100` ➔ `98/100`) and missing defect badges.
 - **Visual Compilation Pipeline**: 4-stage pipeline (Analyzer ➔ Intent Classifier ➔ Dynamic Safeguard Injection ➔ Model Formatter).
 - **Light & Dark Mode**: Handcrafted themes with Google **Outfit** (headings) and **Inter** (body) typography.
-- **Learned Workflows Drawer**: 11 real-world workflows extracted from active repositories (WhisperRoom, Hospital Management, Sentinel, Terrace Farming).
+- **Learned Workflows Drawer**: 14 real-world workflows extracted from active production repositories (WebSockets, Healthcare Portals, Cloud SRE, Smart Agriculture).
 
 ---
 

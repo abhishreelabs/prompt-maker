@@ -50,13 +50,13 @@ export const LearnedPromptsModal: React.FC<LearnedPromptsModalProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">Learned From Your Real Projects & Sessions</h3>
-                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                  {LEARNED_USER_PROMPTS.length} Real Workflows
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">Real-World Developer Workflows</h3>
+                <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                  {LEARNED_USER_PROMPTS.length} Workflows
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400">
-                Extracted directly from your workspace projects (WhisperRoom, HMS, Sentinel, Terrace Farming, Interview Portal).
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
+                Extracted from real developer sessions across WebSockets, Healthcare, Cloud SRE, Document AI, and Video Streaming.
               </p>
             </div>
           </div>
