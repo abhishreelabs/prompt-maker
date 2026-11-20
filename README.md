@@ -90,7 +90,8 @@ Any AI coding assistant supporting MCP can call Prompt Maker as a native tool!
 {
   "mcpServers": {
     "prompt-maker": {
-      "command": "prompt-maker-mcp"
+      "command": "npx",
+      "args": ["-y", "prompt-maker", "mcp"]
     }
   }
 }
@@ -102,7 +103,8 @@ Location: `~/Library/Application Support/Claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "prompt-maker": {
-      "command": "prompt-maker-mcp"
+      "command": "npx",
+      "args": ["-y", "prompt-maker", "mcp"]
     }
   }
 }
@@ -113,6 +115,13 @@ Location: `~/.codeium/windsurf/mcp_config.json`
 ```json
 {
   "mcpServers": {
+    "prompt-maker": {
+      "command": "npx",
+      "args": ["-y", "prompt-maker", "mcp"]
+    }
+  }
+}
+```
     "prompt-maker": {
       "command": "prompt-maker-mcp"
     }

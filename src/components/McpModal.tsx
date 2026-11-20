@@ -12,8 +12,6 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const binaryPath = '/path/to/prompt-maker/bin/prompt-maker-mcp.js';
-
   const configs: Record<'cursor' | 'claude' | 'windsurf' | 'cli', { title: string; filename: string; content: string }> = {
     cursor: {
       title: 'Cursor IDE (.cursor/mcp.json)',
@@ -22,8 +20,8 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
         {
           mcpServers: {
             'prompt-maker': {
-              command: 'node',
-              args: [binaryPath]
+              command: 'npx',
+              args: ['-y', 'prompt-maker', 'mcp']
             }
           }
         },
@@ -38,8 +36,8 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
         {
           mcpServers: {
             'prompt-maker': {
-              command: 'node',
-              args: [binaryPath]
+              command: 'npx',
+              args: ['-y', 'prompt-maker', 'mcp']
             }
           }
         },
@@ -54,8 +52,8 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
         {
           mcpServers: {
             'prompt-maker': {
-              command: 'node',
-              args: [binaryPath]
+              command: 'npx',
+              args: ['-y', 'prompt-maker', 'mcp']
             }
           }
         },
@@ -66,7 +64,7 @@ export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
     cli: {
       title: 'Terminal / Background Process',
       filename: 'Command Line',
-      content: `node ${binaryPath}`
+      content: 'npx -y prompt-maker mcp'
     }
   };
 

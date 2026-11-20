@@ -7,6 +7,10 @@
     "prompt-maker": "./bin/prompt-maker.js",
     "prompt-maker-mcp": "./bin/prompt-maker-mcp.js"
   },
+  "files": [
+    "bin",
+    "README.md"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
