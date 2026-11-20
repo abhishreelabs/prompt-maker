@@ -2,7 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import { enhancePromptOffline } from '../engine/offlineEnhancer.ts';
-import { analyzeBadPrompt } from '../engine/promptAnalyzer.ts';
+import { analyzeBadPrompt, inferUseCase } from '../engine/promptAnalyzer.ts';
 import { USE_CASES } from '../data/useCases.ts';
 import { LEARNED_USER_PROMPTS } from '../data/learnedPrompts.ts';
 import type { UseCaseId, TargetModel, PromptTone } from '../types/index.ts';
@@ -46,19 +46,20 @@ export function createPromptMakerServer() {
         'local-cloud-emulation',
         'patent-compliance',
         'general-developer'
-      ] as const).optional().describe('The engineering domain category (defaults to ui-testing or auto-detected)'),
+      ] as const).optional().describe('The engineering domain category (defaults to auto-detected)'),
       framework: z.string().optional().describe('Target tech stack or framework (e.g. "Playwright (TypeScript)", "Next.js 16", "Cloudflare DNS", "Django REST")'),
       target_model: z.enum(['claude', 'gpt4o', 'gemini', 'cursor'] as const).optional().describe('Format wrapper for target model: claude (XML tags), gpt4o (markdown), gemini (grounding), cursor (.cursorrules style)'),
       tone: z.enum(['production', 'crisp', 'step-by-step', 'qa-adversarial'] as const).optional().describe('Prompt tone and rigor')
     },
-    async ({ raw_prompt, use_case = 'ui-testing', framework, target_model = 'claude', tone = 'production' }) => {
+    async ({ raw_prompt, use_case, framework, target_model = 'claude', tone = 'production' }) => {
+      const effectiveUseCase = (use_case as UseCaseId) || inferUseCase(raw_prompt);
       // Auto-detect framework if not provided
-      const selectedUseCase = USE_CASES.find(u => u.id === use_case);
+      const selectedUseCase = USE_CASES.find(u => u.id === effectiveUseCase);
       const effectiveFramework = framework || selectedUseCase?.defaultFramework || 'TypeScript';
 
       const result = enhancePromptOffline({
         rawPrompt: raw_prompt,
-        useCase: use_case as UseCaseId,
+        useCase: effectiveUseCase,
         targetModel: target_model as TargetModel,
         tone: tone as PromptTone,
         framework: effectiveFramework
@@ -123,8 +124,9 @@ export function createPromptMakerServer() {
         'general-developer'
       ] as const).optional().describe('The engineering domain category')
     },
-    async ({ raw_prompt, use_case = 'ui-testing' }) => {
-      const analysis = analyzeBadPrompt(raw_prompt, use_case as UseCaseId);
+    async ({ raw_prompt, use_case }) => {
+      const effectiveUseCase = (use_case as UseCaseId) || inferUseCase(raw_prompt);
+      const analysis = analyzeBadPrompt(raw_prompt, effectiveUseCase);
 
       return {
         content: [

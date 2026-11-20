@@ -126,3 +126,83 @@ export function analyzeBadPrompt(prompt: string, useCase: UseCaseId): PromptAnal
     detectedVariables
   };
 }
+
+export function inferUseCase(text: string): UseCaseId {
+  const t = text.toLowerCase();
+  if (t.includes('webrtc') || t.includes('video call') || t.includes('screen share') || t.includes('ice candidate')) {
+    return 'webrtc-video';
+  }
+  if (t.includes('pdf') || t.includes('ocr') || /\bexams?\b/.test(t) || t.includes('scanned')) {
+    return 'pdf-document-ai';
+  }
+  if (t.includes('social') || t.includes('linkedin') || t.includes('twitter') || t.includes('tweet') || t.includes('schedule post')) {
+    return 'social-automation';
+  }
+  if (t.includes('farming') || t.includes('terrace') || t.includes('soil') || t.includes('irrigation') || t.includes('plant')) {
+    return 'iot-terrace-farming';
+  }
+  if (t.includes('white label') || t.includes('tenant') || t.includes('custom domain') || t.includes('clinic1') || t.includes('branding')) {
+    return 'multi-tenant-branding';
+  }
+  if (t.includes('stale') || t.includes('cache') || t.includes('react query') || t.includes('not showing up') || t.includes('optimistic')) {
+    return 'state-cache-invalidation';
+  }
+  if (t.includes('monorepo') || t.includes('branch split') || t.includes('landing page branch') || t.includes('staff portal')) {
+    return 'monorepo-branch-split';
+  }
+  if (t.includes('touch target') || t.includes('virtual keyboard') || t.includes('mobile web') || t.includes('iphone') || t.includes('touch')) {
+    return 'mobile-touch-qa';
+  }
+  if (t.includes('floci') || t.includes('localstack') || t.includes('local aws') || t.includes('s3 local')) {
+    return 'local-cloud-emulation';
+  }
+  if (t.includes('patent') || t.includes('gpl') || t.includes('copyleft') || t.includes('license audit') || t.includes('claims')) {
+    return 'patent-compliance';
+  }
+  if (t.includes('dns') || t.includes('uptime') || t.includes('cloudflare') || t.includes('render') || t.includes('better stack')) {
+    return 'devops-infra';
+  }
+  if (t.includes('docker') || t.includes('dockerfile') || t.includes('container') || t.includes('k8s') || t.includes('kubernetes')) {
+    return 'devops-docker';
+  }
+  if (t.includes('sql') || t.includes('database') || t.includes('postgres') || t.includes('prisma') || t.includes('query')) {
+    return 'db-optimization';
+  }
+  if (t.includes('api') || t.includes('endpoint') || t.includes('rest') || t.includes('webhook') || t.includes('graphql')) {
+    return 'api-design';
+  }
+  if (t.includes('unit test') || t.includes('coverage') || t.includes('mock') || t.includes('jest') || t.includes('vitest')) {
+    return 'unit-testing';
+  }
+  if (t.includes('playwright') || t.includes('cypress') || t.includes('e2e') || t.includes('locator') || (t.includes('test') && !t.includes('unit'))) {
+    return 'ui-testing';
+  }
+  if (t.includes('bug') || t.includes('fix') || t.includes('error') || t.includes('leak') || t.includes('failing') || t.includes('why')) {
+    return 'bug-fixing';
+  }
+  if (t.includes('refactor') || t.includes('clean up') || t.includes('solid')) {
+    return 'code-refactoring';
+  }
+  if (t.includes('security') || t.includes('vulnerability') || t.includes('privacy') || t.includes('zero-trace') || t.includes('auto-burn')) {
+    return 'security-privacy';
+  }
+  if (t.includes('infisical') || t.includes('sentry') || t.includes('secret') || t.includes('env key')) {
+    return 'secrets-observability';
+  }
+  if (t.includes('doctor') || t.includes('patient') || t.includes('hospital') || t.includes('triage') || t.includes('appointment')) {
+    return 'healthcare-doctor';
+  }
+  if (t.includes('image') || t.includes('infographic') || t.includes('midjourney') || t.includes('imagen')) {
+    return 'image-generation';
+  }
+  if (t.includes('concurrency') || t.includes('websocket') || t.includes('socket.io') || t.includes('redis adapter')) {
+    return 'concurrency-scaling';
+  }
+  if (t.includes('code review') || t.includes('pr review') || t.includes('audit')) {
+    return 'code-review';
+  }
+  if (t.includes('create') || t.includes('implement') || t.includes('feature') || t.includes('add')) {
+    return 'feature-implementation';
+  }
+  return 'general-developer';
+}
