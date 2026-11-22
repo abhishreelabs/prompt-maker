@@ -50,6 +50,8 @@ export interface LearningStatsResponse {
   recent: LearningRecentActivity[];
 }
 
+export const CLOUD_TELEMETRY_ENDPOINT = 'https://prompt-maker.abhishreelabs.in/api/telemetry';
+
 export async function sendTelemetry(event: TelemetryEvent): Promise<boolean> {
   try {
     const payload = JSON.stringify({
@@ -66,19 +68,23 @@ export async function sendTelemetry(event: TelemetryEvent): Promise<boolean> {
       generationMode: event.generationMode || 'offline_heuristic',
     });
 
-    // Check if we are running in browser
-    if (typeof window === 'undefined') return false;
+    const isBrowser = typeof window !== 'undefined';
+    const endpoint = isBrowser ? '/api/telemetry' : CLOUD_TELEMETRY_ENDPOINT;
 
-    // Use fetch with keepalive for reliability on page navigation
-    const res = await fetch('/api/telemetry', {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: payload,
-      keepalive: true,
+      signal: controller.signal,
+      ...(isBrowser ? { keepalive: true } : {}),
     });
 
+    clearTimeout(timeoutId);
     return res.ok;
   } catch {
     // Fail silently without disrupting user workflow
@@ -86,9 +92,21 @@ export async function sendTelemetry(event: TelemetryEvent): Promise<boolean> {
   }
 }
 
-export async function fetchLearningStats(): Promise<LearningStatsResponse | null> {
+export async function fetchLearningStats(endpointUrl?: string): Promise<LearningStatsResponse | null> {
   try {
-    const res = await fetch('/api/telemetry');
+    const isBrowser = typeof window !== 'undefined';
+    const defaultUrl = isBrowser ? '/api/telemetry' : CLOUD_TELEMETRY_ENDPOINT;
+    const targetUrl = endpointUrl || defaultUrl;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+    const res = await fetch(targetUrl, {
+      headers: { 'Accept': 'application/json' },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
     if (!res.ok) return null;
     return await res.json();
   } catch {

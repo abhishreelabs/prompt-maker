@@ -7,12 +7,27 @@ interface McpModalProps {
 }
 
 export const McpModal: React.FC<McpModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'cli' | 'cursor' | 'claude' | 'windsurf'>('cli');
+  const [activeTab, setActiveTab] = useState<'antigravity' | 'cli' | 'cursor' | 'claude' | 'windsurf'>('antigravity');
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const configs: Record<'cli' | 'cursor' | 'claude' | 'windsurf', { title: string; filename: string; content: string }> = {
+  const configs: Record<'antigravity' | 'cli' | 'cursor' | 'claude' | 'windsurf', { title: string; filename: string; content: string }> = {
+    antigravity: {
+      title: 'Google Antigravity Global MCP (~/.gemini/config/mcp_config.json)',
+      filename: '~/.gemini/config/mcp_config.json',
+      content: JSON.stringify(
+        {
+          mcpServers: {
+            'prompt-maker': {
+              command: 'prompt-maker-mcp'
+            }
+          }
+        },
+        null,
+        2
+      )
+    },
     cli: {
       title: 'Terminal CLI (Instant execution via npx or global npm)',
       filename: 'Terminal / Shell',
@@ -114,17 +129,17 @@ prompt-maker "create stripe checkout webhook endpoint" --use-case api-design --q
 
         {/* Tab selection */}
         <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-950/30 flex items-center space-x-1.5 sm:space-x-2 text-xs overflow-x-auto no-scrollbar">
-          {(['cli', 'cursor', 'claude', 'windsurf'] as const).map(tab => (
+          {(['antigravity', 'cli', 'cursor', 'claude', 'windsurf'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer shrink-0 ${
                 activeTab === tab
                   ? 'bg-indigo-600 text-white shadow-md'
                   : 'bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-800'
               }`}
             >
-              {tab === 'cli' ? 'TERMINAL CLI' : tab.toUpperCase()}
+              {tab === 'antigravity' ? 'ANTIGRAVITY' : tab === 'cli' ? 'TERMINAL CLI' : tab.toUpperCase()}
             </button>
           ))}
         </div>

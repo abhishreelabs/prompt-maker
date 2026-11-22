@@ -92,3 +92,13 @@ test('CLI auto-detects new engineering domains (webrtc, patent, iot)', async () 
   ]);
   assert.equal(JSON.parse(iotOut).useCase, 'iot-terrace-farming');
 });
+
+test('CLI stats returns improvement metrics and trajectory with --json output', async () => {
+  const { stdout } = await execFileAsync('node', [cliBinary, 'stats', '--json']);
+  const parsed = JSON.parse(stdout);
+  assert.equal(parsed.success, true);
+  assert.ok(parsed.summary.total_prompts_tracked > 0);
+  assert.ok(typeof parsed.summary.avg_clarity_gain === 'number');
+  assert.ok(parsed.local_sessions);
+  assert.ok(parsed.local_sessions.domain_breakdown);
+});

@@ -47,4 +47,5 @@ test('MCP Server responds to initialize and tools/list', async () => {
   assert.ok(output.includes('enhance_developer_prompt'), 'Should list enhance_developer_prompt tool');
   assert.ok(output.includes('analyze_developer_prompt'), 'Should list analyze_developer_prompt tool');
   assert.ok(output.includes('get_learned_workflows'), 'Should list get_learned_workflows tool');
+  assert.ok(output.includes('get_improvement_metrics'), 'Should list get_improvement_metrics tool');
 });

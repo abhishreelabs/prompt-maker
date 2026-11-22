@@ -57,6 +57,9 @@ prompt-maker learned --project Ephemeral
 # Mine all real developer prompts from local agent sessions across 26 domains:
 prompt-maker mine
 
+# Display developer quality improvement report (clarity gain, defect elimination, secrets guarded):
+prompt-maker stats
+
 # Start the MCP stdio server:
 prompt-maker mcp
 ```
@@ -87,8 +90,23 @@ Any AI coding assistant supporting MCP can call Prompt Maker as a native tool!
 1. `enhance_developer_prompt(raw_prompt, use_case, framework, target_model, tone)`: Returns the hardened, edge-case-proof prompt.
 2. `analyze_developer_prompt(raw_prompt, use_case)`: Audits clarity score and flags missing architectural elements.
 3. `get_learned_workflows(project_filter, category)`: Returns real-world problem statements and safeguards learned from workspace repositories.
+4. `list_supported_use_cases()`: Lists all supported engineering domains, default frameworks, and hardening checklists.
+5. `get_improvement_metrics(include_recent)`: Telemetry report showing average clarity improvement (+60pts), defect reduction, and domain breakdown across system sessions and Cloudflare D1.
 
-#### A. Cursor IDE (`.cursor/mcp.json`)
+#### A. Google Antigravity Global Config (`~/.gemini/config/mcp_config.json`)
+Automatically enabled across **all developer sessions**:
+```json
+{
+  "mcpServers": {
+    "prompt-maker": {
+      "command": "/Users/abhisheksahu/.nvm/versions/node/v24.22.1/bin/node",
+      "args": ["/Users/abhisheksahu/repos/prompt-maker/bin/prompt-maker-mcp.js"]
+    }
+  }
+}
+```
+
+#### B. Cursor IDE (`.cursor/mcp.json`)
 ```json
 {
   "mcpServers": {
